@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Bell, ShoppingCart, Search, ChevronDown } from "lucide-react";
-import ModeToggle from "@/components/mode-toggle";
+import ModeToggle from "@/components/ModeToggle";
 function Header() {
   return (
     <header className="h-16 border-b border-border bg-background px-6 flex items-center justify-between">

@@ -1,3 +1,5 @@
+import { OrdersTable } from "@/components/OrderTable";
+import { SalesDashboard } from "@/components/SalesDashboard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, ShoppingCart, Package, Wallet } from "lucide-react";
@@ -240,6 +242,8 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+      <SalesDashboard />
+      <OrdersTable />
     </div>
   );
 }

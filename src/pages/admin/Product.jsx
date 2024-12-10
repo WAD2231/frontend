@@ -111,7 +111,16 @@ export default function ProductsPage() {
                 <TableCell>{product.stock}</TableCell>
                 <TableCell>{product.price}</TableCell>
                 <TableCell>
-                  <Badge variant={product.status === "Published" ? "success" : "warning"}>
+                  <Badge variant="outline"
+                    className={
+                      product.status === "Low Stock" 
+                        ? "border-orange-200 bg-orange-100 text-orange-700 dark:border-orange-800 dark:bg-orange-900 dark:text-orange-300"
+                        : product.status === "Shipped"
+                        ? "border-blue-200 bg-blue-100 text-blue-700 dark:border-blue-800 dark:bg-blue-900 dark:text-blue-300"
+                        : product.status === "Published"
+                        ? "border-green-200 bg-green-100 text-green-700 dark:border-green-800 dark:bg-green-900 dark:text-green-300"
+                        : "border-red-200 bg-red-100 text-red-700 dark:border-red-800 dark:bg-red-900 dark:text-red-300"
+                    }>
                     {product.status}
                   </Badge>
                 </TableCell>
