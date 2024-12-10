@@ -1,12 +1,12 @@
-import './App.css'
-import AdminLayout from './layouts/admin/AdminLayout';
-
+import "./App.css";
+import AdminLayout from "./layouts/admin/AdminLayout";
+import Product from "@/pages/admin/Product";
 function App() {
   return (
     <AdminLayout>
-      <div>Hello world</div>
+      <Product />
     </AdminLayout>
   );
 }
 
-export default App
+export default App;
