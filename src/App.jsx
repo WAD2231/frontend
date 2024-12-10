@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/Button";
 import './App.css'
+import AdminLayout from './layouts/admin/AdminLayout';
 
 function App() {
   return (
-    <div className="flex justify-center items-center h-screen">
-      <Button variant="default">Click Me</Button>
-    </div>
+    <AdminLayout>
+      <div>Hello world</div>
+    </AdminLayout>
   );
 }
 

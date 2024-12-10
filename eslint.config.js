@@ -35,7 +35,6 @@ export default [
       ],
       'react-hooks/rules-of-hooks': 'error',
       'react-prop-types': 'off',
-      
     },
   },
 ]
