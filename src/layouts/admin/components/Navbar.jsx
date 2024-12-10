@@ -5,7 +5,7 @@ import {
   Package,
   ShoppingCart,
   Users,
-  Store,
+  NotebookTabs,
   BarChart2,
   HelpCircle,
   Settings,
@@ -16,19 +16,18 @@ const navigation = [
   { name: "Product", href: "/products", icon: Package },
   { name: "Orders", href: "/orders", icon: ShoppingCart, badge: "3" },
   { name: "Customers", href: "/customers", icon: Users },
-  { name: "Seller", href: "/seller", icon: Store },
+  { name: "Category", href: "/category", icon: NotebookTabs },
   { name: "Analytics", href: "/analytics", icon: BarChart2 },
   { name: "Support", href: "/supports", icon: HelpCircle },
   { name: "Setting", href: "/settings", icon: Settings },
 ];
-
 function Navbar() {
   return (
-    <div className="w-64 bg-white border-r flex flex-col">
-      <div className="p-4">
+    <div className="w-64 bg-background border-r border-border flex flex-col">
+      <div className="p-6">
         <Link to="/" className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <span className="text-white text-xl font-bold">D</span>
+            <span className="text-primary-foreground text-xl font-bold">D</span>
           </div>
           <span className="text-xl font-bold">Dashlab</span>
         </Link>
@@ -38,12 +37,12 @@ function Navbar() {
           <Link key={item.name} to={item.href}>
             <Button
               variant="ghost"
-              className="w-full justify-start h-11 font-normal font-bold"
+              className="w-full justify-start h-11 font-bold"
             >
               <item.icon className="mr-3 h-5 w-5" />
               {item.name}
               {item.badge && (
-                <span className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                <span className="ml-auto bg-destructive text-destructive-foreground text-xs px-2 py-0.5 rounded-full">
                   {item.badge}
                 </span>
               )}
@@ -52,7 +51,7 @@ function Navbar() {
         ))}
       </nav>
     </div>
-  );
+  )
 }
 
 export default Navbar;

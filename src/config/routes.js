@@ -5,7 +5,7 @@ const routes = {
   analytics: '/analytics',
   supports: '/supports',
   settings: '/settings',
-  seller: '/seller',
+  category: '/category',
   orders: '/orders',
 }
 

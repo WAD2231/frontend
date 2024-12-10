@@ -43,7 +43,7 @@ export default function ProductsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Product</h1>
-          <div className="flex items-center space-x-2 text-sm text-gray-500">
+          <div className="flex items-center space-x-2 text-sm text-muted-foreground">
             <span>Dashboard</span>
             <span>/</span>
             <span>Product List</span>
@@ -59,8 +59,8 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow">
-        <div className="p-4 border-b flex items-center justify-between">
+      <div className="bg-background rounded-lg shadow">
+        <div className="p-4 border-b border-border flex items-center justify-between">
           <Input
             placeholder="Search product..."
             className="max-w-sm"
@@ -81,34 +81,32 @@ export default function ProductsPage() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-12">
-                <input type="checkbox" className="rounded border-gray-300" />
+                <input type="checkbox" className="rounded border-input" />
               </TableHead>
-              <TableHead>Product</TableHead>
-              <TableHead>SKU</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Stock</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Added</TableHead>
-              <TableHead>Action</TableHead>
+              <TableHead className="w-1/5">Product</TableHead>
+              <TableHead className="w-1/6">Category</TableHead>
+              <TableHead className="w-1/6">Stock</TableHead>
+              <TableHead className="w-1/6">Price</TableHead>
+              <TableHead className="w-1/6">Status</TableHead>
+              <TableHead className="w-1/6">Added</TableHead>
+              <TableHead className="w-1/6">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {products.map((product) => (
               <TableRow key={product.id}>
                 <TableCell>
-                  <input type="checkbox" className="rounded border-gray-300" />
+                  <input type="checkbox" className="rounded border-input" />
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gray-100 rounded" />
+                    <div className="w-10 h-10 bg-muted rounded" />
                     <div>
                       <div className="font-medium">{product.name}</div>
-                      <div className="text-sm text-gray-500">{product.variants}</div>
+                      <div className="text-sm text-muted-foreground">{product.variants}</div>
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>{product.sku}</TableCell>
                 <TableCell>{product.category}</TableCell>
                 <TableCell>{product.stock}</TableCell>
                 <TableCell>{product.price}</TableCell>
@@ -136,15 +134,15 @@ export default function ProductsPage() {
           </TableBody>
         </Table>
 
-        <div className="p-4 border-t flex items-center justify-between">
-          <div className="text-sm text-gray-500">
+        <div className="p-4 border-t border-border flex items-center justify-between">
+          <div className="text-sm text-muted-foreground">
             Showing 1-10 from 100
           </div>
           <div className="flex items-center space-x-2">
             <Button variant="outline" size="sm" disabled>
               Previous
             </Button>
-            <Button variant="outline" size="sm" className="bg-primary text-white">
+            <Button variant="outline" size="sm" className="bg-primary text-primary-foreground">
               1
             </Button>
             <Button variant="outline" size="sm">
