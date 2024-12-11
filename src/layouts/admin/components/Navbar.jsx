@@ -1,54 +1,58 @@
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import routes from "@/config/routes";
 import {
   LayoutDashboard,
   Package,
   ShoppingCart,
   Users,
-  Store,
+  NotebookTabs,
   BarChart2,
   HelpCircle,
   Settings,
 } from "lucide-react";
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
-  { name: "Product", href: "/products", icon: Package },
-  { name: "Orders", href: "/orders", icon: ShoppingCart, badge: "3" },
-  { name: "Customers", href: "/customers", icon: Users },
-  { name: "Seller", href: "/seller", icon: Store },
-  { name: "Analytics", href: "/analytics", icon: BarChart2 },
-  { name: "Support", href: "/supports", icon: HelpCircle },
-  { name: "Setting", href: "/settings", icon: Settings },
+  { name: "Dashboard", to: routes.dashboard, icon: LayoutDashboard },
+  { name: "Product", to: routes.product, icon: Package },
+  { name: "Orders", to: routes.orders, icon: ShoppingCart, badge: "3" },
+  { name: "Customers", to: routes.customers, icon: Users },
+  { name: "Category", to: routes.category, icon: NotebookTabs },
+  { name: "Analytics", to: routes.analytics, icon: BarChart2 },
+  { name: "Support", to: routes.supports, icon: HelpCircle },
+  { name: "Setting", to: routes.settings, icon: Settings },
 ];
-
 function Navbar() {
   return (
-    <div className="w-64 bg-white border-r flex flex-col">
-      <div className="p-4">
-        <Link to="/" className="flex items-center space-x-2">
+    <div className="w-64 bg-background border-r border-border flex flex-col">
+      <div className="p-6">
+        <Link to={routes.dashboard} className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <span className="text-white text-xl font-bold">D</span>
+            <span className="text-primary-foreground text-xl font-bold">D</span>
           </div>
           <span className="text-xl font-bold">Dashlab</span>
         </Link>
       </div>
       <nav className="flex-1 px-4 space-y-1">
         {navigation.map((item) => (
-          <Link key={item.name} to={item.href}>
+          <NavLink key={item.name} to={item.to} className={({ isActive }) =>
+            isActive
+              ? "bg-primary/20 text-primary dark:bg-primary/20"
+              : "hover:bg-gray-100 dark:hover:bg-gray-800"
+          }>
             <Button
               variant="ghost"
-              className="w-full justify-start h-11 font-normal font-bold"
+              className="w-full justify-start h-11 font-bold flex"
             >
               <item.icon className="mr-3 h-5 w-5" />
               {item.name}
               {item.badge && (
-                <span className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                <span className="ml-auto bg-destructive text-destructive-foreground text-xs px-2 py-0.5 rounded-full">
                   {item.badge}
                 </span>
               )}
             </Button>
-          </Link>
+          </NavLink>
         ))}
       </nav>
     </div>
