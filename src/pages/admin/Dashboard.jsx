@@ -2,7 +2,9 @@ import { OrdersTable } from "@/components/OrderTable";
 import { SalesDashboard } from "@/components/SalesDashboard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import routes from "@/config/routes";
 import { Calendar, ShoppingCart, Package, Wallet } from "lucide-react";
+import { Link } from "react-router-dom";
 import {
   LineChart,
   Line,
@@ -44,7 +46,9 @@ export default function DashboardPage() {
             <Calendar className="h-4 w-4 mr-2" />
             Select Dates
           </Button>
-          <Button>+ Add Product</Button>
+          <Link to={routes.addProduct}>
+            <Button>+ Add Product</Button>
+          </Link>
         </div>
       </div>
 

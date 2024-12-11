@@ -10,7 +10,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Filter, Eye, Pencil, Trash2 } from 'lucide-react'
-
+import { Link } from "react-router-dom"
+import routes from "@/config/routes"
 const products = [
   {
     id: "1",
@@ -39,7 +40,7 @@ const products = [
 
 export default function ProductsPage() {
   return (
-    <div className="space-y-6">
+    <div className="p-6 space-y-6 bg-background min-h-screen w-full">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Product</h1>
@@ -53,9 +54,9 @@ export default function ProductsPage() {
           <Button variant="outline">
             Export
           </Button>
-          <Button>
-            Add Product
-          </Button>
+          <Link to={routes.addProduct}>
+            <Button>+ Add Product</Button>
+          </Link>
         </div>
       </div>
 
