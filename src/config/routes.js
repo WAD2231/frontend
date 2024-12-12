@@ -1,6 +1,5 @@
 const ADMIN = "/admin";
 const routes = {
-  home: `/`,
   dashboard: `${ADMIN}/dashboard`,
   product: `${ADMIN}/products`,
   addProduct: `${ADMIN}/products/add`,
