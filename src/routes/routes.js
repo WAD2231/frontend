@@ -14,6 +14,7 @@ import Setting from "@/pages/admin/Setting";
 //Private Routes (for Admin)
 
 const privateRoutes = [
+  { path: routes.home, components: Dashboard },
   { path: routes.dashboard, components: Dashboard },
   { path: routes.product, components: Product },
   { path: routes.addProduct, components: AddProduct },
