@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useState } from "react";
+import  { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -20,8 +18,6 @@ import {
   Pencil,
   Trash2,
 } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
-
 const categories = [
   {
     id: "1",
