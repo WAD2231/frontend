@@ -10,6 +10,9 @@ import Analytics from "@/pages/admin/Analytics";
 import Support from "@/pages/admin/Support";
 import Category from "@/pages/admin/Category";
 import Setting from "@/pages/admin/Setting";
+import DetailProduct from "@/pages/admin/Product/DetailProduct";
+import OrderDetail from "@/pages/admin/OrderDetail";
+import CustomerDetail from "@/pages/admin/CustomerDetail";
 
 //Private Routes (for Admin)
 
@@ -17,11 +20,13 @@ const privateRoutes = [
   { path: routes.dashboard, components: Dashboard },
   { path: routes.product, components: Product },
   { path: routes.addProduct, components: AddProduct },
-  { path: routes.editProduct, components: EditProduct },
-  { path: routes.editProduct, components: EditProduct },
+  { path: `${routes.editProduct}/:id`, components: EditProduct },
+  { path: `${routes.detailProduct}/:id`, components: DetailProduct },
   { path: routes.analytics, components: Analytics },
   { path: routes.customers, components: Customer },
+  { path: `${routes.customerDetail}/:id`, components: CustomerDetail },
   { path: routes.orders, components: Order },
+  { path: `${routes.orders}/:id`, components: OrderDetail },
   { path: routes.category, components: Category },
   { path: routes.supports, components: Support },
   { path: routes.settings, components: Setting },

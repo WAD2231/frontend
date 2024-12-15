@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -6,9 +6,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Filter, Eye, Link2, ChevronDown } from 'lucide-react'
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Filter, Eye, Link2, ChevronDown } from "lucide-react";
+import { Link } from "react-router-dom";
+import routes from "@/config/routes";
 
 const orders = [
   {
@@ -18,11 +20,11 @@ const orders = [
     date: "1 min ago",
     customer: {
       name: "John Bushmill",
-      email: "johnb@mail.com"
+      email: "johnb@mail.com",
     },
     total: "$121.00",
     payment: "Mastercard",
-    status: "Processing"
+    status: "Processing",
   },
   {
     id: "#302011",
@@ -31,11 +33,11 @@ const orders = [
     date: "1 min ago",
     customer: {
       name: "Ilham Budi A",
-      email: "ilhambudi@mail.com"
+      email: "ilhambudi@mail.com",
     },
     total: "$590.00",
     payment: "Visa",
-    status: "Processing"
+    status: "Processing",
   },
   {
     id: "#302002",
@@ -43,11 +45,11 @@ const orders = [
     date: "5 hour ago",
     customer: {
       name: "Mohammad Karim",
-      email: "m_karim@mail.com"
+      email: "m_karim@mail.com",
     },
     total: "$125.00",
     payment: "Transfer",
-    status: "Shipped"
+    status: "Shipped",
   },
   {
     id: "#301901",
@@ -56,11 +58,11 @@ const orders = [
     date: "1 day ago",
     customer: {
       name: "Linda Blair",
-      email: "lindablair@mail.com"
+      email: "lindablair@mail.com",
     },
     total: "$348.00",
     payment: "Paypal",
-    status: "Shipped"
+    status: "Shipped",
   },
   {
     id: "#301900",
@@ -68,11 +70,11 @@ const orders = [
     date: "2 day ago",
     customer: {
       name: "Josh Adam",
-      email: "josh.adam@mail.com"
+      email: "josh.adam@mail.com",
     },
     total: "$607.00",
     payment: "Visa",
-    status: "Delivered"
+    status: "Delivered",
   },
   {
     id: "#301881",
@@ -81,11 +83,11 @@ const orders = [
     date: "5 Jan 2023",
     customer: {
       name: "Sin Tae",
-      email: "sin_tae@mail.com"
+      email: "sin_tae@mail.com",
     },
     total: "$234.00",
     payment: "Visa",
-    status: "Cancelled"
+    status: "Cancelled",
   },
   {
     id: "#301643",
@@ -93,11 +95,11 @@ const orders = [
     date: "1 Jan 2023",
     customer: {
       name: "Rajesh Masvidal",
-      email: "rajesh_m@mail.com"
+      email: "rajesh_m@mail.com",
     },
     total: "$760.00",
     payment: "Transfer",
-    status: "Shipped"
+    status: "Shipped",
   },
   {
     id: "#301600",
@@ -106,11 +108,11 @@ const orders = [
     date: "24 Dec 2022",
     customer: {
       name: "Fajar Surya",
-      email: "surya@mail.com"
+      email: "surya@mail.com",
     },
     total: "$400.00",
     payment: "Mastercard",
-    status: "Delivered"
+    status: "Delivered",
   },
   {
     id: "#301555",
@@ -119,11 +121,11 @@ const orders = [
     date: "2 Dec 2022",
     customer: {
       name: "Francis Greg",
-      email: "francisg@mail.com"
+      email: "francisg@mail.com",
     },
     total: "$812.00",
     payment: "Paypal",
-    status: "Delivered"
+    status: "Delivered",
   },
   {
     id: "#301002",
@@ -132,13 +134,13 @@ const orders = [
     date: "2 Dec 2022",
     customer: {
       name: "Linda Blair",
-      email: "lindablair@mail.com"
+      email: "lindablair@mail.com",
     },
     total: "$123.00",
     payment: "Paypal",
-    status: "Delivered"
-  }
-]
+    status: "Delivered",
+  },
+];
 
 export function OrdersTable() {
   return (
@@ -146,7 +148,10 @@ export function OrdersTable() {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <h2 className="text-xl font-semibold">Recent Orders</h2>
-          <Badge variant="secondary" className="bg-primary/10 text-primary dark:bg-primary/20">
+          <Badge
+            variant="secondary"
+            className="bg-primary/10 text-primary dark:bg-primary/20"
+          >
             +2 Orders
           </Badge>
         </div>
@@ -230,10 +235,10 @@ export function OrdersTable() {
                 <TableCell>{order.total}</TableCell>
                 <TableCell>{order.payment}</TableCell>
                 <TableCell>
-                  <Badge 
+                  <Badge
                     variant="outline"
                     className={
-                      order.status === "Processing" 
+                      order.status === "Processing"
                         ? "border-orange-200 bg-orange-100 text-orange-700 dark:border-orange-800 dark:bg-orange-900 dark:text-orange-300"
                         : order.status === "Shipped"
                         ? "border-blue-200 bg-blue-100 text-blue-700 dark:border-blue-800 dark:bg-blue-900 dark:text-blue-300"
@@ -247,9 +252,11 @@ export function OrdersTable() {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-2">
-                    <Button variant="ghost" size="icon">
-                      <Eye className="h-4 w-4" />
-                    </Button>
+                    <Link to={`${routes.orderDetail}/${order.id}`}>
+                      <Button variant="ghost" size="icon">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </Link>
                     <Button variant="ghost" size="icon">
                       <Link2 className="h-4 w-4" />
                     </Button>
@@ -274,11 +281,21 @@ export function OrdersTable() {
             >
               1
             </Button>
-            <Button variant="outline" size="sm">2</Button>
-            <Button variant="outline" size="sm">3</Button>
-            <Button variant="outline" size="sm">4</Button>
-            <Button variant="outline" size="sm">5</Button>
-            <Button variant="outline" size="sm">...</Button>
+            <Button variant="outline" size="sm">
+              2
+            </Button>
+            <Button variant="outline" size="sm">
+              3
+            </Button>
+            <Button variant="outline" size="sm">
+              4
+            </Button>
+            <Button variant="outline" size="sm">
+              5
+            </Button>
+            <Button variant="outline" size="sm">
+              ...
+            </Button>
             <Button variant="outline" size="sm">
               Next
             </Button>
@@ -286,6 +303,5 @@ export function OrdersTable() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-

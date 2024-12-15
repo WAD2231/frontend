@@ -10,31 +10,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { X, ImageIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { X, ImageIcon, Check } from "lucide-react";
 import routes from "@/config/routes";
+import { Link } from "react-router-dom";
 
-import { useDropzone } from "react-dropzone";
-import { useCallback, useState } from "react";
-
-function AddProduct() {
-  const [selectedImages, setSelectedImages] = useState([]);
-  const onDrop = useCallback((acceptedFiles) => {
-    acceptedFiles.forEach((file) => {
-      setSelectedImages((prevState) => [...prevState, file]);
-    });
-  }, []);
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: {
-      "image/*": [],
-    },
-    onDrop,
-  });
-
-  const removeImage = (index) => {
-    setSelectedImages((prevState) => prevState.filter((_, i) => i !== index));
-  };
-
+export default function DetailProduct() {
   return (
     <div className="container mx-auto p-6">
       <div className="flex items-center justify-between mb-8">
@@ -48,16 +29,19 @@ function AddProduct() {
               Product List
             </Link>
             <span>/</span>
-            <span>Add Product</span>
+            <span>Product Details</span>
           </div>
-          <h1 className="text-2xl font-semibold">Add Product</h1>
+          <h1 className="text-2xl font-semibold">Product Details</h1>
         </div>
         <div className="flex items-center space-x-2">
           <Button variant="ghost">
             <X className="h-4 w-4 mr-2" />
             Cancel
           </Button>
-          <Button>+ Add Product</Button>
+          <Button>
+            <Check className="h-4 w-4 mr-2" />
+            Save Product
+          </Button>
         </div>
       </div>
 
@@ -70,16 +54,13 @@ function AddProduct() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="product-name">Product Name</Label>
-                <Input
-                  id="product-name"
-                  placeholder="Type product name here..."
-                />
+                <Input id="product-name" value="Smartwatch E2" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="description">Description</Label>
                 <Textarea
                   id="description"
-                  placeholder="Type product description here..."
+                  value="Smartwatch E2 is a premium fitness tracker that connects with your phone via Bluetooth. Once paired with fitness tracker, Connect fitness tracker with your phone you will never miss a call and a message. The smart watches for android phones will vibrate to alert you if your phone receives any notifications. You can reject calls and view message directly from your watch. A best gift for family and friends"
                   className="min-h-[150px]"
                 />
               </div>
@@ -93,50 +74,33 @@ function AddProduct() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label>Photo</Label>
-                <div {...getRootProps({ className: "dropzone" })}>
-                  <div className="border-2 border-dashed rounded-lg p-8 text-center space-y-4">
-                    <div className="mx-auto w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <ImageIcon className="h-6 w-6 text-primary" />
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Drag and drop image here, or click add image
-                    </div>
-                    <div>
-                      <input {...getInputProps()} />
-                      <Button variant="secondary" size="sm">
+                <div className="border-2 border-dashed rounded-lg p-4">
+                  <div className="grid grid-cols-4 gap-4">
+                    {[1, 2, 3].map((index) => (
+                      <div key={index} className="relative group">
+                        <div className="aspect-square bg-muted rounded-lg overflow-hidden">
+                          <div className="absolute top-2 right-2">
+                            <Badge
+                              variant="secondary"
+                              className="bg-background/80 backdrop-blur-sm"
+                            >
+                              <Check className="h-3 w-3 text-green-500" />
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <Button
+                      variant="outline"
+                      className="aspect-square flex flex-col items-center justify-center border-dashed"
+                    >
+                      <ImageIcon className="h-8 w-8 mb-2 text-muted-foreground" />
+                      <span className="text-xs text-muted-foreground">
                         Add Image
-                      </Button>
-                    </div>
+                      </span>
+                    </Button>
                   </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-4 gap-4">
-                {selectedImages.length > 0 &&
-                  selectedImages.map((image, index) => (
-                    <div
-                      key={index}
-                      className="relative group border border-gray-200 rounded-lg overflow-hidden dark:border-gray-700"
-                    >
-                      <div className="aspect-square overflow-hidden rounded-lg">
-                        <img
-                          src={`${URL.createObjectURL(image)}`}
-                          alt={`Preview ${index + 1}`}
-                          width={300}
-                          height={300}
-                          className="object-cover w-full h-full"
-                        />
-                      </div>
-                      <Button
-                        variant="destructive"
-                        size="icon"
-                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={() => removeImage(index)}
-                        aria-label={`Remove image ${index + 1}`}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ))}
               </div>
             </CardContent>
           </Card>
@@ -185,14 +149,14 @@ function AddProduct() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label>Product Category</Label>
-                <Select>
+                <Select defaultValue="watch">
                   <SelectTrigger>
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="watch">Watch</SelectItem>
                     <SelectItem value="electronics">Electronics</SelectItem>
-                    <SelectItem value="clothing">Clothing</SelectItem>
-                    <SelectItem value="books">Books</SelectItem>
+                    <SelectItem value="accessories">Accessories</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -215,12 +179,15 @@ function AddProduct() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0">
               <CardTitle>Status</CardTitle>
-              <div className="text-sm font-medium text-muted-foreground">
-                Draft
-              </div>
+              <Badge
+                variant="secondary"
+                className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+              >
+                Published
+              </Badge>
             </CardHeader>
             <CardContent>
-              <Select>
+              <Select defaultValue="published">
                 <SelectTrigger>
                   <SelectValue placeholder="Select product status" />
                 </SelectTrigger>
@@ -237,5 +204,3 @@ function AddProduct() {
     </div>
   );
 }
-
-export default AddProduct;
