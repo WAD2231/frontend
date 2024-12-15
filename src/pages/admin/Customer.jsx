@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -8,10 +8,19 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Filter, Download, Eye, Pencil, Trash2, ChevronDown } from 'lucide-react'
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Filter,
+  Download,
+  Eye,
+  Pencil,
+  Trash2,
+  ChevronDown,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import routes from "@/config/routes";
 
 const customers = [
   {
@@ -22,7 +31,7 @@ const customers = [
     orders: "124",
     balance: "$121.00",
     status: "Blocked",
-    created: "29 Dec 2022"
+    created: "29 Dec 2022",
   },
   {
     id: 2,
@@ -32,7 +41,7 @@ const customers = [
     orders: "45",
     balance: "$590.00",
     status: "Active",
-    created: "24 Dec 2022"
+    created: "24 Dec 2022",
   },
   {
     id: 3,
@@ -42,7 +51,7 @@ const customers = [
     orders: "884",
     balance: "$125.00",
     status: "Blocked",
-    created: "12 Dec 2022"
+    created: "12 Dec 2022",
   },
   {
     id: 4,
@@ -52,7 +61,7 @@ const customers = [
     orders: "99",
     balance: "$348.00",
     status: "Blocked",
-    created: "21 Oct 2022"
+    created: "21 Oct 2022",
   },
   {
     id: 5,
@@ -62,7 +71,7 @@ const customers = [
     orders: "1,340",
     balance: "$607.00",
     status: "Active",
-    created: "21 Oct 2022"
+    created: "21 Oct 2022",
   },
   {
     id: 6,
@@ -72,7 +81,7 @@ const customers = [
     orders: "431",
     balance: "$234.00",
     status: "Active",
-    created: "21 Oct 2022"
+    created: "21 Oct 2022",
   },
   {
     id: 7,
@@ -82,7 +91,7 @@ const customers = [
     orders: "36",
     balance: "$760.00",
     status: "Blocked",
-    created: "19 Sep 2022"
+    created: "19 Sep 2022",
   },
   {
     id: 8,
@@ -92,7 +101,7 @@ const customers = [
     orders: "77",
     balance: "$400.00",
     status: "Active",
-    created: "19 Sep 2022"
+    created: "19 Sep 2022",
   },
   {
     id: 9,
@@ -102,7 +111,7 @@ const customers = [
     orders: "89",
     balance: "$812.00",
     status: "Active",
-    created: "19 Sep 2022"
+    created: "19 Sep 2022",
   },
   {
     id: 10,
@@ -112,9 +121,9 @@ const customers = [
     orders: "1,296",
     balance: "$723.00",
     status: "Active",
-    created: "10 Aug 2022"
-  }
-]
+    created: "10 Aug 2022",
+  },
+];
 
 export default function Customer() {
   return (
@@ -133,9 +142,7 @@ export default function Customer() {
             <Download className="h-4 w-4 mr-2" />
             Export
           </Button>
-          <Button>
-            + Add Customer
-          </Button>
+          <Button>+ Add Customer</Button>
         </div>
       </div>
 
@@ -211,7 +218,7 @@ export default function Customer() {
                 <TableCell>{customer.orders}</TableCell>
                 <TableCell>{customer.balance}</TableCell>
                 <TableCell>
-                  <Badge 
+                  <Badge
                     variant="outline"
                     className={
                       customer.status === "Active"
@@ -225,9 +232,11 @@ export default function Customer() {
                 <TableCell>{customer.created}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon">
-                      <Eye className="h-4 w-4" />
-                    </Button>
+                    <Link to={`${routes.customerDetail}/${customer.id}`}>
+                      <Button variant="ghost" size="icon">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </Link>
                     <Button variant="ghost" size="icon">
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -256,11 +265,21 @@ export default function Customer() {
             >
               1
             </Button>
-            <Button variant="outline" size="sm">2</Button>
-            <Button variant="outline" size="sm">3</Button>
-            <Button variant="outline" size="sm">4</Button>
-            <Button variant="outline" size="sm">5</Button>
-            <Button variant="outline" size="sm">...</Button>
+            <Button variant="outline" size="sm">
+              2
+            </Button>
+            <Button variant="outline" size="sm">
+              3
+            </Button>
+            <Button variant="outline" size="sm">
+              4
+            </Button>
+            <Button variant="outline" size="sm">
+              5
+            </Button>
+            <Button variant="outline" size="sm">
+              ...
+            </Button>
             <Button variant="outline" size="sm">
               Next
             </Button>
@@ -268,5 +287,5 @@ export default function Customer() {
         </div>
       </div>
     </div>
-  )
+  );
 }

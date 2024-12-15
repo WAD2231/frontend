@@ -6,6 +6,7 @@ const routes = {
   editProduct: `${ADMIN}/products/edit`,
   detailProduct: `${ADMIN}/products/detail`,
   customers: `${ADMIN}/customers`,
+  customerDetail: `${ADMIN}/customers/detail`,
   analytics: `${ADMIN}/analytics`,
   supports: `${ADMIN}/supports`,
   settings: `${ADMIN}/settings`,
