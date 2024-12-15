@@ -10,6 +10,7 @@ import Analytics from "@/pages/admin/Analytics";
 import Support from "@/pages/admin/Support";
 import Category from "@/pages/admin/Category";
 import Setting from "@/pages/admin/Setting";
+import DetailProduct from "@/pages/admin/Product/DetailProduct";
 
 //Private Routes (for Admin)
 
@@ -17,8 +18,8 @@ const privateRoutes = [
   { path: routes.dashboard, components: Dashboard },
   { path: routes.product, components: Product },
   { path: routes.addProduct, components: AddProduct },
-  { path: routes.editProduct, components: EditProduct },
-  { path: routes.editProduct, components: EditProduct },
+  { path: `${routes.editProduct}/:id`, components: EditProduct },
+  { path: `${routes.detailProduct}/:id`, components: DetailProduct },
   { path: routes.analytics, components: Analytics },
   { path: routes.customers, components: Customer },
   { path: routes.orders, components: Order },
