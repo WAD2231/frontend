@@ -11,6 +11,7 @@ const routes = {
   settings: `${ADMIN}/settings`,
   category: `${ADMIN}/category`,
   orders: `${ADMIN}/orders`,
+  orderDetail: `${ADMIN}/orders/detail`,
 };
 
 export default routes;

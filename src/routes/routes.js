@@ -11,6 +11,7 @@ import Support from "@/pages/admin/Support";
 import Category from "@/pages/admin/Category";
 import Setting from "@/pages/admin/Setting";
 import DetailProduct from "@/pages/admin/Product/DetailProduct";
+import OrderDetail from "@/pages/admin/OrderDetail";
 
 //Private Routes (for Admin)
 
@@ -23,6 +24,7 @@ const privateRoutes = [
   { path: routes.analytics, components: Analytics },
   { path: routes.customers, components: Customer },
   { path: routes.orders, components: Order },
+  { path: `${routes.orders}/:id`, components: OrderDetail },
   { path: routes.category, components: Category },
   { path: routes.supports, components: Support },
   { path: routes.settings, components: Setting },
