@@ -1,0 +1,402 @@
+import SideBar from "../components/SideBar";
+import slide_banner from "../assets/slide-banner.png";
+import icon_arrow from "../assets/icons_arrow-left.png";
+import icon_phone from "../assets/Category-CellPhone.png";
+import icon_cpt from "../assets/Category-Computer.png";
+import icon_sm from "../assets/Category-SmartWatch.png";
+import icon_cam from "../assets/Category-CellPhone.png";
+import icon_hp from "../assets/Category-Headphone.png";
+import icon_gam from "../assets/Category-Gamepad.png";
+import speaker_banner from "../assets/speaker-banner.png";
+import ps5 from "../assets/ps5-slim-goedkope-playstation_large 1.png";
+import women from "../assets/attractive-woman-wearing-hat-posing-black-background 1.png";
+import speaker from "../assets/speaker.png";
+import gucci from "../assets/gucci.png";
+import dt from "../assets/havit-pad.png";
+//speaker-banner.png;
+import Product from "../UI/Product";
+import Button from "../UI/Button";
+import icon_service1 from "../assets/icon-service-car.png";
+import icon_service2 from "../assets/icon-service-contact.png";
+import icon_service3 from "../assets/icon-service-security.png";
+import { useState } from "react";
+const Home = () => {
+  const items = ["", "", "", "", "", ""];
+  let cates = [
+    {
+      image: icon_phone,
+      text: "Phones",
+    },
+    {
+      image: icon_cpt,
+      text: "Coputers",
+    },
+    {
+      image: icon_sm,
+      text: "SmartWatch",
+    },
+    {
+      image: icon_phone,
+      text: "Camera",
+    },
+    {
+      image: icon_hp,
+      text: "Headphones",
+    },
+    {
+      image: icon_gam,
+      text: "Gaming",
+    },
+  ];
+
+  const allProducts = [
+    {
+      name: "HAVIT HV-G92 Gamepad",
+      salePrice: 120,
+      originalPrice: 160,
+      discount: 40,
+      rating: 5,
+      reviews: 88,
+      image: dt,
+    },
+    {
+      name: "AK-900 Wired Keyboard",
+      salePrice: 960,
+      originalPrice: 1160,
+      discount: 35,
+      rating: 4,
+      reviews: 75,
+      image: dt,
+    },
+    {
+      name: "IPS LCD Gaming Monitor",
+      salePrice: 370,
+      originalPrice: 400,
+      discount: 30,
+      rating: 5,
+      reviews: 99,
+      image: dt,
+    },
+    {
+      name: "S-Series Comfort Chair",
+      salePrice: 375,
+      originalPrice: 400,
+      discount: 25,
+      rating: 4,
+      reviews: 98,
+      image: dt,
+    },
+    {
+      name: "S-Series Comfort Chair 2",
+      salePrice: 375,
+      originalPrice: 400,
+      discount: 25,
+      rating: 4,
+      reviews: 98,
+      image: dt,
+    },
+  ];
+  const [startIndex, setStartIndex] = useState(0);
+  const itemsToShow = 4; // Số sản phẩm hiển thị cùng lúc
+
+  const handlePrevious = () => {
+    setStartIndex((prevIndex) => Math.max(0, prevIndex - 1));
+  };
+
+  const handleNext = () => {
+    setStartIndex((prevIndex) =>
+      Math.min(allProducts.length - itemsToShow, prevIndex + 1)
+    );
+  };
+
+  const currentProducts = allProducts.slice(
+    startIndex,
+    startIndex + itemsToShow
+  );
+  const canGoPrevious = startIndex > 0;
+  const canGoNext = startIndex + itemsToShow < allProducts.length;
+  return (
+    <div>
+      <div className='container mx-auto flex'>
+        <SideBar />
+        <div className='p-16 flex-1'>
+          <img src={slide_banner} alt='s' className='w-full' />
+        </div>
+      </div>
+      <div className='container mx-auto'>
+        <p className='flex items-center gap-3 mb-4'>
+          <div className='bg-[#DB4444] w-[20px] h-[40px] rounded'></div>
+          <span className='text-[#DB4444] font-semibold'>{"Today's"}</span>
+        </p>
+        <div className='flex items-center justify-between'>
+          <div className='flex gap-20 items-end'>
+            <p className='text-4xl font-semibold leading-none'>Flash Sales</p>
+            <div className='flex items-end gap-4'>
+              <span className='flex flex-col'>
+                <p className='text-[12px] font-medium leading-none'>Days</p>
+                <p className='text-[32px] font-semibold leading-none'>03</p>
+              </span>
+              <span className='text-[#DB4444] text-3xl'>:</span>
+              <span className='flex flex-col'>
+                <p className='text-[12px] font-medium leading-none'>Hours</p>
+                <p className='text-[32px] font-semibold leading-none'>23</p>
+              </span>
+              <span className='text-[#DB4444] text-3xl'>:</span>
+              <span className='flex flex-col'>
+                <p className='text-[12px] font-medium leading-none'>Minutes</p>
+                <p className='text-[32px] font-semibold leading-none'>19</p>
+              </span>
+              <span className='text-[#DB4444] text-3xl'>:</span>
+              <span className='flex flex-col'>
+                <p className='text-[12px] font-medium leading-none'>Seconds</p>
+                <p className='text-[32px] font-semibold leading-none'>56</p>
+              </span>
+            </div>
+          </div>
+          <div>
+            <button
+              className='bg-[#e9e9e9] rounded-full p-2'
+              onClick={handlePrevious}
+              disabled={!canGoPrevious}>
+              <img src={icon_arrow} alt='hoang an com voi vo' />
+            </button>
+            <button
+              onClick={handleNext}
+              disabled={!canGoNext}
+              className='bg-[#e9e9e9] ml-4 rounded-full p-2'>
+              <img
+                className='rotate-180'
+                src={icon_arrow}
+                alt='hoang an com voi vo'
+              />
+            </button>
+          </div>
+        </div>
+        <ul className='grid grid-cols-1 md:grid-cols-4 gap-6'>
+          {allProducts.map((item, index) => {
+            return (
+              <li key={index + startIndex}>
+                <Product {...item} />
+              </li>
+            );
+          })}
+        </ul>
+        <div className='text-center mt-20 mb-16'>
+          <Button isPrimary={true}>View All Products</Button>
+        </div>
+        <hr />
+
+        <p className='flex items-center gap-3 mb-4 mt-10'>
+          <div className='bg-[#DB4444] w-[20px] h-[40px] rounded'></div>
+          <span className='text-[#DB4444] font-semibold'>{"Categories"}</span>
+        </p>
+        <div className='flex items-center justify-between'>
+          <div className='flex gap-20 items-end'>
+            <p className='text-4xl font-semibold leading-none'>
+              Browse By Category
+            </p>
+          </div>
+          <div>
+            <button className='bg-[#e9e9e9] rounded-full p-2'>
+              <img src={icon_arrow} alt='hoang an com voi vo' />
+            </button>
+            <button className='bg-[#e9e9e9] ml-4 rounded-full p-2'>
+              <img
+                className='rotate-180'
+                src={icon_arrow}
+                alt='hoang an com voi vo'
+              />
+            </button>
+          </div>
+        </div>
+        <div className='my-8'>
+          <ul className='flex justify-between'>
+            {cates.map((item, index) => {
+              return (
+                <li
+                  key={index}
+                  className='hover:bg-[#DB4444] flex flex-col items-center justify-center cursor-pointer duration-300 border-[2px] rounded-md py-8 w-[180px]'>
+                  <img src={item.image} />
+                  <p>{item.text}</p>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+        <hr />
+
+        <p className='flex items-center gap-3 mb-4 mt-10'>
+          <div className='bg-[#DB4444] w-[20px] h-[40px] rounded'></div>
+          <span className='text-[#DB4444] font-semibold'>{"This month"}</span>
+        </p>
+        <div className='flex items-center justify-between'>
+          <p className='text-4xl font-semibold leading-none'>
+            Best Selling Products
+          </p>
+          <Button isPrimary={true}>View All</Button>
+        </div>
+        <ul className='grid grid-cols-4 gap-5 mt-10 justify-between'>
+          {items.map((item, index) => {
+            if (index > 3) return;
+            return (
+              <li key={index}>
+                <Product />
+              </li>
+            );
+          })}
+        </ul>
+        <div className='px-20 py-10 flex mt-10 bg-black items-center justify-between'>
+          <div>
+            <p className='text-[#00FF66] font-medium'>Categories</p>
+            <p className='text-white text-[60px]'>
+              Enhance Your Music Experience
+            </p>
+            <div className='flex gap-4'>
+              <span className='flex items-center flex-col justify-center bg-white w-[60px] h-[60px] rounded-full'>
+                <p className='font-semibold text-lg leading-none'>23</p>
+                <p className='leading-none text-sm'>Hours</p>
+              </span>
+              <span className='flex items-center flex-col justify-center bg-white w-[60px] h-[60px] rounded-full'>
+                <p className='font-semibold text-lg leading-none'>23</p>
+                <p className='leading-none text-sm'>Hours</p>
+              </span>
+              <span className='flex items-center flex-col justify-center bg-white w-[60px] h-[60px] rounded-full'>
+                <p className='font-semibold text-lg leading-none'>23</p>
+                <p className='leading-none text-sm'>Hours</p>
+              </span>
+              <span className='flex items-center flex-col justify-center bg-white w-[60px] h-[60px] rounded-full'>
+                <p className='font-semibold text-lg leading-none'>23</p>
+                <p className='leading-none text-sm'>Hours</p>
+              </span>
+            </div>
+            <button className='bg-[#00FF66] hover:bg-opacity-85 duration-300 mt-8 text-white rounded-md px-10 py-4'>
+              Buy Now!
+            </button>
+          </div>
+          <div className=''>
+            <img src={speaker_banner} className='w-full' alt='' />
+          </div>
+        </div>
+
+        <p className='flex items-center gap-3 mb-4 mt-10'>
+          <div className='bg-[#DB4444] w-[20px] h-[40px] rounded'></div>
+          <span className='text-[#DB4444] font-semibold'>{"Our Products"}</span>
+        </p>
+        <div className='flex items-center justify-between'>
+          <p className='text-4xl font-semibold leading-none'>
+            Explore Our Products
+          </p>
+          <div>
+            <button className='bg-[#e9e9e9] rounded-full p-2'>
+              <img src={icon_arrow} alt='hoang an com voi vo' />
+            </button>
+            <button className='bg-[#e9e9e9] ml-4 rounded-full p-2'>
+              <img
+                className='rotate-180'
+                src={icon_arrow}
+                alt='hoang an com voi vo'
+              />
+            </button>
+          </div>
+        </div>
+        <ul className='grid grid-cols-4 gap-5 mt-10 justify-between justify-items-center'>
+          {items.map((item, index) => {
+            if (index > 3) return;
+            return (
+              <li key={index}>
+                <Product />
+              </li>
+            );
+          })}
+        </ul>
+        <ul className='grid grid-cols-4 gap-5 mt-10 justify-items-center'>
+          {items.map((item, index) => {
+            if (index > 3) return;
+            return (
+              <li key={index}>
+                <Product />
+              </li>
+            );
+          })}
+        </ul>
+        <div className='text-center mt-20 mb-16'>
+          <Button isPrimary={true}>View All Products</Button>
+        </div>
+
+        <p className='flex items-center gap-3 mb-4 mt-10'>
+          <div className='bg-[#DB4444] w-[20px] h-[40px] rounded'></div>
+          <span className='text-[#DB4444] font-semibold'>{"Our Products"}</span>
+        </p>
+        <div className='flex items-center justify-between'>
+          <p className='text-4xl font-semibold leading-none'>New Arrival</p>
+        </div>
+        <div className='flex gap-5'>
+          <div className='bg-black flex-1 relative rounded flex items-end justify-center pt-5'>
+            <img src={ps5} alt='ps5' />
+            <div className='absolute bottom-5 left-5 text-white'>
+              <h1 className='font-semibold text-2xl'>PlayStation 5</h1>
+              <p className='text-sm my-3 font-normal'>
+                Black and White version of the PS5 coming out on sale.
+              </p>
+              <button className='font-medium underline'>Shop Now</button>
+            </div>
+          </div>
+          <div className='flex flex-1 flex-col gap-5'>
+            <div className='bg-black flex-1 relative rounded flex items-end justify-end pt-5'>
+              <img src={women} alt='ps5' />
+              <div className='absolute bottom-5 left-5 text-white'>
+                <h1 className='font-semibold text-2xl'>Women’s Collections</h1>
+                <p className='text-sm my-3 font-normal'>
+                  Featured woman collections that give you another vibe.
+                </p>
+                <button className='font-medium underline'>Shop Now</button>
+              </div>
+            </div>
+            <div className='flex w-full gap-5'>
+              <div className='bg-black flex-1 relative rounded flex items-center justify-center pt-5'>
+                <img src={speaker} alt='ps5' />
+                <div className='absolute bottom-5 left-5 text-white'>
+                  <h1 className='font-semibold text-2xl'>Speakers</h1>
+                  <p className='text-sm my-3 font-normal'>
+                    Amazon wireless speakers
+                  </p>
+                  <button className='font-medium underline'>Shop Now</button>
+                </div>
+              </div>
+              <div className='bg-black flex-1 relative rounded flex items-center justify-center pt-5'>
+                <img src={gucci} alt='ps5' />
+                <div className='absolute bottom-5 left-5 text-white'>
+                  <h1 className='font-semibold text-2xl'>Perfume</h1>
+                  <p className='text-sm my-3 font-normal'>
+                    GUCCI INTENSE OUD EDP
+                  </p>
+                  <button className='font-medium underline'>Shop Now</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className='flex mt-14 items-center  mb-10 justify-evenly'>
+          <div className='flex flex-col items-center gap-2'>
+            <img src={icon_service1} />
+            <h3 className='text-xl font-semibold'>FREE AND FAST DELIVERY</h3>
+            <p>Free delivery for all orders over $140</p>
+          </div>
+          <div className='flex flex-col items-center gap-2'>
+            <img src={icon_service2} />
+            <h3 className='text-xl font-semibold'>24/7 CUSTOMER SERVICE</h3>
+            <p>Friendly 24/7 customer support0</p>
+          </div>
+          <div className='flex flex-col items-center gap-2'>
+            <img src={icon_service3} />
+            <h3 className='text-xl font-semibold'>MONEY BACK GUARANTEE</h3>
+            <p>We reurn money within 30 days</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Home;
