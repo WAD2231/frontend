@@ -14,6 +14,19 @@ import DetailProduct from "@/pages/admin/Product/DetailProduct";
 import OrderDetail from "@/pages/admin/OrderDetail";
 import CustomerDetail from "@/pages/admin/CustomerDetail";
 
+// Client Pages
+import Home from "@/pages/Home";
+import Wishlist from "@/pages/Wishlist";
+import Cart from "@/pages/Cart";
+import ProductDetail from "@/pages/ProductDetail";
+import Contact from "@/pages/Contact";
+import About from "@/pages/About";
+import Register from "@/pages/Register";
+import Account from "@/pages/Account";
+import Checkout from "@/pages/Checkout";
+import Notfound from "@/pages/Notfound";
+import Login from "@/pages/Login";
+
 //Private Routes (for Admin)
 
 const privateRoutes = [
@@ -33,6 +46,18 @@ const privateRoutes = [
 ];
 
 //Private Routes (for User)
-const publicRoutes = [];
+const publicRoutes = [
+  { path: routes.home, components: Home },
+  { path: routes.wishlist, components: Wishlist },
+  { path: routes.cart, components: Cart },
+  { path: routes.productDetail, components: ProductDetail },
+  { path: routes.contact, components: Contact },
+  { path: routes.about, components: About },
+  { path: routes.signUp, components: Register },
+  { path: routes.myAccount, components: Account },
+  { path: routes.checkout, components: Checkout },
+  { path: routes.login, components: Login },
+  { path: routes.notFound, components: Notfound },
+];
 
 export { publicRoutes, privateRoutes };

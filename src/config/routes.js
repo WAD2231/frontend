@@ -13,6 +13,20 @@ const routes = {
   category: `${ADMIN}/category`,
   orders: `${ADMIN}/orders`,
   orderDetail: `${ADMIN}/orders/detail`,
+  
+  // Client routes
+  home: "/",
+  wishlist: "/wishlist",
+  cart: "/cart",
+  productDetail: "/product-detail",
+  contact: "/contact",
+  about: "/about",
+  signUp: "/sign-up",
+  myAccount: "/my-account",
+  checkout: "/checkout",
+  login: "/login",
+  notFound: "*"
 };
+
 
 export default routes;
