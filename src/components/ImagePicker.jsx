@@ -5,7 +5,6 @@ import { X, ImageIcon } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { useCallback, useState } from "react";
 
-// eslint-disable-next-line react/prop-types
 function ImagePicker({ title, imageName, multiple = false }) {
   const [selectedImages, setSelectedImages] = useState([]);
 

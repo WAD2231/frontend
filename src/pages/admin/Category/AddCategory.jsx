@@ -45,10 +45,8 @@ const categories = [
   },
 ];
 
-// eslint-disable-next-line react/prop-types
 const SelectCategory = ({ categories }) => {
   const renderCategories = (categories, prefix = "") => {
-    // eslint-disable-next-line react/prop-types
     return categories.map((category) => {
       const displayName = `${prefix}${category.name}`;
       return (

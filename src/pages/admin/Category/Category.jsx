@@ -147,7 +147,6 @@ const categories = [
   },
 ];
 
-// eslint-disable-next-line react/prop-types
 const CategoryRow = ({ category, level }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -162,7 +161,6 @@ const CategoryRow = ({ category, level }) => {
             className="flex items-center gap-3"
             style={{ paddingLeft: `${level * 24}px` }}
           >
-            {/* eslint-disable-next-line react/prop-types */}
             {category?.children && (
               <Button
                 variant="ghost"
@@ -177,24 +175,18 @@ const CategoryRow = ({ category, level }) => {
                 )}
               </Button>
             )}
-             {/* eslint-disable-next-line react/prop-types */}
             {!category?.children && <div className="w-4" />}
             <div className="w-8 h-8 bg-muted rounded-lg shrink-0" />
             <div>
-               {/* eslint-disable-next-line react/prop-types */}
               <div className="font-medium">{category.name}</div>
               <div className="text-sm text-muted-foreground">
-                 {/* eslint-disable-next-line react/prop-types */}
                 {category.description}
               </div>
             </div>
           </div>
         </TableCell>
-         {/* eslint-disable-next-line react/prop-types */}
         <TableCell>{category.sales.toLocaleString()}</TableCell>
-         {/* eslint-disable-next-line react/prop-types */}
         <TableCell>{category.stock.toLocaleString()}</TableCell>
-         {/* eslint-disable-next-line react/prop-types */}
         <TableCell>{category.added}</TableCell>
         <TableCell>
           <div className="flex items-center gap-2">
@@ -211,9 +203,7 @@ const CategoryRow = ({ category, level }) => {
         </TableCell>
       </TableRow>
       {isExpanded &&
-      //  eslint-disable-next-line react/prop-types
         category?.children && 
-        //  eslint-disable-next-line react/prop-types
         category?.children.map((child) => (
           <CategoryRow key={child.id} category={child} level={level + 1} />
         ))}
