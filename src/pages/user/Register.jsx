@@ -1,7 +1,6 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import anh from "../assets/image-form.png";
-import { useDarkMode } from "../UI/DarkModeContext";
+import anh from "@/assets/image-form.png";
+import { useDarkMode } from "@/components/DarkModeContext";
 
 const Register = () => {
   const { darkMode } = useDarkMode();

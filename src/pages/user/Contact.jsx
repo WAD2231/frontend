@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Phone, Mail } from "lucide-react";
-import { useDarkMode } from "../UI/DarkModeContext";
+import { useDarkMode } from "@/components/DarkModeContext";
 
 const Contact = () => {
   const { darkMode } = useDarkMode();

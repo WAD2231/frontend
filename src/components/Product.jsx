@@ -1,8 +1,7 @@
-import React from "react";
-import star_full from "../assets/icon-star-full.png";
-import havit_pad from "../assets/havit-pad.png";
-import icon_heart from "../assets/icon-heart.png";
-import icon_eye from "../assets/icon-eye.png";
+import star_full from "@/assets/icon-star-full.png";
+import havit_pad from "@/assets/havit-pad.png";
+import icon_heart from "@/assets/icon-heart.png";
+import icon_eye from "@/assets/icon-eye.png";
 import { Link } from "react-router-dom";
 
 const Product = ({ name, price, discount, image, isNew, ...props }) => {

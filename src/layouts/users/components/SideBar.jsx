@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import icon_arrow from "../assets/icon-arrow.png";
+import { useState, useEffect } from "react";
 
 const SideBar = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -53,10 +52,10 @@ const SideBar = () => {
     <div className="flex translate-y-[-50px] gap-8">
       <ul className='flex flex-col gap-5 w-[15%] pt-10 pr-5 border-r-[1px]'>
         <li className='flex gap-7 justify-between'>
-          <span className='hover:underline cursor-pointer'>Woman's Fashion</span>{" "}
+          <span className='hover:underline cursor-pointer'>Woman&#39;s Fashion</span>{" "}
         </li>
         <li className='flex gap-7 justify-between'>
-          <span className='hover:underline cursor-pointer'>Men's Fashion</span>{" "}
+          <span className='hover:underline cursor-pointer'>Men&#39;s Fashion</span>{" "}
         </li>
         <li>
           <span className='hover:underline cursor-pointer'>Electronics</span>
@@ -71,7 +70,7 @@ const SideBar = () => {
           <span className='hover:underline cursor-pointer'>Sports & Outdoor</span>
         </li>
         <li>
-          <span className='hover:underline cursor-pointer'>Baby's & Toys</span>
+          <span className='hover:underline cursor-pointer'>Baby&rsquo;s & Toys</span>
         </li>
         <li>
           <span className='hover:underline cursor-pointer'>Groceries & Pets</span>

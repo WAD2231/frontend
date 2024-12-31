@@ -3,9 +3,7 @@ import AdminLayout from "./layouts/admin/AdminLayout";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { privateRoutes, publicRoutes } from "@/routes/routes";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import { DarkModeProvider } from './UI/DarkModeContext';
+import UserLayout from "./layouts/users/UserLayout";
 
 function App() {
   return (
@@ -32,29 +30,21 @@ function App() {
               />
             );
           })}
-          <Route
-            path="*"
-            element={
-              <DarkModeProvider>
-                <Header />
-                <div className="App">
-                  <Routes>
-                    {publicRoutes.map((route, index) => {
-                      const Page = route.components;
-                      return (
-                        <Route
-                          key={index}
-                          path={route.path}
-                          element={<Page />}
-                        />
-                      );
-                    })}
-                  </Routes>
-                </div>
-                <Footer />
-              </DarkModeProvider>
-            }
-          />
+          {publicRoutes.map((route, index) => {
+            const Page = route.components;
+            let Layout = UserLayout;
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={
+                  <Layout>
+                    <Page />
+                  </Layout>
+                }
+              />
+            );
+          })}
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

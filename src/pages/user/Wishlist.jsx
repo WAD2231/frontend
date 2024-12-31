@@ -1,15 +1,14 @@
-import React from "react";
-import { useDarkMode } from "../UI/DarkModeContext";
-import Button from "../UI/Button";
-import bag from "../assets/product-images/bag.png";
-import cpu from "../assets/product-images/cpu.png";
-import gamepad1 from "../assets/product-images/gamepad.png";
-import jacket from "../assets/product-images/jacket.png";
-import laptop from "../assets/product-images/laptop.png";
-import screen from "../assets/product-images/screen.png";
-import gamepad2 from "../assets/product-images/gamepad2.png";
-import keyboard from "../assets/product-images/keyboard.png";
-import Product from "../UI/Product";
+import { useDarkMode } from "@/components/DarkModeContext";
+import Button from "@/components/Button";
+import bag from "@/assets/product-images/bag.png";
+import cpu from "@/assets/product-images/cpu.png";
+import gamepad1 from "@/assets/product-images/gamepad.png";
+import jacket from "@/assets/product-images/jacket.png";
+import laptop from "@/assets/product-images/laptop.png";
+import screen from "@/assets/product-images/screen.png";
+import gamepad2 from "@/assets/product-images/gamepad2.png";
+import keyboard from "@/assets/product-images/keyboard.png";
+import Product from "@/components/Product";
 
 const wishlist = [
  {

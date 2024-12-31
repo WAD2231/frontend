@@ -1,26 +1,24 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Heart, Eye, ChevronLeft, ChevronRight } from "lucide-react";
-import dt from "../assets/havit-pad.png";
-import Product from "../UI/Product";
-import SideBar from "../components/SideBar";
-import slide_banner from "../assets/slide-banner.png";
-import icon_arrow from "../assets/icons_arrow-left.png";
-import icon_phone from "../assets/Category-CellPhone.png";
-import icon_cpt from "../assets/Category-Computer.png";
-import icon_sm from "../assets/Category-SmartWatch.png";
-import icon_cam from "../assets/Category-CellPhone.png";
-import icon_hp from "../assets/Category-Headphone.png";
-import icon_gam from "../assets/Category-Gamepad.png";
-import speaker_banner from "../assets/speaker-banner.png";
-import ps5 from "../assets/ps5-slim-goedkope-playstation_large 1.png";
-import women from "../assets/attractive-woman-wearing-hat-posing-black-background 1.png";
-import speaker from "../assets/speaker.png";
-import gucci from "../assets/gucci.png";
-import Button from "../UI/Button";
-import icon_service1 from "../assets/icon-service-car.png";
-import icon_service2 from "../assets/icon-service-contact.png";
-import icon_service3 from "../assets/icon-service-security.png";
-import { useDarkMode } from "../UI/DarkModeContext";
+import dt from "@/assets/havit-pad.png";
+import Product from "@/components/Product";
+import SideBar from "@/layouts/users/components/SideBar";
+import icon_arrow from "@/assets/icons_arrow-left.png";
+import icon_phone from "@/assets/Category-CellPhone.png";
+import icon_cpt from "@/assets/Category-Computer.png";
+import icon_sm from "@/assets/Category-SmartWatch.png";
+import icon_hp from "@/assets/Category-Headphone.png";
+import icon_gam from "@/assets/Category-Gamepad.png";
+import speaker_banner from "@/assets/speaker-banner.png";
+import ps5 from "@/assets/ps5-slim-goedkope-playstation_large 1.png";
+import women from "@/assets/attractive-woman-wearing-hat-posing-black-background 1.png";
+import speaker from "@/assets/speaker.png";
+import gucci from "@/assets/gucci.png";
+import Button from "@/components/Button";
+import icon_service1 from "@/assets/icon-service-car.png";
+import icon_service2 from "@/assets/icon-service-contact.png";
+import icon_service3 from "@/assets/icon-service-security.png";
+import { useDarkMode } from "@/components/DarkModeContext";
 
 
 

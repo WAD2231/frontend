@@ -1,6 +1,5 @@
-import React from "react";
-import qr from "../assets/qr.png";
-import { useDarkMode } from "../UI/DarkModeContext";
+import qr from "@/assets/qr.png";
+import { useDarkMode } from "@/components/DarkModeContext";
 
 const Footer = () => {
   const { darkMode } = useDarkMode();

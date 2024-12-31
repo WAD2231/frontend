@@ -1,20 +1,19 @@
-import React from "react";
-import { useDarkMode } from "../UI/DarkModeContext";
-import detail1 from "../assets/product-detail/detail1.png";
-import detail2 from "../assets/product-detail/detail2.png"; 
-import detail3 from "../assets/product-detail/detail3.png";
-import detail4 from "../assets/product-detail/detail4.png";
-import maind from "../assets/product-detail/detail-main.png";
-import star_full from "../assets/icon-star-full.png";
-import car from "../assets/product-detail/icon-delivery.png";
-import ireturn from "../assets/product-detail/Icon-return.png";
-import heart from "../assets/icon-heart.png";
-import laptop from "../assets/product-images/laptop.png";
-import screen from "../assets/product-images/screen.png";
-import gamepad2 from "../assets/product-images/gamepad2.png";
-import keyboard from "../assets/product-images/keyboard.png";
-import Product from "../UI/Product";
-import Button from "../UI/Button";
+import { useDarkMode } from "@/components/DarkModeContext";
+import detail1 from "@/assets/product-detail/detail1.png";
+import detail2 from "@/assets/product-detail/detail2.png"; 
+import detail3 from "@/assets/product-detail/detail3.png";
+import detail4 from "@/assets/product-detail/detail4.png";
+import maind from "@/assets/product-detail/detail-main.png";
+import star_full from "@/assets/icon-star-full.png";
+import car from "@/assets/product-detail/icon-delivery.png";
+import ireturn from "@/assets/product-detail/Icon-return.png";
+import heart from "@/assets/icon-heart.png";
+import laptop from "@/assets/product-images/laptop.png";
+import screen from "@/assets/product-images/screen.png";
+import gamepad2 from "@/assets/product-images/gamepad2.png";
+import keyboard from "@/assets/product-images/keyboard.png";
+import Product from "@/components/Product";
+import Button from "@/components/Button";
 
 const just = [
  {

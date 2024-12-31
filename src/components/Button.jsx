@@ -1,5 +1,3 @@
-import React from "react";
-
 const Button = ({ onClick, isLink, isPrimary, link, children, ...props }) => {
   return (
     <button

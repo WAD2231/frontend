@@ -1,9 +1,8 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import { useDarkMode } from "../UI/DarkModeContext";
-import screen from "../assets/product-images/screen.png";
-import gamepad from "../assets/product-images/gamepad2.png";
-import Button from "../UI/Button";
+import { useDarkMode } from "@/components/DarkModeContext";
+import screen from "@/assets/product-images/screen.png";
+import gamepad from "@/assets/product-images/gamepad2.png";
+import Button from "@/components/Button";
 
 const list = [
  {

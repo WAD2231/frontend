@@ -1,8 +1,8 @@
-import icon_search from "../assets/icon-search.png";
-import icon_cart from "../assets/icon-cart.png";
-import icon_heart from "../assets/icon-heart.png";
+import icon_search from "@/assets/icon-search.png";
+import icon_cart from "@/assets/icon-cart.png";
+import icon_heart from "@/assets/icon-heart.png";
 import { Link } from "react-router-dom";
-import { useDarkMode } from "../UI/DarkModeContext";
+import { useDarkMode } from "@/components/DarkModeContext";
 
 const Header = () => {
   const { darkMode, toggleDarkMode } = useDarkMode();

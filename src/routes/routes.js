@@ -15,17 +15,17 @@ import OrderDetail from "@/pages/admin/OrderDetail";
 import CustomerDetail from "@/pages/admin/CustomerDetail";
 
 // Client Pages
-import Home from "@/pages/Home";
-import Wishlist from "@/pages/Wishlist";
-import Cart from "@/pages/Cart";
-import ProductDetail from "@/pages/ProductDetail";
-import Contact from "@/pages/Contact";
-import About from "@/pages/About";
-import Register from "@/pages/Register";
-import Account from "@/pages/Account";
-import Checkout from "@/pages/Checkout";
-import Notfound from "@/pages/Notfound";
-import Login from "@/pages/Login";
+import Home from "@/pages/user/Home";
+import Wishlist from "@/pages/user/Wishlist";
+import Cart from "@/pages/user/Cart";
+import ProductDetail from "@/pages/user/ProductDetail";
+import Contact from "@/pages/user/Contact";
+import About from "@/pages/user/About";
+import Register from "@/pages/user/Register";
+import Account from "@/pages/user/Account";
+import Checkout from "@/pages/user/Checkout";
+import Notfound from "@/pages/user/Notfound";
+import Login from "@/pages/user/Login";
 
 //Private Routes (for Admin)
 

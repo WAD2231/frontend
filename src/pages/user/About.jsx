@@ -1,9 +1,9 @@
 import React from "react";
-import { useDarkMode } from "../UI/DarkModeContext";
-import banner from "../assets/about/Side Image.png";
-import c1 from "../assets/about/Frame 874.png";
-import c2 from "../assets/about/Frame 875.png";
-import c3 from "../assets/about/Frame 876.png";
+import { useDarkMode } from "@/components/DarkModeContext";
+import banner from "@/assets/about/Side Image.png";
+import c1 from "@/assets/about/Frame 874.png";
+import c2 from "@/assets/about/Frame 875.png";
+import c3 from "@/assets/about/Frame 876.png";
 
 import { ShoppingBag, Headphones, Shield } from "lucide-react";
 

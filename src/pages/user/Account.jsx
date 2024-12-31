@@ -1,5 +1,3 @@
-import React from "react";
-
 const Account = () => {
   return (
     <div className='min-h-screen bg-white p-6'>
