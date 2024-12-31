@@ -4,15 +4,16 @@ import Dashboard from "@/pages/admin/Dashboard";
 import Product from "@/pages/admin/Product/Product";
 import AddProduct from "@/pages/admin/Product/AddProduct";
 import EditProduct from "@/pages/admin/Product/EditProduct";
-import Customer from "@/pages/admin/Customer";
-import Order from "@/pages/admin/Order";
+import Customer from "@/pages/admin/Customer/Customer";
+import Order from "@/pages/admin/Order/Order";
 import Analytics from "@/pages/admin/Analytics";
 import Support from "@/pages/admin/Support";
-import Category from "@/pages/admin/Category";
+import Category from "@/pages/admin/Category/Category";
+import AddCategory from "@/pages/admin/Category/AddCategory";
 import Setting from "@/pages/admin/Setting";
 import DetailProduct from "@/pages/admin/Product/DetailProduct";
-import OrderDetail from "@/pages/admin/OrderDetail";
-import CustomerDetail from "@/pages/admin/CustomerDetail";
+import OrderDetail from "@/pages/admin/Order/OrderDetail";
+import CustomerDetail from "@/pages/admin/Customer/CustomerDetail";
 
 // Client Pages
 import Home from "@/pages/user/Home";
@@ -40,6 +41,7 @@ const privateRoutes = [
   { path: `${routes.customerDetail}/:id`, components: CustomerDetail },
   { path: routes.orders, components: Order },
   { path: `${routes.orders}/:id`, components: OrderDetail },
+  { path: routes.addCategory, components: AddCategory },
   { path: routes.category, components: Category },
   { path: routes.supports, components: Support },
   { path: routes.settings, components: Setting },

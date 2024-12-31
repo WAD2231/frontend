@@ -11,6 +11,7 @@ const routes = {
   supports: `${ADMIN}/supports`,
   settings: `${ADMIN}/settings`,
   category: `${ADMIN}/category`,
+  addCategory: `${ADMIN}/category/add`,
   orders: `${ADMIN}/orders`,
   orderDetail: `${ADMIN}/orders/detail`,
   
