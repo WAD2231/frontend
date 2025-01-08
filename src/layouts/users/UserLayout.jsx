@@ -1,11 +1,11 @@
 import { DarkModeProvider } from "@/components/DarkModeContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-// eslint-disable-next-line react/prop-types
-function UserLayout({ children }) {
+
+function UserLayout({user, children }) {
   return (
     <DarkModeProvider>
-      <Header />
+      <Header user={user}/>
       <div className="App">{children}</div>
       <Footer />
     </DarkModeProvider>

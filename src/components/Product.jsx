@@ -11,8 +11,8 @@ const Product = ({ name, price, discount, image, isNew, ...props }) => {
 
   for (let i = 0; i < 5; i++) {
     listItems.push(
-      <span>
-        <img src={star_full} />
+      <span key={i}>
+        <img src={star_full} alt="star" />
       </span>
     );
   }

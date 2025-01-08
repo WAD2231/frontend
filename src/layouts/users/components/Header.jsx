@@ -4,11 +4,14 @@ import icon_heart from "@/assets/icon-heart.png";
 import { Link } from "react-router-dom";
 import { useDarkMode } from "@/components/DarkModeContext";
 
-const Header = () => {
+const Header = ({ user }) => {
   const { darkMode, toggleDarkMode } = useDarkMode();
-
+  console.log(user);
+  
   return (
-    <header className={darkMode ? "bg-gray-900 text-white" : "bg-white text-black"}>
+    <header
+      className={darkMode ? "bg-gray-900 text-white" : "bg-white text-black"}
+    >
       <div className={darkMode ? "bg-gray-800" : "bg-[#000]"}>
         <div className="container mx-auto py-3 relative text-right">
           <select className="bg-transparent outline-none text-sm text-white">
@@ -27,16 +30,28 @@ const Header = () => {
             <Link to="/">Exclusive</Link>
           </div>
           <div className="hidden md:flex text-lg font-medium space-x-8">
-            <Link to="/" className="hover:underline transition-all duration-300">
+            <Link
+              to="/"
+              className="hover:underline transition-all duration-300"
+            >
               Home
             </Link>
-            <Link to="/contact" className="hover:underline transition-all duration-300">
+            <Link
+              to="/contact"
+              className="hover:underline transition-all duration-300"
+            >
               Contact
             </Link>
-            <Link to="/about" className="hover:underline transition-all duration-300">
+            <Link
+              to="/about"
+              className="hover:underline transition-all duration-300"
+            >
               About
             </Link>
-            <Link to="/sign-up" className="hover:underline transition-all duration-300">
+            <Link
+              to="/sign-up"
+              className="hover:underline transition-all duration-300"
+            >
               Sign Up
             </Link>
             <div className="relative group">
@@ -61,11 +76,17 @@ const Header = () => {
           </div>
           <div className="hidden md:flex gap-6 items-center">
             {/* Search Bar */}
-            <div className={`gap-4 px-5 py-1 flex items-center rounded ${darkMode ? 'bg-gray-700' : 'bg-[#F5F5F5]'
-              }`}>
+            <div
+              className={`gap-4 px-5 py-1 flex items-center rounded ${
+                darkMode ? "bg-gray-700" : "bg-[#F5F5F5]"
+              }`}
+            >
               <input
-                className={`w-full py-2 rounded-md bg-transparent outline-none ${darkMode ? 'placeholder-gray-400 text-white' : 'placeholder-gray-500'
-                  }`}
+                className={`w-full py-2 rounded-md bg-transparent outline-none ${
+                  darkMode
+                    ? "placeholder-gray-400 text-white"
+                    : "placeholder-gray-500"
+                }`}
                 type="text"
                 placeholder="What are you looking for?"
               />
@@ -74,27 +95,36 @@ const Header = () => {
               </button>
             </div>
             <Link to="/wishlist">
-              <button className={`text-2xl rounded-md ${darkMode ? 'text-white' : 'text-black'
-                }`}>
+              <button
+                className={`text-2xl rounded-md ${
+                  darkMode ? "text-white" : "text-black"
+                }`}
+              >
                 <img className="w-9" src={icon_heart} alt="Wishlist" />
               </button>
             </Link>
 
             {/* Cart Icon */}
             <Link to="/cart">
-              <button className={`text-2xl rounded-md ${darkMode ? 'text-white' : 'text-black'
-                }`}>
+              <button
+                className={`text-2xl rounded-md ${
+                  darkMode ? "text-white" : "text-black"
+                }`}
+              >
                 <img className="w-9" src={icon_cart} alt="Cart" />
               </button>
             </Link>
 
             <div
-              className={`relative w-14 h-8 flex items-center rounded-full p-1 cursor-pointer ${darkMode ? 'bg-gray-600' : 'bg-gray-300'
-                }`}
-              onClick={toggleDarkMode}>
+              className={`relative w-14 h-8 flex items-center rounded-full p-1 cursor-pointer ${
+                darkMode ? "bg-gray-600" : "bg-gray-300"
+              }`}
+              onClick={toggleDarkMode}
+            >
               <div
-                className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform ${darkMode ? "translate-x-6" : ""
-                  }`}
+                className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform ${
+                  darkMode ? "translate-x-6" : ""
+                }`}
               ></div>
             </div>
           </div>

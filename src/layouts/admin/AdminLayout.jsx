@@ -1,6 +1,5 @@
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
-// eslint-disable-next-line react/prop-types
 function AdminLayout({ children }) {
   return (
     <div className="flex h-screen overflow-hidden">
