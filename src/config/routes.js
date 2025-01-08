@@ -20,8 +20,6 @@ const routes = {
   wishlist: "/wishlist",
   cart: "/cart",
   productDetail: "/product-detail",
-  contact: "/contact",
-  about: "/about",
   signUp: "/sign-up",
   myAccount: "/my-account",
   checkout: "/checkout",

@@ -20,8 +20,6 @@ import Home from "@/pages/user/Home";
 import Wishlist from "@/pages/user/Wishlist";
 import Cart from "@/pages/user/Cart";
 import ProductDetail from "@/pages/user/ProductDetail";
-import Contact from "@/pages/user/Contact";
-import About from "@/pages/user/About";
 import Register from "@/pages/user/Register";
 import Account from "@/pages/user/Account";
 import Checkout from "@/pages/user/Checkout";
@@ -53,8 +51,6 @@ const publicRoutes = [
   { path: routes.wishlist, components: Wishlist },
   { path: routes.cart, components: Cart },
   { path: routes.productDetail, components: ProductDetail },
-  { path: routes.contact, components: Contact },
-  { path: routes.about, components: About },
   { path: routes.signUp, components: Register },
   { path: routes.myAccount, components: Account },
   { path: routes.checkout, components: Checkout },
