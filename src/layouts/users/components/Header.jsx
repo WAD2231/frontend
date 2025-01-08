@@ -9,17 +9,47 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useDarkMode } from "@/components/DarkModeContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useState, useRef } from "react";
+import CategoriesNav from "@/components/CategoryNav";
+
 const Header = ({ user }) => {
   const { darkMode, toggleDarkMode } = useDarkMode();
+  const [showCategories, setShowCategories] = useState(false);
+  const categoriesRef = useRef(null);
+
+  const handleBlur = (e) => {
+    if (!categoriesRef.current.contains(e.relatedTarget)) {
+      setShowCategories(false);
+    }
+  };
+
   return (
     <header
-      className={darkMode ? "bg-gray-900 text-white" : "bg-white text-black"}
+      className={`${
+        darkMode ? "bg-gray-900 text-white" : "bg-white text-black"
+      } fixed w-full top-0 z-50`}
     >
-      <nav className="px-[130px]">
+      <nav className="px-[50px]">
         <div className="container py-3 mx-auto flex justify-between items-center">
           <div className="flex items-center justify-between w-7/12">
             <div className="text-2xl font-bold">
               <Link to="/">Exclusive</Link>
+            </div>
+            <div className="relative" ref={categoriesRef}>
+              <Button
+                variant="ghost"
+                onClick={() => setShowCategories(!showCategories)}
+                onBlur={handleBlur}
+              >
+                All Categories
+              </Button>
+              {showCategories && (
+                <div
+                  className={`absolute top-full mt-2 left-0 bg-white shadow-lg border rounded z-40`}
+                >
+                  <CategoriesNav />
+                </div>
+              )}
             </div>
             <div className="hidden md:flex space-x-8">
               <div
@@ -51,7 +81,7 @@ const Header = ({ user }) => {
           <div className="hidden md:flex gap-6 items-center w-5/12 justify-end">
             <Link to="/cart">
               <Button variant="ghost" size="icon">
-                <ShoppingCart />
+                <ShoppingCart className="h-6 w-6" />
               </Button>
             </Link>
             <div

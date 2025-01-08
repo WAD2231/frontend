@@ -164,7 +164,7 @@ const Home = () => {
   const items = ["", "", "", "", "", ""];
   return (
     <div
-      className={`max-w-full mx-auto px-[130px] py-12 ${
+      className={`max-w-full mx-auto px-[50px] py-12 ${
         darkMode ? "bg-gray-900 text-white" : ""
       }`}
     >
