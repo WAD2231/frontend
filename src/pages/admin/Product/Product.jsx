@@ -14,50 +14,41 @@ import { Link } from "react-router-dom";
 import routes from "@/config/routes";
 import { getProducts } from "@/services/productServices";
 import { useEffect, useState } from "react";
-// const products = [
-//   {
-//     id: "1",
-//     name: "Handmade Pouch",
-//     variants: "3 Variants",
-//     sku: "302012",
-//     category: "Bag & Pouch",
-//     stock: 10,
-//     price: "$121.00",
-//     status: "Low Stock",
-//     added: "29 Dec 2022",
-//   },
-//   {
-//     id: "2",
-//     name: "Smartwatch E2",
-//     variants: "2 Variants",
-//     sku: "302011",
-//     category: "Watch",
-//     stock: 204,
-//     price: "$590.00",
-//     status: "Published",
-//     added: "24 Dec 2022",
-//   },
-//   // Add more products as needed
-// ];
-
+import { useSearchParams } from "react-router-dom";
 export default function ProductsPage() {
-
   const [products, setProducts] = useState([]);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [paging, setPaging] = useState({
+    totalPages: 0,
+    pageSize: 15,
+    totalItems: 0,
+  });
+
+  const currentPage = parseInt(searchParams.get("page")) || 1;
+
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProducts = async ({ current_page, page_size }) => {
       const response = await getProducts({
-        current_page: 1,
-        page_size: 10,
+        current_page,
+        page_size,
       });
       if (response.status === 200) {
         setProducts(response.data.products);
-        console.log(response.data.products);
+        setPaging({
+          totalPages: response.data.paging.total_page,
+          pageSize: response.data.paging.page_size,
+          totalItems: response.data.paging.total_item,
+        });
       }
     };
 
-    fetchProducts();
-  }, []);
+    fetchProducts({
+      current_page: currentPage,
+      page_size: paging.pageSize,
+    });
+  }, [currentPage]);
 
   return (
     <div className="p-6 space-y-6 bg-background min-h-screen w-full">
@@ -109,89 +100,102 @@ export default function ProductsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.map((product, index) => (
-              <TableRow key={index}>
-                <TableCell>
-                  <input type="checkbox" className="rounded border-input" />
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-muted rounded" />
-                    <div>
-                      <div className="font-medium">{product.name}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {product.variants}
+            {products.map((product, index) => {
+              let status = "Available";
+              if (product.stock === 0) {
+                status = "Out of Stock";
+              } else if (product.stock <= 10) {
+                status = "Low Stock";
+              }
+              return (
+                <TableRow key={index}>
+                  <TableCell>
+                    <input type="checkbox" className="rounded border-input" />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-muted rounded" />
+                      <div>
+                        <div className="font-medium">{product.name}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {product.variants}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </TableCell>
-                <TableCell>{product.category_id}</TableCell>
-                <TableCell>{product.stock}</TableCell>
-                <TableCell>{product.price}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant="outline"
-                    className={
-                      product?.status === "Low Stock"
-                        ? "border-orange-200 bg-orange-100 text-orange-700 dark:border-orange-800 dark:bg-orange-900 dark:text-orange-300"
-                        : product?.status === "Shipped"
-                        ? "border-blue-200 bg-blue-100 text-blue-700 dark:border-blue-800 dark:bg-blue-900 dark:text-blue-300"
-                        : product?.status === "Published"
-                        ? "border-green-200 bg-green-100 text-green-700 dark:border-green-800 dark:bg-green-900 dark:text-green-300"
-                        : "border-red-200 bg-red-100 text-red-700 dark:border-red-800 dark:bg-red-900 dark:text-red-300"
-                    }
-                  >
-                    {product?.status}
-                  </Badge>
-                </TableCell>
-                <TableCell>{product?.added}</TableCell>
-                <TableCell>
-                  <div className="flex items-center space-x-3">
-                    <Link to={`${routes.detailProduct}/${product.id}`}>
+                  </TableCell>
+                  <TableCell>{product.category_id}</TableCell>
+                  <TableCell>{product.stock}</TableCell>
+                  <TableCell>{product.price}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant="outline"
+                      className={
+                        status === "Out of Stock"
+                          ? "border-red-200 bg-red-300 text-red-700 dark:border-red-800 dark:bg-red-900 dark:text-red-300"
+                          : status === "Low Stock"
+                          ? "border-orange-200 bg-orange-100 text-orange-700 dark:border-orange-800 dark:bg-orange-900 dark:text-orange-300"
+                          : status === "Available"
+                          ? "border-green-200 bg-green-100 text-green-700 dark:border-green-800 dark:bg-green-900 dark:text-green-300"
+                          : "border-red-200 bg-red-100 text-red-700 dark:border-red-800 dark:bg-red-900 dark:text-red-300"
+                      }
+                    >
+                      {status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>{product?.added}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center space-x-3">
+                      <Link to={`${routes.detailProduct}/${product.id}`}>
+                        <Button variant="ghost" size="icon">
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </Link>
+                      <Link to={`${routes.editProduct}/${product.id}`}>
+                        <Button variant="ghost" size="icon">
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      </Link>
                       <Button variant="ghost" size="icon">
-                        <Eye className="h-4 w-4" />
+                        <Trash2 className="h-4 w-4" />
                       </Button>
-                    </Link>
-                    <Link to={`${routes.editProduct}/${product.id}`}>
-                      <Button variant="ghost" size="icon">
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                    </Link>
-                    <Button variant="ghost" size="icon">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
 
         <div className="p-4 border-t border-border flex items-center justify-between">
           <div className="text-sm text-muted-foreground">
-            Showing 1-10 from 100
+            {`Showing ${(currentPage - 1) * paging.pageSize + 1}-${
+              (currentPage - 1) * paging.pageSize + products.length
+            } from ${paging.totalItems} products`}
           </div>
           <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm" disabled>
+            <Button variant="outline" size="sm" disabled={currentPage === 1} onClick={() => setSearchParams({ page: currentPage - 1 })}>
               Previous
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-primary text-primary-foreground"
-            >
-              1
-            </Button>
-            <Button variant="outline" size="sm">
-              2
-            </Button>
-            <Button variant="outline" size="sm">
-              3
-            </Button>
-            <Button variant="outline" size="sm">
-              ...
-            </Button>
-            <Button variant="outline" size="sm">
+            {[...Array(paging.totalPages).keys()].map((page) => {
+              return (
+                <Button
+                  key={page}
+                  variant="outline"
+                  size="sm"
+                  className={
+                    currentPage === page + 1
+                      ? "bg-primary text-primary-foreground"
+                      : ""
+                  }
+                  onClick={() => {
+                    setSearchParams({ page: page + 1 });
+                  }}
+                >
+                  {page + 1}
+                </Button>
+              );
+            })}
+            <Button variant="outline" size="sm" disabled={currentPage === paging.totalPages} onClick={() => setSearchParams({ page: currentPage + 1 })}>
               Next
             </Button>
           </div>

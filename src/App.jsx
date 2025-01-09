@@ -1,6 +1,6 @@
 import "./App.css";
 import AdminLayout from "./layouts/admin/AdminLayout";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { privateRoutes, publicRoutes } from "@/routes/routes";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import UserLayout from "./layouts/users/UserLayout";
@@ -30,8 +30,8 @@ function App() {
     </ThemeProvider>
   );
 }
-
 function AppContent({ user, setUser, checkingAuth, setCheckingAuth }) {
+  const location = useLocation();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -39,18 +39,18 @@ function AppContent({ user, setUser, checkingAuth, setCheckingAuth }) {
         const res = await getMe();
         if (res.status === 200) {
           setUser(res.data);
+          console.log(res.data);
         } else {
-          // navigate("/login");
+          console.warn("User not authenticated");
         }
       } catch (error) {
         console.error("Error fetching user:", error);
-        // navigate("/login");
       } finally {
         setCheckingAuth(false);
       }
     };
     fetchUser();
-  }, [setUser, setCheckingAuth]);
+  }, [location.pathname, setUser, setCheckingAuth]);
 
   if (checkingAuth) {
     return (
@@ -88,7 +88,7 @@ function AppContent({ user, setUser, checkingAuth, setCheckingAuth }) {
             path={route.path}
             element={
               <Layout user={user} setUser={setUser}>
-                <Page setUser={setUser}/>
+                <Page />
               </Layout>
             }
           />

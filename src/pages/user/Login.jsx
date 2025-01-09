@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Facebook, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import routes from "@/config/routes";
-const Login = ({ setUser }) => {
+const Login = () => {
   const { darkMode } = useDarkMode();
 
   const [fields, setFields] = useState({
