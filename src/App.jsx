@@ -5,11 +5,12 @@ import { privateRoutes, publicRoutes } from "@/routes/routes";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import UserLayout from "./layouts/users/UserLayout";
 import { getMe } from "@/services/userServices";
-import routes from "@/config/routes";
 import { useEffect, useState } from "react";
+import Spinner from "@/components/ui/Spinner";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   return (
     <ThemeProvider
@@ -19,30 +20,50 @@ function App() {
       disableTransitionOnChange
     >
       <BrowserRouter>
-        <AppContent user={user} setUser={setUser} />
+        <AppContent
+          user={user}
+          setUser={setUser}
+          checkingAuth={checkingAuth}
+          setCheckingAuth={setCheckingAuth}
+        />
       </BrowserRouter>
     </ThemeProvider>
   );
 }
 
-function AppContent({ user, setUser }) {
-  const navigate = useNavigate();
+function AppContent({ user, setUser, checkingAuth, setCheckingAuth }) {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await getMe();
-      if (res.status !== 200) {
-        // navigate(routes.login);
-      } else {
-        setUser(res.data);
+      try {
+        const res = await getMe();
+        if (res.status === 200) {
+          setUser(res.data);
+        } else {
+          // navigate("/login");
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        // navigate("/login");
+      } finally {
+        setCheckingAuth(false);
       }
     };
     fetchUser();
-  }, [navigate]);
+  }, [setUser, setCheckingAuth]);
+
+  if (checkingAuth) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <Routes>
       {user &&
+        user?.permission == 1 &&
         privateRoutes.map((route, index) => {
           let Layout = AdminLayout;
           const Page = route.components;
@@ -51,7 +72,7 @@ function AppContent({ user, setUser }) {
               key={index}
               path={route.path}
               element={
-                <Layout>
+                <Layout user={user} setUser={setUser}>
                   <Page />
                 </Layout>
               }
@@ -67,7 +88,7 @@ function AppContent({ user, setUser }) {
             path={route.path}
             element={
               <Layout user={user} setUser={setUser}>
-                <Page />
+                <Page setUser={setUser}/>
               </Layout>
             }
           />
@@ -76,5 +97,4 @@ function AppContent({ user, setUser }) {
     </Routes>
   );
 }
-
 export default App;

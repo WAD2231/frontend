@@ -22,7 +22,7 @@ const Register = () => {
     });
     if (res.status === 201) {
       setError("");
-      navigate(routes.home);
+      navigate(routes.login);
     } else {
       setError(res.data.message);
     }

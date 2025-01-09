@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Bell, ShoppingCart, Search, ChevronDown } from "lucide-react";
 import ModeToggle from "@/components/ModeToggle";
-function Header() {
+function Header({user, setUser}) {
+  console.log(user);
+  
   return (
     <header className="h-16 border-b border-border bg-background px-6 flex items-center justify-between">
       <Button variant="ghost" size="icon" className="lg:hidden">
@@ -21,14 +23,13 @@ function Header() {
           </span>
         </div>
         <ModeToggle/>
-        <Button variant="ghost" className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-muted rounded-full" />
+        <div className="flex items-center space-x-3 cursor-pointer">
+          <img src={user.avatar} alt={user.username} className="h-10 w-10 rounded-full" />
           <div className="hidden lg:block text-left">
-            <div className="text-sm font-medium">Jay Hargudson</div>
-            <div className="text-xs text-muted-foreground">Manager</div>
+            <div className="text-sm font-medium">{user.fullname}</div>
           </div>
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
-        </Button>
+        </div>
       </div>
     </header>
   );

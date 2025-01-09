@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Facebook, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import routes from "@/config/routes";
-const Login = () => {
+const Login = ({ setUser }) => {
   const { darkMode } = useDarkMode();
 
   const [fields, setFields] = useState({
@@ -29,13 +29,13 @@ const Login = () => {
     }
   };
 
-  const handleLoginFacebook = async () => { 
+  const handleLoginFacebook = async () => {
     window.open("http://localhost:3000/api/auth/login/facebook", "_self");
-  }
+  };
 
-  const handleLoginGoogle = async () => { 
-    window.open("http://localhost:3000/api/auth/login/google", "_self");    
-  }
+  const handleLoginGoogle = async () => {
+    window.open("http://localhost:3000/api/auth/login/google", "_self");
+  };
 
   return (
     <div

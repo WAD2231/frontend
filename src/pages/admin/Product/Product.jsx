@@ -12,33 +12,53 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, Filter, Eye, Pencil, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import routes from "@/config/routes";
-const products = [
-  {
-    id: "1",
-    name: "Handmade Pouch",
-    variants: "3 Variants",
-    sku: "302012",
-    category: "Bag & Pouch",
-    stock: 10,
-    price: "$121.00",
-    status: "Low Stock",
-    added: "29 Dec 2022",
-  },
-  {
-    id: "2",
-    name: "Smartwatch E2",
-    variants: "2 Variants",
-    sku: "302011",
-    category: "Watch",
-    stock: 204,
-    price: "$590.00",
-    status: "Published",
-    added: "24 Dec 2022",
-  },
-  // Add more products as needed
-];
+import { getProducts } from "@/services/productServices";
+import { useEffect, useState } from "react";
+// const products = [
+//   {
+//     id: "1",
+//     name: "Handmade Pouch",
+//     variants: "3 Variants",
+//     sku: "302012",
+//     category: "Bag & Pouch",
+//     stock: 10,
+//     price: "$121.00",
+//     status: "Low Stock",
+//     added: "29 Dec 2022",
+//   },
+//   {
+//     id: "2",
+//     name: "Smartwatch E2",
+//     variants: "2 Variants",
+//     sku: "302011",
+//     category: "Watch",
+//     stock: 204,
+//     price: "$590.00",
+//     status: "Published",
+//     added: "24 Dec 2022",
+//   },
+//   // Add more products as needed
+// ];
 
 export default function ProductsPage() {
+
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response = await getProducts({
+        current_page: 1,
+        page_size: 10,
+      });
+      if (response.status === 200) {
+        setProducts(response.data.products);
+        console.log(response.data.products);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <div className="p-6 space-y-6 bg-background min-h-screen w-full">
       <div className="flex items-center justify-between">
@@ -89,8 +109,8 @@ export default function ProductsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.map((product) => (
-              <TableRow key={product.id}>
+            {products.map((product, index) => (
+              <TableRow key={index}>
                 <TableCell>
                   <input type="checkbox" className="rounded border-input" />
                 </TableCell>
@@ -105,26 +125,26 @@ export default function ProductsPage() {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>{product.category}</TableCell>
+                <TableCell>{product.category_id}</TableCell>
                 <TableCell>{product.stock}</TableCell>
                 <TableCell>{product.price}</TableCell>
                 <TableCell>
                   <Badge
                     variant="outline"
                     className={
-                      product.status === "Low Stock"
+                      product?.status === "Low Stock"
                         ? "border-orange-200 bg-orange-100 text-orange-700 dark:border-orange-800 dark:bg-orange-900 dark:text-orange-300"
-                        : product.status === "Shipped"
+                        : product?.status === "Shipped"
                         ? "border-blue-200 bg-blue-100 text-blue-700 dark:border-blue-800 dark:bg-blue-900 dark:text-blue-300"
-                        : product.status === "Published"
+                        : product?.status === "Published"
                         ? "border-green-200 bg-green-100 text-green-700 dark:border-green-800 dark:bg-green-900 dark:text-green-300"
                         : "border-red-200 bg-red-100 text-red-700 dark:border-red-800 dark:bg-red-900 dark:text-red-300"
                     }
                   >
-                    {product.status}
+                    {product?.status}
                   </Badge>
                 </TableCell>
-                <TableCell>{product.added}</TableCell>
+                <TableCell>{product?.added}</TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-3">
                     <Link to={`${routes.detailProduct}/${product.id}`}>

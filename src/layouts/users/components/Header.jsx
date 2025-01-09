@@ -9,10 +9,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useDarkMode } from "@/components/DarkModeContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import CategoriesNav from "@/components/CategoryNav";
-import {logout} from "@/services/authServices";
+import { logout } from "@/services/authServices";
 import { useNavigate } from "react-router-dom";
+import routes from "@/config/routes";
 
 const Header = ({ user, setUser }) => {
   const { darkMode, toggleDarkMode } = useDarkMode();
@@ -26,13 +27,53 @@ const Header = ({ user, setUser }) => {
     }
   };
 
-  const handleLogout = async () => { 
+  const handleLogout = async () => {
     const res = await logout();
     if (res.status === 200) {
       navigate("/");
       setUser(null);
     }
-  }
+  };
+
+  const [cart, setCart] = useState({
+    user_id: 1,
+    paging: {
+      total_item: 5,
+      total_page: 3,
+      current_page: 1,
+      page_size: 2,
+    },
+    items: [
+      {
+        product: {
+          id: 1,
+          name: "Product 1",
+          price: 100000,
+          discount: 0.1,
+          quantity: 20,
+          images: [
+            "https://example.com/image1.jpg",
+            "https://example.com/image2.jpg",
+          ],
+        },
+        quantity: 2,
+      },
+      {
+        product: {
+          id: 2,
+          name: "Apple",
+          price: 1,
+          discount: 0.1,
+          quantity: 100,
+          images: [
+            "https://example.com/image3.jpg",
+            "https://example.com/image4.jpg",
+          ],
+        },
+        quantity: 2,
+      },
+    ],
+  });
 
   return (
     <header
@@ -44,7 +85,7 @@ const Header = ({ user, setUser }) => {
         <div className="container py-3 mx-auto flex justify-between items-center">
           <div className="flex items-center justify-between w-7/12">
             <div className="text-2xl font-bold">
-              <Link to="/">Exclusive</Link>
+              <Link to={routes.home}>Exclusive</Link>
             </div>
             <div className="relative" ref={categoriesRef}>
               <Button
@@ -90,10 +131,15 @@ const Header = ({ user, setUser }) => {
             </div>
           </div>
           <div className="hidden md:flex gap-6 items-center w-5/12 justify-end">
-            <Link to="/cart">
-              <Button variant="ghost" size="icon">
-                <ShoppingCart className="h-6 w-6" />
-              </Button>
+            <Link
+              to={routes.cart}
+            >
+              <div className="relative">
+                <ShoppingCart className="text-muted-foreground" size={26} />
+                <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                  {cart.items.length}
+                </span>
+              </div>
             </Link>
             <div
               className={`relative w-14 h-8 flex items-center rounded-full p-1 cursor-pointer ${
@@ -116,6 +162,14 @@ const Header = ({ user, setUser }) => {
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
+                  {user && user?.permission === 1 && (
+                    <Link to={routes.dashboard}>
+                      <DropdownMenuItem>
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Dashboard</span>
+                      </DropdownMenuItem>
+                    </Link>
+                  )}
                   <DropdownMenuItem>
                     <User className="mr-2 h-4 w-4" />
                     <span>Profile</span>
@@ -127,10 +181,8 @@ const Header = ({ user, setUser }) => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Link to="/login">
-                <Button variant="ghost" size="sm">
-                  Log in
-                </Button>
+              <Link to={routes.login}>
+                <Button>Log in</Button>
               </Link>
             )}
           </div>
