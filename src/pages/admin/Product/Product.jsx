@@ -15,6 +15,7 @@ import routes from "@/config/routes";
 import { getProducts } from "@/services/productServices";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import formatDate from "@/lib/formatDate";
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
 
@@ -35,6 +36,8 @@ export default function ProductsPage() {
         page_size,
       });
       if (response.status === 200) {
+        console.log(response.data.products[0]);
+        
         setProducts(response.data.products);
         setPaging({
           totalPages: response.data.paging.total_page,
@@ -100,7 +103,7 @@ export default function ProductsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.map((product, index) => {
+            {products?.map((product, index) => {
               let status = "Available";
               if (product.stock === 0) {
                 status = "Out of Stock";
@@ -114,7 +117,11 @@ export default function ProductsPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-muted rounded" />
+                      <img
+                        src={product?.images[0]?.image_url}
+                        alt={product.name}
+                        className="h-10 w-10 rounded-md"
+                      />
                       <div>
                         <div className="font-medium">{product.name}</div>
                         <div className="text-sm text-muted-foreground">
@@ -123,7 +130,7 @@ export default function ProductsPage() {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>{product.category_id}</TableCell>
+                  <TableCell>{product.category}</TableCell>
                   <TableCell>{product.stock}</TableCell>
                   <TableCell>{product.price}</TableCell>
                   <TableCell>
@@ -142,7 +149,7 @@ export default function ProductsPage() {
                       {status}
                     </Badge>
                   </TableCell>
-                  <TableCell>{product?.added}</TableCell>
+                  <TableCell>{formatDate(product?.created_at)}</TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-3">
                       <Link to={`${routes.detailProduct}/${product.id}`}>

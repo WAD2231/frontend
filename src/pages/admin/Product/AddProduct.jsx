@@ -14,8 +14,80 @@ import { X } from "lucide-react";
 import { Link } from "react-router-dom";
 import routes from "@/config/routes";
 import ImagePicker from "@/components/ImagePicker";
+import SelectCategory from "@/components/SelectCategory";
+import { getAllCategories, getManufacturers } from "@/services/categoryServices";
+import { createProduct } from "@/services/productServices";
+import { useEffect, useState } from "react";
 
 function AddProduct() {
+
+  const [categories, setCategories] = useState([]);
+  const [manufacturers, setManufacturers] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [categoriesResponse, manufacturersResponse] = await Promise.all([
+          getAllCategories(),
+          getManufacturers(),
+        ]);
+
+        if (categoriesResponse.status === 200) {
+          setCategories(categoriesResponse.data.categories);
+        }
+
+        if (manufacturersResponse.status === 200) {
+          setManufacturers(manufacturersResponse.data.manufacturers);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const [fields, setFields] = useState({
+    name: "",
+    description: "",
+    price: 0,
+    discount: 0,
+    stock: 0,
+    category_id: 0,
+    manufacturer_id: 0,
+    images: [],
+  })
+
+  const handleSelectedCategory = (category_id) => {
+    console.log(category_id);
+    setFields({ ...fields, category_id: category_id });
+  }
+
+  const handleSelectedImage = (images) => {
+    setFields((prevFields) => ({ ...prevFields, images }));
+  };
+
+  const handleAddProduct = async () => {
+    const formData = new FormData();
+    formData.append("name", fields.name);
+    formData.append("description", fields.description);
+    formData.append("price", fields.price);
+    formData.append("discount", fields.discount);
+    formData.append("stock", fields.stock);
+    formData.append("category_id", fields.category_id);
+    formData.append("manufacturer_id", fields.manufacturer_id);
+    fields.images.forEach((image) => {
+      formData.append("image", image);
+    });
+
+    const response = await createProduct(formData);
+    if (response.status === 201) { 
+      console.log("Product added successfully");
+      console.log(response.data);
+    }
+
+  }
+
   return (
     <div className="container mx-auto p-6">
       <div className="flex items-center justify-between mb-8">
@@ -34,11 +106,11 @@ function AddProduct() {
           <h1 className="text-2xl font-semibold">Add Product</h1>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="ghost">
+          {/* <Button variant="ghost">
             <X className="h-4 w-4 mr-2" />
             Cancel
           </Button>
-          <Button>+ Add Product</Button>
+          <Button>+ Add Product</Button> */}
         </div>
       </div>
 
@@ -54,6 +126,8 @@ function AddProduct() {
                 <Input
                   id="product-name"
                   placeholder="Type product name here..."
+                  value={fields.name}
+                  onChange={(e) => setFields({ ...fields, name: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
@@ -62,11 +136,15 @@ function AddProduct() {
                   id="description"
                   placeholder="Type product description here..."
                   className="min-h-[150px]"
+                  value={fields.description}
+                  onChange={(e) => {
+                    setFields({ ...fields, description: e.target.value })
+                  }}
                 />
               </div>
             </CardContent>
           </Card>
-          <ImagePicker title={"Media"} imageName={"Image"} multiple={true} />
+          <ImagePicker title={"Media"} imageName={"Image"} multiple={true} onChange={handleSelectedImage}/>
           <Card>
             <CardHeader>
               <CardTitle>Other Information</CardTitle>
@@ -80,6 +158,8 @@ function AddProduct() {
                     id="base-price"
                     placeholder="Type base price here..."
                     className="pl-6"
+                    value={fields.price}
+                    onChange={(e) => setFields({ ...fields, price: e.target.value })}
                   />
                 </div>
               </div>
@@ -88,6 +168,8 @@ function AddProduct() {
                 <Input
                   id="discount-value"
                   placeholder="Type discount percentage..."
+                  value={fields.discount}
+                  onChange={(e) => setFields({ ...fields, discount: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
@@ -97,6 +179,8 @@ function AddProduct() {
                   type="number"
                   placeholder="Type product quantity here..."
                   min="0"
+                  value={fields.stock}
+                  onChange={(e) => setFields({ ...fields, stock: e.target.value })}
                 />
               </div>
             </CardContent>
@@ -111,16 +195,7 @@ function AddProduct() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label>Product Category</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="electronics">Electronics</SelectItem>
-                    <SelectItem value="clothing">Clothing</SelectItem>
-                    <SelectItem value="books">Books</SelectItem>
-                  </SelectContent>
-                </Select>
+                <SelectCategory categories={categories} label={"Select category"} onChange={handleSelectedCategory}/>
               </div>
               <div className="space-y-2">
                 <Label>Product Tags</Label>
@@ -140,26 +215,28 @@ function AddProduct() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0">
-              <CardTitle>Status</CardTitle>
-              <div className="text-sm font-medium text-muted-foreground">
-                Draft
-              </div>
+              <CardTitle>Manufacturer</CardTitle>
             </CardHeader>
             <CardContent>
-              <Select>
+              <Select onValueChange={(id) => setFields({ ...fields, manufacturer_id: id })}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select product status" />
+                  <SelectValue placeholder="Select manufacturer" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="published">Published</SelectItem>
-                  <SelectItem value="archived">Archived</SelectItem>
+                  {manufacturers?.map((manufacturer) => {
+                    return (
+                      <SelectItem key={manufacturer.id} value={manufacturer.id}>
+                        {manufacturer.name}
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
             </CardContent>
           </Card>
         </div>
       </div>
+      <Button className="mt-4" onClick={handleAddProduct}>+ Add Product</Button>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { X, ImageIcon } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { useCallback, useState } from "react";
 
-function ImagePicker({ title, imageName, multiple = false }) {
+function ImagePicker({ title, imageName, multiple = false, onChange }) {
   const [selectedImages, setSelectedImages] = useState([]);
 
   const onDrop = useCallback(
@@ -13,9 +13,11 @@ function ImagePicker({ title, imageName, multiple = false }) {
       if (multiple) {
         // Add new images to the current selection
         setSelectedImages((prevState) => [...prevState, ...acceptedFiles]);
+        onChange(acceptedFiles);
       } else {
         // Replace the current selection with the new image
         setSelectedImages(acceptedFiles.slice(0, 1)); // Limit to one file
+        onChange(acceptedFiles.slice(0, 1)); // Limit to one file
       }
     },
     [multiple]
@@ -31,6 +33,7 @@ function ImagePicker({ title, imageName, multiple = false }) {
 
   const removeImage = (index) => {
     setSelectedImages((prevState) => prevState.filter((_, i) => i !== index));
+    onChange(selectedImages.filter((_, i) => i !== index));
   };
 
   return (

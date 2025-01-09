@@ -14,8 +14,24 @@ import { Badge } from "@/components/ui/badge";
 import { X, ImageIcon, Check } from "lucide-react";
 import routes from "@/config/routes";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getProduct } from "@/services/productServices";
 
 export default function DetailProduct() {
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  useEffect(() => {
+    const fetchProduct = async (id) => {
+      const response = await getProduct(id);
+      console.log(response);
+      if (response.status === 200) {
+        console.log(response.data);
+        // setProduct(response.data.product);
+      }
+    };
+    fetchProduct(id);
+  }, [id])
   return (
     <div className="container mx-auto p-6">
       <div className="flex items-center justify-between mb-8">

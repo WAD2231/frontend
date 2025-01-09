@@ -3,76 +3,28 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {  X } from "lucide-react";
 import { Link } from "react-router-dom";
 import routes from "@/config/routes";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ImagePicker from "@/components/ImagePicker";
-
-const categories = [
-  {
-    id: "1",
-    name: "Electronics",
-    children: [
-      { id: "1-1", name: "Smartphones" },
-      { id: "1-2", name: "Audio" },
-      { id: "1-3", name: "PC Desktop" },
-    ],
-  },
-  {
-    id: "2",
-    name: "Fashion",
-    children: [
-      { id: "2-1", name: "Bag & Pouch" },
-      { id: "2-2", name: "Shoes" },
-      { id: "2-3", name: "Hat" },
-    ],
-  },
-  {
-    id: "3",
-    name: "Accessories",
-    children: [
-      { id: "3-1", name: "Watch" },
-      { id: "3-2", name: "Camera" },
-    ],
-  },
-];
-
-const SelectCategory = ({ categories }) => {
-  const renderCategories = (categories, prefix = "") => {
-    return categories.map((category) => {
-      const displayName = `${prefix}${category.name}`;
-      return (
-        <React.Fragment key={category.id}>
-          <SelectItem value={category.id}>{displayName}</SelectItem>
-          {category.children &&
-            renderCategories(category.children, `${displayName} > `)}
-        </React.Fragment>
-      );
-    });
-  };
-
-  return (
-    <Select>
-      <SelectTrigger>
-        <SelectValue placeholder="Select parent category" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="top">None (Top Level)</SelectItem>
-        {renderCategories(categories)}
-      </SelectContent>
-    </Select>
-  );
-};
+import SelectCategory from "@/components/SelectCategory";
+import { getAllCategories } from "@/services/categoryServices";
 
 export default function AddCategory() {
+  const [categories, setCategories] = useState([]);
+  
+    useEffect(() => {
+      const fetchCategories = async () => {
+        const response = await getAllCategories();
+        if (response.status === 200) {
+          console.log(response.data.categories);
+          setCategories(response.data.categories);
+        }
+      };
+  
+      fetchCategories();
+    }, []);
   return (
     <div className="container mx-auto p-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
@@ -110,7 +62,7 @@ export default function AddCategory() {
           <CardContent className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="parent-category">Parent Category</Label>
-              <SelectCategory categories={categories} />
+              <SelectCategory categories={categories} label="Select super category"/>
             </div>
             <div className="space-y-2">
               <Label htmlFor="category-name">Category Name</Label>
