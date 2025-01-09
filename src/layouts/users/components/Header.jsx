@@ -11,17 +11,28 @@ import { useDarkMode } from "@/components/DarkModeContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState, useRef } from "react";
 import CategoriesNav from "@/components/CategoryNav";
+import {logout} from "@/services/authServices";
+import { useNavigate } from "react-router-dom";
 
-const Header = ({ user }) => {
+const Header = ({ user, setUser }) => {
   const { darkMode, toggleDarkMode } = useDarkMode();
   const [showCategories, setShowCategories] = useState(false);
   const categoriesRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleBlur = (e) => {
     if (!categoriesRef.current.contains(e.relatedTarget)) {
       setShowCategories(false);
     }
   };
+
+  const handleLogout = async () => { 
+    const res = await logout();
+    if (res.status === 200) {
+      navigate("/");
+      setUser(null);
+    }
+  }
 
   return (
     <header
@@ -109,7 +120,7 @@ const Header = ({ user }) => {
                     <User className="mr-2 h-4 w-4" />
                     <span>Profile</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                   </DropdownMenuItem>

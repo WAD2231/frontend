@@ -11,15 +11,14 @@ const Register = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [fields, setFields] = useState({
+    fullname: "",
     username: "",
-    email: "",
     password: "",
   });
 
   const handleSubmit = async () => {
     const res = await register({
       ...fields,
-      permission: 0,
     });
     if (res.status === 201) {
       setError("");
@@ -71,14 +70,14 @@ const Register = () => {
               </div>
             )}
 
-            <form className="space-y-6">
+            <div className="space-y-6">
               <div>
                 <input
                   type="text"
-                  placeholder="Username"
-                  value={fields.username}
+                  placeholder="Full Name"
+                  value={fields.fullname}
                   onChange={(e) =>
-                    setFields({ ...fields, username: e.target.value })
+                    setFields({ ...fields, fullname: e.target.value })
                   }
                   className={`w-full px-4 py-3 rounded-lg outline-none transition
                     ${
@@ -92,10 +91,10 @@ const Register = () => {
               <div>
                 <input
                   type="text"
-                  placeholder="Email"
-                  value={fields.email}
+                  placeholder="Username"
+                  value={fields.username}
                   onChange={(e) =>
-                    setFields({ ...fields, email: e.target.value })
+                    setFields({ ...fields, username: e.target.value })
                   }
                   className={`w-full px-4 py-3 rounded-lg outline-none transition
                     ${
@@ -130,25 +129,7 @@ const Register = () => {
               >
                 Create Account
               </button>
-
-              <button
-                type="button"
-                className={`w-full py-3 rounded-lg flex items-center justify-center space-x-2 transition duration-200
-                  ${
-                    darkMode
-                      ? "border-gray-600 bg-gray-700 text-gray-200 hover:bg-gray-600"
-                      : "border border-gray-300 text-gray-700 hover:bg-gray-50"
-                  }`}
-              >
-                <svg className="w-5 h-5" viewBox="0 0 24 24">
-                  <path
-                    fill="currentColor"
-                    d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"
-                  />
-                </svg>
-                <span>Sign up with Google</span>
-              </button>
-            </form>
+            </div>
 
             <div className="mt-6 text-center">
               <span className={darkMode ? "text-gray-400" : "text-gray-600"}>
