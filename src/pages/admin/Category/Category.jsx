@@ -93,7 +93,6 @@ export default function Category() {
     const fetchCategories = async () => {
       const response = await getAllCategories();
       if (response.status === 200) {
-        console.log(response.data.categories);
         setCategories(response.data.categories);
       }
     };

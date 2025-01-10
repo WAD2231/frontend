@@ -16,6 +16,7 @@ import { getProducts } from "@/services/productServices";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import formatDate from "@/lib/formatDate";
+import ProductStatus from "@/components/ProductStatus";
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
 
@@ -36,8 +37,6 @@ export default function ProductsPage() {
         page_size,
       });
       if (response.status === 200) {
-        console.log(response.data.products[0]);
-        
         setProducts(response.data.products);
         setPaging({
           totalPages: response.data.paging.total_page,
@@ -134,20 +133,7 @@ export default function ProductsPage() {
                   <TableCell>{product.stock}</TableCell>
                   <TableCell>{product.price}</TableCell>
                   <TableCell>
-                    <Badge
-                      variant="outline"
-                      className={
-                        status === "Out of Stock"
-                          ? "border-red-200 bg-red-300 text-red-700 dark:border-red-800 dark:bg-red-900 dark:text-red-300"
-                          : status === "Low Stock"
-                          ? "border-orange-200 bg-orange-100 text-orange-700 dark:border-orange-800 dark:bg-orange-900 dark:text-orange-300"
-                          : status === "Available"
-                          ? "border-green-200 bg-green-100 text-green-700 dark:border-green-800 dark:bg-green-900 dark:text-green-300"
-                          : "border-red-200 bg-red-100 text-red-700 dark:border-red-800 dark:bg-red-900 dark:text-red-300"
-                      }
-                    >
-                      {status}
-                    </Badge>
+                    <ProductStatus stock={product.stock} />
                   </TableCell>
                   <TableCell>{formatDate(product?.created_at)}</TableCell>
                   <TableCell>

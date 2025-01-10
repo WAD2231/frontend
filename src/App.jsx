@@ -39,7 +39,6 @@ function AppContent({ user, setUser, checkingAuth, setCheckingAuth }) {
         const res = await getMe();
         if (res.status === 200) {
           setUser(res.data);
-          console.log(res.data);
         } else {
           console.warn("User not authenticated");
         }
