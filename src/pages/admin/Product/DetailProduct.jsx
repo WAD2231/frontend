@@ -10,32 +10,56 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Edit } from "lucide-react";
 import routes from "@/config/routes";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getProduct } from "@/services/productServices";
 import ProductStatus from "@/components/ProductStatus";
 import capitalFirstLetter from "@/lib/capitalFirstLetter";
+import { getProductReviews } from "@/services/reviewServices";
+import formatDate from "@/lib/formatDate";
+import ProductReview from "@/components/ReviewItem";
 
 export default function DetailProduct() {
   const { id } = useParams();
   const [product, setProduct] = useState({});
+  const [reviews, setReviews] = useState([]);
 
+  const [paging, setPaging] = useState({
+    totalPages: 0,
+    size: 5,
+    totalItems: 0,
+  });
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const currentPage = parseInt(searchParams.get("page")) || 1;
   useEffect(() => {
-    const fetchProduct = async (id) => {
-      try {
-        const response = await getProduct(id);
-        if (response.status === 200) {
-          console.log("Product fetched successfully:", response.data);
+    const fetchData = async (id, currentPage, size) => {
+      const [productData, reviewsData] = await Promise.all([
+        getProduct(id),
+        getProductReviews({
+          id,
+          page: currentPage,
+          size,
+        }),
+      ]);
+      if (productData.status === 200) {
+        setProduct(productData.data);
+      }
+      if (reviewsData.status === 200) {
+        setReviews(reviewsData.data.reviews);
+        console.log(reviewsData.data.reviews);
 
-          setProduct(response.data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch product:", error);
+        setPaging({
+          totalPages: reviewsData.data.paging.total_page,
+          size: reviewsData.data.paging.page_size,
+          totalItems: reviewsData.data.paging.total_item,
+        });
       }
     };
-    fetchProduct(id);
-  }, [id]);
+    fetchData(id, currentPage, paging.size);
+  }, [id, currentPage, paging.size]);
 
   return (
     <div className="container mx-auto p-6">
@@ -99,6 +123,63 @@ export default function DetailProduct() {
               </div>
             </CardContent>
           </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Product Reviews</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {reviews.length ? (
+                reviews.map((review, index) => (
+                  <div key={index} className="space-y-2">
+                    <ProductReview review={review} />
+                  </div>
+                ))
+              ) : (
+                <p>No reviews available</p>
+              )}
+            </CardContent>
+            {paging.totalPages > 1 && (
+              <div className="p-4 border-t border-border flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={currentPage === 1}
+                    onClick={() => setSearchParams({ page: currentPage - 1 })}
+                  >
+                    Previous
+                  </Button>
+                  {[...Array(paging.totalPages).keys()].map((page) => {
+                    return (
+                      <Button
+                        key={page}
+                        variant="outline"
+                        size="sm"
+                        className={
+                          currentPage === page + 1
+                            ? "bg-primary text-primary-foreground"
+                            : ""
+                        }
+                        onClick={() => {
+                          setSearchParams({ page: page + 1 });
+                        }}
+                      >
+                        {page + 1}
+                      </Button>
+                    );
+                  })}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={currentPage === paging.totalPages}
+                    onClick={() => setSearchParams({ page: currentPage + 1 })}
+                  >
+                    Next
+                  </Button>
+                </div>
+              </div>
+            )}
+          </Card>
         </div>
 
         <div className="space-y-6 lg:col-span-2">
@@ -120,7 +201,7 @@ export default function DetailProduct() {
                         : "bg-yellow-300 hover:bg-yellow-200"
                     }`}
                   >
-                    {capitalFirstLetter(product?.tag)}
+                    {`${capitalFirstLetter(product?.tag)}`}
                   </Badge>
                 </div>
               </div>

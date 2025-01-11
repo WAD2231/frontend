@@ -141,7 +141,10 @@ function AddProduct() {
               </div>
             </CardContent>
           </Card>
+          
+          {/* Image Picker */}
           <ImagePicker title={"Media"} imageName={"Image"} multiple={true} onChange={handleSelectedImage} image_urls={[]}/>
+
           <Card>
             <CardHeader>
               <CardTitle>Other Information</CardTitle>
