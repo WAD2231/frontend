@@ -51,7 +51,11 @@ const CategoryRow = ({ category, level }) => {
               </Button>
             )}
             {!category?.children && <div className="w-4" />}
-            <img src={category?.thumbnail} alt={category?.name} className="w-8 h-8" />
+            <img
+              src={category?.thumbnail}
+              alt={category?.name}
+              className="w-8 h-8"
+            />
             <div>
               <div className="font-medium">{category.name}</div>
               <div className="text-sm text-muted-foreground">
@@ -65,9 +69,11 @@ const CategoryRow = ({ category, level }) => {
         <TableCell>{formatDate(category?.created_at)}</TableCell>
         <TableCell>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon">
-              <Eye className="h-4 w-4" />
-            </Button>
+            <Link to={`${routes.detailCategory}/${category.category_id}`}>
+              <Button variant="ghost" size="icon">
+                <Eye className="h-4 w-4" />
+              </Button>
+            </Link>
             <Button variant="ghost" size="icon">
               <Pencil className="h-4 w-4" />
             </Button>
@@ -80,7 +86,11 @@ const CategoryRow = ({ category, level }) => {
       {isExpanded &&
         category?.children &&
         category?.children.map((child) => (
-          <CategoryRow key={child.category_id} category={child} level={level + 1} />
+          <CategoryRow
+            key={child.category_id}
+            category={child}
+            level={level + 1}
+          />
         ))}
     </>
   );
@@ -99,8 +109,6 @@ export default function Category() {
 
     fetchCategories();
   }, []);
-
-
 
   return (
     <div className="container mx-auto p-6">
@@ -170,7 +178,11 @@ export default function Category() {
           </TableHeader>
           <TableBody>
             {categories?.map((category) => (
-              <CategoryRow key={category.category_id} category={category} level={0} />
+              <CategoryRow
+                key={category.category_id}
+                category={category}
+                level={0}
+              />
             ))}
           </TableBody>
         </Table>

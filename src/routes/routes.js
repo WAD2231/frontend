@@ -14,6 +14,7 @@ import Setting from "@/pages/admin/Setting";
 import DetailProduct from "@/pages/admin/Product/DetailProduct";
 import OrderDetail from "@/pages/admin/Order/OrderDetail";
 import CustomerDetail from "@/pages/admin/Customer/CustomerDetail";
+import DetailCategory from "@/pages/admin/Category/DetailCategory";
 
 // Client Pages
 import Home from "@/pages/user/Home";
@@ -41,6 +42,7 @@ const privateRoutes = [
   { path: `${routes.orders}/:id`, components: OrderDetail },
   { path: routes.addCategory, components: AddCategory },
   { path: routes.category, components: Category },
+  { path: `${routes.detailCategory}/:id`, components: DetailCategory },
   { path: routes.supports, components: Support },
   { path: routes.settings, components: Setting },
 ];

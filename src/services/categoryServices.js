@@ -19,3 +19,21 @@ export const getManufacturers = async () => {
     return error;
   }
 }
+
+export const createCategory = async (category) => {
+  try {
+    const res = await api.post(`${CATEGORY}`, category);
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getCategory = async (id) => {
+  try {
+    const res = await api.get(`${CATEGORY}/${id}`);
+    return res;
+  } catch (error) {
+    return error;
+  }
+};

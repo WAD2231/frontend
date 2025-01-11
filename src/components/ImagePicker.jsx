@@ -14,26 +14,28 @@ function ImagePicker({
   image_urls = [],
 }) {
   const [selectedImages, setSelectedImages] = useState([]);
-
   const [initialImages, setInitialImages] = useState(image_urls);
 
+  // Update initialImages only if image_urls changes
   useEffect(() => {
-    setInitialImages(image_urls);
+    if (JSON.stringify(initialImages) !== JSON.stringify(image_urls)) {
+      setInitialImages(image_urls);
+    }
   }, [image_urls]);
 
   const onDrop = useCallback(
     (acceptedFiles) => {
       if (multiple) {
-        // Add new images to the current selection
-        setSelectedImages((prevState) => [...prevState, ...acceptedFiles]);
-        onChange(acceptedFiles);
+        const newImages = [...selectedImages, ...acceptedFiles];
+        setSelectedImages(newImages);
+        if (onChange) onChange(newImages);
       } else {
-        // Replace the current selection with the new image
-        setSelectedImages(acceptedFiles.slice(0, 1)); // Limit to one file
-        onChange(acceptedFiles.slice(0, 1)); // Limit to one file
+        const newImages = acceptedFiles.slice(0, 1); // Only the first file
+        setSelectedImages(newImages);
+        if (onChange) onChange(newImages);
       }
     },
-    [multiple]
+    [multiple, selectedImages, onChange]
   );
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -45,13 +47,15 @@ function ImagePicker({
   });
 
   const removeImage = (index) => {
-    setSelectedImages((prevState) => prevState.filter((_, i) => i !== index));
-    onChange(selectedImages.filter((_, i) => i !== index));
+    const updatedImages = selectedImages.filter((_, i) => i !== index);
+    setSelectedImages(updatedImages);
+    if (onChange) onChange(updatedImages);
   };
 
   const removeImageUrl = (index) => {
-    setInitialImages((prevState) => prevState.filter((_, i) => i !== index));
-    onChangeInitialImages(initialImages.filter((_, i) => i !== index));
+    const updatedInitialImages = initialImages.filter((_, i) => i !== index);
+    setInitialImages(updatedInitialImages);
+    if (onChangeInitialImages) onChangeInitialImages(updatedInitialImages);
   };
 
   return (
@@ -80,9 +84,10 @@ function ImagePicker({
           </div>
         </div>
         <div className="grid grid-cols-4 gap-4">
+          {/* Render initial images */}
           {initialImages?.map((image, index) => (
             <div
-              key={index}
+              key={`initial-${index}`}
               className="relative group border border-gray-200 rounded-lg overflow-hidden dark:border-gray-700"
             >
               <div className="aspect-square overflow-hidden rounded-lg">
@@ -105,9 +110,10 @@ function ImagePicker({
               </Button>
             </div>
           ))}
+          {/* Render selected images */}
           {selectedImages?.map((image, index) => (
             <div
-              key={index}
+              key={`selected-${index}`}
               className="relative group border border-gray-200 rounded-lg overflow-hidden dark:border-gray-700"
             >
               <div className="aspect-square overflow-hidden rounded-lg">

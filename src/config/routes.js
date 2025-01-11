@@ -12,6 +12,7 @@ const routes = {
   settings: `${ADMIN}/settings`,
   category: `${ADMIN}/category`,
   addCategory: `${ADMIN}/category/add`,
+  detailCategory: `${ADMIN}/category/detail`,
   orders: `${ADMIN}/orders`,
   orderDetail: `${ADMIN}/orders/detail`,
   
