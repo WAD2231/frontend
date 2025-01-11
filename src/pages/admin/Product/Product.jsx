@@ -28,6 +28,7 @@ import { useSearchParams } from "react-router-dom";
 import formatDate from "@/lib/formatDate";
 import ProductStatus from "@/components/ProductStatus";
 import MyAlertDialog from "@/components/MyAlertDialog";
+import useDebounce from "@/hooks/useDebounce";
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
 
@@ -41,6 +42,8 @@ export default function ProductsPage() {
 
   const currentPage = parseInt(searchParams.get("page")) || 1;
   const [search, setSearch] = useState(searchParams.get("search") || "");
+
+  const debounceSearchValue = useDebounce(search, 500);
 
   useEffect(() => {
     const fetchProducts = async ({ current_page, page_size, search }) => {
@@ -62,9 +65,9 @@ export default function ProductsPage() {
     fetchProducts({
       current_page: currentPage,
       page_size: paging.pageSize,
-      search: search,
+      search: debounceSearchValue,
     });
-  }, [currentPage, search]);
+  }, [currentPage, debounceSearchValue]);
 
   const handleSearch = (e) => {
     const value = e.target.value;

@@ -158,7 +158,7 @@ const Header = ({ user, setUser }) => {
                 <DropdownMenuTrigger asChild>
                   <Avatar>
                     <AvatarImage src={user.avatar} />
-                    <AvatarFallback>CN</AvatarFallback>
+                    {/* <AvatarFallback>CN</AvatarFallback> */}
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">

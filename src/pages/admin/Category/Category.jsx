@@ -133,7 +133,7 @@ export default function Category() {
       </div>
 
       <div className="rounded-lg border bg-card">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center justify-between p-4 border-b">
+        {/* <div className="flex flex-col gap-4 md:flex-row md:items-center justify-between p-4 border-b">
           <div className="relative w-full md:w-80">
             <Input placeholder="Search category..." className="pl-4" />
           </div>
@@ -141,7 +141,7 @@ export default function Category() {
             <Filter className="h-4 w-4 mr-2" />
             Filters
           </Button>
-        </div>
+        </div> */}
 
         <Table>
           <TableHeader>
