@@ -61,10 +61,18 @@ export default function EditCategory() {
   const handleUpdateCategory = async () => {
     const formData = new FormData();
     formData.append("thumbnail", category.thumbnail[0]);
-    formData.append("thumbnail_url", category.thumbnail_url);
-    formData.append("super_category_id", category.super_category_id);
+    if (category.thumbnail_url) { 
+      formData.append("thumbnail_url", category.thumbnail_url);
+    }
+
+
+    if (category.super_category_id) { 
+      formData.append("super_category_id", category.super_category_id);
+    }
+
     formData.append("name", category.name);
     formData.append("description", category.description);
+    
     const response = await updateCategory(id, formData);
     if (response.status === 200) {
       navigate(`${routes.detailCategory}/${id}`);
