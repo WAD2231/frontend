@@ -215,7 +215,7 @@ export default function ProductsPage() {
                           <AlertDialogDescription></AlertDialogDescription>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDeleteProduct(product.id)}>Yes</AlertDialogAction>
+                            <AlertDialogAction onClick={() => handleDeleteProduct(product.id)}>Delete</AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>

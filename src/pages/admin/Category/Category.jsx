@@ -8,21 +8,34 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
+import routes from "@/config/routes";
+import {
+  getAllCategories,
+  deleteCategory as apiDeleteCategory,
+} from "@/services/categoryServices";
+import formatDate from "@/lib/formatDate";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import {
   ChevronDown,
   ChevronRight,
-  Filter,
   Download,
   Eye,
   Pencil,
   Trash2,
 } from "lucide-react";
-import { Link } from "react-router-dom";
-import routes from "@/config/routes";
-import { getAllCategories } from "@/services/categoryServices";
-import formatDate from "@/lib/formatDate";
-const CategoryRow = ({ category, level }) => {
+import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
+
+const CategoryRow = ({ category, level, handleDeleteCategory }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -36,7 +49,7 @@ const CategoryRow = ({ category, level }) => {
             className="flex items-center gap-3"
             style={{ paddingLeft: `${level * 24}px` }}
           >
-            {category?.children && (
+            {category?.children?.length > 0 && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -50,7 +63,7 @@ const CategoryRow = ({ category, level }) => {
                 )}
               </Button>
             )}
-            {!category?.children && <div className="w-4" />}
+            {!category?.children?.length && <div className="w-4" />}
             <img
               src={category?.thumbnail}
               alt={category?.name}
@@ -79,19 +92,39 @@ const CategoryRow = ({ category, level }) => {
                 <Pencil className="h-4 w-4" />
               </Button>
             </Link>
-            <Button variant="ghost" size="icon">
-              <Trash2 className="h-4 w-4" />
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="flex flex-col items-center">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-xl">
+                    Are you sure you want to delete this category?
+                  </AlertDialogTitle>
+                </AlertDialogHeader>
+                <AlertDialogDescription></AlertDialogDescription>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => handleDeleteCategory(category.category_id)}
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </TableCell>
       </TableRow>
       {isExpanded &&
-        category?.children &&
-        category?.children.map((child) => (
+        category?.children?.map((child) => (
           <CategoryRow
             key={child.category_id}
             category={child}
             level={level + 1}
+            handleDeleteCategory={handleDeleteCategory}
           />
         ))}
     </>
@@ -111,6 +144,25 @@ export default function Category() {
 
     fetchCategories();
   }, []);
+
+  const deleteCategory = async (categoryId) => {
+    try {
+      const response = await apiDeleteCategory(categoryId);
+      const updatedCategories = removeCategoryById(categories, categoryId);
+      setCategories(updatedCategories);
+    } catch (error) {
+      console.error("Failed to delete category:", error);
+    }
+  };
+
+  const removeCategoryById = (categories, categoryId) => {
+    return categories
+      .filter((category) => category.category_id !== categoryId)
+      .map((category) => ({
+        ...category,
+        children: removeCategoryById(category.children || [], categoryId),
+      }));
+  };
 
   return (
     <div className="container mx-auto p-6">
@@ -133,85 +185,31 @@ export default function Category() {
           </Link>
         </div>
       </div>
-
       <div className="rounded-lg border bg-card">
-        {/* <div className="flex flex-col gap-4 md:flex-row md:items-center justify-between p-4 border-b">
-          <div className="relative w-full md:w-80">
-            <Input placeholder="Search category..." className="pl-4" />
-          </div>
-          <Button variant="outline" size="sm">
-            <Filter className="h-4 w-4 mr-2" />
-            Filters
-          </Button>
-        </div> */}
-
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="w-12">
                 <input type="checkbox" className="rounded border-input" />
               </TableHead>
-              <TableHead>
-                <div className="flex items-center gap-1">
-                  Category
-                  <ChevronDown className="h-4 w-4" />
-                </div>
-              </TableHead>
-              <TableHead>
-                <div className="flex items-center gap-1">
-                  Sales
-                  <ChevronDown className="h-4 w-4" />
-                </div>
-              </TableHead>
-              <TableHead>
-                <div className="flex items-center gap-1">
-                  Stock
-                  <ChevronDown className="h-4 w-4" />
-                </div>
-              </TableHead>
-              <TableHead>
-                <div className="flex items-center gap-1">
-                  Added
-                  <ChevronDown className="h-4 w-4" />
-                </div>
-              </TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Sales</TableHead>
+              <TableHead>Stock</TableHead>
+              <TableHead>Added</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {categories?.map((category) => (
+            {categories.map((category) => (
               <CategoryRow
                 key={category.category_id}
                 category={category}
                 level={0}
+                handleDeleteCategory={deleteCategory}
               />
             ))}
           </TableBody>
         </Table>
-        {/* paging */}
-        {/* <div className="flex flex-col gap-4 md:flex-row md:items-center justify-between p-4 border-t">
-          <div className="text-sm text-muted-foreground">
-            Showing 1-10 from 15
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm" disabled>
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-primary text-primary-foreground"
-            >
-              1
-            </Button>
-            <Button variant="outline" size="sm">
-              2
-            </Button>
-            <Button variant="outline" size="sm">
-              Next
-            </Button>
-          </div>
-        </div> */}
       </div>
     </div>
   );

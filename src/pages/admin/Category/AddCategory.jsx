@@ -46,7 +46,7 @@ export default function AddCategory() {
   const handleCreateCategory = async () => {
     const formData = new FormData();
     formData.append("thumbnail", category.thumbnail);
-    if (category.super_category_id !== 0) { 
+    if (category.super_category_id && category.super_category_id != 0) { 
       formData.append("super_category_id", category.super_category_id);
     }
     formData.append("name", category.name);

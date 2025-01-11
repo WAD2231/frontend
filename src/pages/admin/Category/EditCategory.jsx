@@ -65,8 +65,7 @@ export default function EditCategory() {
       formData.append("thumbnail_url", category.thumbnail_url);
     }
 
-
-    if (category.super_category_id) { 
+    if (category.super_category_id && category.super_category_id != 0) { 
       formData.append("super_category_id", category.super_category_id);
     }
 

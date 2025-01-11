@@ -46,3 +46,12 @@ export const updateCategory = async (id, category) => {
     return error;
   }
 };
+
+export const deleteCategory = async (id) => { 
+  try {
+    const res = await api.delete(`${CATEGORY}/${id}`);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Edit } from "lucide-react";
 import { Link } from "react-router-dom";
 import routes from "@/config/routes";
 import React, { useEffect, useState } from "react";
@@ -27,7 +27,7 @@ export default function DetailCategory() {
   return (
     <div className="container mx-auto p-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
-        <div className="space-y-1">
+        <div className="space-y-1 w-full">
           <div className="flex items-center space-x-2 text-sm text-muted-foreground">
             <Link to={routes.dashboard} className="hover:text-primary">
               Dashboard
@@ -39,7 +39,15 @@ export default function DetailCategory() {
             <span>/</span>
             <span>Category Details</span>
           </div>
-          <h1 className="text-2xl font-semibold">Category Details</h1>
+          <div className="flex justify-between space-x-2 items-center w-full">
+            <h1 className="text-2xl font-semibold">Category Details</h1>
+            <Link to={`${routes.editCategory}/${id}`}>
+              <Button variant="outline" className="mt-2">
+                <Edit className="h-4 w-4 mr-2" />
+                Edit Category
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -94,4 +102,3 @@ export default function DetailCategory() {
     </div>
   );
 }
-
