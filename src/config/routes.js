@@ -7,14 +7,10 @@ const routes = {
   detailProduct: `${ADMIN}/products/detail`,
   customers: `${ADMIN}/customers`,
   customerDetail: `${ADMIN}/customers/detail`,
-  analytics: `${ADMIN}/analytics`,
-  supports: `${ADMIN}/supports`,
-  settings: `${ADMIN}/settings`,
   category: `${ADMIN}/category`,
   addCategory: `${ADMIN}/category/add`,
   detailCategory: `${ADMIN}/category/detail`,
   editCategory: `${ADMIN}/category/edit`,
-  orders: `${ADMIN}/orders`,
   orderDetail: `${ADMIN}/orders/detail`,
   
   // Client routes

@@ -8,3 +8,12 @@ export const getMe = async () => {
     return error;
   }
 };
+
+export const getAllUsers = async ({page, size, search}) => { 
+  try {
+    const res = await api.get(`/users?page=${page}&size=${size}`);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}

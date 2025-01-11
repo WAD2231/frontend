@@ -108,7 +108,7 @@ export default function ProductsPage() {
           </div>
         </div>
         <div className="flex items-center space-x-4">
-          <Button variant="outline">Export</Button>
+          {/* <Button variant="outline">Export</Button> */}
           <Link to={routes.addProduct}>
             <Button>+ Add Product</Button>
           </Link>

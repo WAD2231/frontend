@@ -41,10 +41,6 @@ export default function OrderDetail() {
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <span>Orders</span>
               <span>/</span>
-              <Link to={routes.orders}>
-                <span>Orders List</span>
-              </Link>
-              <span>/</span>
               <span>Orders Detail</span>
             </div>
           </div>

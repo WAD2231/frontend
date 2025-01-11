@@ -125,7 +125,63 @@ const customers = [
   },
 ];
 
+import { useSearchParams } from "react-router-dom";
+import { getAllUsers } from "@/services/userServices";
+import useDebounce from "@/hooks/useDebounce";
+import { useEffect, useState } from "react";
+import formatDate from "@/lib/formatDate";
+
 export default function Customer() {
+  const [paging, setPaging] = useState({
+    totalPages: 0,
+    pageSize: 50,
+    totalItems: 0,
+  });
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [users, setUsers] = useState([]);
+
+  const currentPage = parseInt(searchParams.get("page")) || 1;
+
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+
+  const debounceSearchValue = useDebounce(search, 500);
+
+  useEffect(() => {
+    const fetchUsers = async ({ currentPage, pageSize, search }) => {
+      console.log(currentPage, pageSize, search);
+      
+      const response = await getAllUsers({ page: currentPage, size: pageSize, search });
+      if (response.status === 200) {
+        setUsers(response.data.users);
+        setPaging({
+          totalPages: response.data.paging.total_page,
+          pageSize: response.data.paging.page_size,
+          totalItems: response.data.paging.total_item,
+        });
+      }
+    };
+    fetchUsers({
+      currentPage,
+      pageSize: paging.pageSize,
+      search: debounceSearchValue,
+    });
+  }, [currentPage, debounceSearchValue]);
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearch(value);
+
+    const newParams = new URLSearchParams(searchParams);
+    if (value) {
+      newParams.set("search", value);
+    } else {
+      newParams.delete("search");
+    }
+    setSearchParams(newParams);
+  };
+
   return (
     <div className="container mx-auto p-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
@@ -137,19 +193,24 @@ export default function Customer() {
             <span>Customer List</span>
           </div>
         </div>
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        {/* <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
             Export
           </Button>
           <Button>+ Add Customer</Button>
-        </div>
+        </div> */}
       </div>
 
       <div className="rounded-lg border bg-card">
         <div className="flex flex-col gap-4 md:flex-row md:items-center justify-between p-4 border-b">
           <div className="relative w-full md:w-80">
-            <Input placeholder="Search customer..." className="pl-4" />
+            <Input
+              placeholder="Search customer..."
+              className="pl-4"
+              value={search}
+              onChange={handleSearch}
+            />
           </div>
           <Button variant="outline" size="sm">
             <Filter className="h-4 w-4 mr-2" />
@@ -198,48 +259,45 @@ export default function Customer() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {customers.map((customer) => (
-              <TableRow key={customer.id}>
+            {users?.map((user) => (
+              <TableRow key={user.user_id}>
                 <TableCell>
                   <input type="checkbox" className="rounded border-input" />
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-muted" />
+                    <img src={user.avatar} alt="avatar" className="w-8 h-8" />
                     <div>
-                      <div className="font-medium">{customer.name}</div>
+                      <div className="font-medium">{user.fullname}</div>
                       <div className="text-sm text-muted-foreground">
-                        {customer.email}
+                        {user.username}
                       </div>
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>{customer.phone}</TableCell>
-                <TableCell>{customer.orders}</TableCell>
-                <TableCell>{customer.balance}</TableCell>
+                <TableCell>{user.phone}</TableCell>
+                <TableCell>{user.orders}</TableCell>
+                <TableCell>{user.balance}</TableCell>
                 <TableCell>
                   <Badge
                     variant="outline"
                     className={
-                      customer.status === "Active"
+                      user.status === "Active"
                         ? "border-green-200 bg-green-100 text-green-700 dark:border-green-800 dark:bg-green-900 dark:text-green-300"
                         : "border-red-200 bg-red-100 text-red-700 dark:border-red-800 dark:bg-red-900 dark:text-red-300"
                     }
                   >
-                    {customer.status}
+                    {user.status}
                   </Badge>
                 </TableCell>
-                <TableCell>{customer.created}</TableCell>
+                <TableCell>{`${formatDate(user.created_at)}`}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <Link to={`${routes.customerDetail}/${customer.id}`}>
+                    <Link to={`${routes.customerDetail}/${user.user_id}`}>
                       <Button variant="ghost" size="icon">
                         <Eye className="h-4 w-4" />
                       </Button>
                     </Link>
-                    <Button variant="ghost" size="icon">
-                      <Pencil className="h-4 w-4" />
-                    </Button>
                     <Button variant="ghost" size="icon">
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -249,42 +307,52 @@ export default function Customer() {
             ))}
           </TableBody>
         </Table>
-
-        <div className="flex flex-col gap-4 md:flex-row md:items-center justify-between p-4 border-t">
-          <div className="text-sm text-muted-foreground">
-            Showing 1-10 from 100
+        {paging.totalPages > 1 && (
+          <div className="p-4 border-t border-border flex items-center justify-between">
+            <div className="text-sm text-muted-foreground">
+              {`Showing ${(currentPage - 1) * paging.pageSize + 1}-${
+                (currentPage - 1) * paging.pageSize + users.length
+              } from ${paging.totalItems} users`}
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === 1}
+                onClick={() => setSearchParams({ page: currentPage - 1 })}
+              >
+                Previous
+              </Button>
+              {[...Array(paging.totalPages).keys()].map((page) => {
+                return (
+                  <Button
+                    key={page}
+                    variant="outline"
+                    size="sm"
+                    className={
+                      currentPage === page + 1
+                        ? "bg-primary text-primary-foreground"
+                        : ""
+                    }
+                    onClick={() => {
+                      setSearchParams({ page: page + 1 });
+                    }}
+                  >
+                    {page + 1}
+                  </Button>
+                );
+              })}
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === paging.totalPages}
+                onClick={() => setSearchParams({ page: currentPage + 1 })}
+              >
+                Next
+              </Button>
+            </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm" disabled>
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-primary text-primary-foreground"
-            >
-              1
-            </Button>
-            <Button variant="outline" size="sm">
-              2
-            </Button>
-            <Button variant="outline" size="sm">
-              3
-            </Button>
-            <Button variant="outline" size="sm">
-              4
-            </Button>
-            <Button variant="outline" size="sm">
-              5
-            </Button>
-            <Button variant="outline" size="sm">
-              ...
-            </Button>
-            <Button variant="outline" size="sm">
-              Next
-            </Button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

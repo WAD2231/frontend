@@ -15,12 +15,8 @@ import {
 const navigation = [
   { name: "Dashboard", to: routes.dashboard, icon: LayoutDashboard },
   { name: "Product", to: routes.product, icon: Package },
-  { name: "Orders", to: routes.orders, icon: ShoppingCart, badge: "3" },
   { name: "Customers", to: routes.customers, icon: Users },
   { name: "Category", to: routes.category, icon: NotebookTabs },
-  { name: "Analytics", to: routes.analytics, icon: BarChart2 },
-  { name: "Support", to: routes.supports, icon: HelpCircle },
-  { name: "Setting", to: routes.settings, icon: Settings },
 ];
 function Navbar() {
   return (
