@@ -4,7 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import routes from "@/config/routes";
 import { Calendar, ShoppingCart, Package, Wallet } from "lucide-react";
+import PieChart from "@/components/PieChart";
 import { Link } from "react-router-dom";
+import {
+  getCategoryStatistic,
+  getManufacturerStatistic,
+  getBestSellingProductStatistic,
+  getTopCustomerStatistic,
+  getRevenueStatistic,
+  getNewCustomerStatistic,
+} from "@/services/statisticServices";
 import {
   LineChart,
   Line,
@@ -14,6 +23,9 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useEffect, useState } from "react";
+import BarChartHorizontal from "@/components/BartChartHorizontal";
+import BartChar from "@/components/BartChart";
 
 const data = [
   { name: "Jan", revenue: 800, sales: 400 },
@@ -31,9 +43,57 @@ const data = [
 ];
 
 export default function DashboardPage() {
+  const [categoryStatistics, setCategoryStatistics] = useState([]);
+  const [manufacturerStatistics, setManufacturerStatistics] = useState([]);
+  const [bestSellingProductStatistics, setBestSellingProductStatistics] =
+    useState([]);
+  const [topCustomerStatistics, setTopCustomerStatistics] = useState([]);
+  const [revenueStatistics, setRevenueStatistics] = useState([]);
+  const [newCustomerStatistics, setNewCustomerStatistics] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [
+        categoryStatisticData,
+        manufacturerStatisticData,
+        bestSellingProductStatisticData,
+        topCustomerStatisticData,
+        revenueStatisticData,
+        newCustomerStatisticData,
+      ] = await Promise.all([
+        getCategoryStatistic(),
+        getManufacturerStatistic(),
+        getBestSellingProductStatistic(10),
+        getTopCustomerStatistic(10),
+        getRevenueStatistic(),
+        getNewCustomerStatistic(),
+      ]);
+      if (categoryStatisticData.status === 200) {
+        setCategoryStatistics(categoryStatisticData.data);
+      }
+      if (manufacturerStatisticData.status === 200) {
+        setManufacturerStatistics(manufacturerStatisticData.data);
+      }
+      if (bestSellingProductStatisticData.status === 200) {
+        setBestSellingProductStatistics(bestSellingProductStatisticData.data);
+      }
+      if (topCustomerStatisticData.status === 200) {
+        console.log(topCustomerStatisticData.data);
+        setTopCustomerStatistics(topCustomerStatisticData.data);
+      }
+      if (revenueStatisticData.status === 200) {
+        setRevenueStatistics(revenueStatisticData.data);
+      }
+      if (newCustomerStatisticData.status === 200) {
+        setNewCustomerStatistics(newCustomerStatisticData.data);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div className="p-6 space-y-6 bg-background min-h-screen w-full">
-      <div className="flex justify-between items-center">
+      {/* <div className="flex justify-between items-center">
         <div className="flex space-x-2">
           <Button variant="default">All Time</Button>
           <Button variant="outline">12 Months</Button>
@@ -50,9 +110,9 @@ export default function DashboardPage() {
             <Button>+ Add Product</Button>
           </Link>
         </div>
-      </div>
+      </div> */}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center space-x-4">
@@ -124,10 +184,98 @@ export default function DashboardPage() {
             </div>
           </CardContent>
         </Card>
+      </div> */}
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <BartChar
+          dataKey={"sales"}
+          chartData={[
+            {
+              month: 1,
+              year: 2024,
+              sales: 100000,
+            },
+            {
+              month: 12,
+              year: 2024,
+              sales: 200000,
+              monthYear: "12/2024",
+            },
+            {
+              month: 1,
+              year: 2025,
+              sales: 100000,
+              monthYear: "1/2025",
+            },
+            {
+              month: 2,
+              year: 2025,
+              sales: 80000,
+              monthYear: "2/2025",
+            },
+            {
+              month: 3,
+              year: 2025,
+              sales: 70000,
+              monthYear: "3/2025",
+            },
+            {
+              month: 4,
+              year: 2025,
+              sales: 60000,
+              monthYear: "4/2025",
+            },
+            {
+              month: 5,
+              year: 2025,
+              sales: 50000,
+              monthYear: "5/2025",
+            },
+            {
+              month: 6,
+              year: 2025,
+              sales: 40000,
+              monthYear: "6/2025",
+            },
+            {
+              month: 7,
+              year: 2025,
+              sales: 30000,
+              monthYear: "7/2025",
+            },
+            {
+              month: 8,
+              year: 2025,
+              sales: 20000,
+              monthYear: "8/2025",
+            },
+            {
+              month: 9,
+              year: 2025,
+              sales: 10000,
+              monthYear: "9/2025",
+            },
+            {
+              month: 11,
+              year: 2025,
+              sales: 2000,
+              monthYear: "11/2025",
+            },
+          ]}
+          label={"Sales Data: January - June 2024"}
+        />
+        <BartChar
+          dataKey={"quantity"}
+          chartData={newCustomerStatistics?.map((item) => ({
+            ...item,
+            monthYear: `${item.month}/${item.year}`,
+          }))}
+          label={"New customer statistics"}
+        />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-1">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* <Card className="lg:col-span-1">
           <CardContent className="p-6">
             <div className="flex justify-between items-start">
               <div>
@@ -195,9 +343,85 @@ export default function DashboardPage() {
               </div>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
 
-        <Card className="lg:col-span-2">
+        <BarChartHorizontal
+          dataKey={"quantity"}
+          chartData={
+            bestSellingProductStatistics.length > 0
+              ? bestSellingProductStatistics
+              : [
+                  {
+                    id: 5,
+                    name: "Date",
+                    quantity: 4,
+                  },
+                  {
+                    id: 3,
+                    name: "Banana",
+                    quantity: 3,
+                  },
+                  {
+                    id: 4,
+                    name: "Cherry",
+                    quantity: 2,
+                  },
+                  {
+                    id: 2,
+                    name: "Apple",
+                    quantity: 2,
+                  },
+                  {
+                    id: 1,
+                    name: "Product 1",
+                    quantity: 1,
+                  },
+                ]
+          }
+          label={"Top best-selling products"}
+        />
+        <BarChartHorizontal
+          dataKey={"total"}
+          chartData={
+            topCustomerStatistics.length > 0
+              ? topCustomerStatistics
+              : [
+                  {
+                    id: 8,
+                    name: "Nguyễn Khánh Du",
+                    total: 200000,
+                  },
+                  {
+                    id: 7,
+                    name: "Bùi Công Anh",
+                    total: 100000,
+                  },
+                  {
+                    id: 6,
+                    name: "Nguyễn Văn A",
+                    total: 80000,
+                  },
+                  {
+                    id: 5,
+                    name: "Nguyễn Văn B",
+                    total: 70000,
+                  },
+                  {
+                    id: 4,
+                    name: "Nguyễn Văn C",
+                    total: 60000,
+                  },
+                  {
+                    id: 3,
+                    name: "Nguyễn Văn D",
+                    total: 50000,
+                  },
+                ]
+          }
+          label={"Top customers"}
+        />
+
+        {/* <Card className="lg:col-span-2">
           <CardContent className="p-6">
             <div className="flex justify-between items-start">
               <div>
@@ -244,9 +468,20 @@ export default function DashboardPage() {
               </ResponsiveContainer>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
-      <SalesDashboard />
+
+      <div className="grid gap-6 md:grid-cols-2">
+        <PieChart
+          label={"Statistic product quantity by category"}
+          chartData={categoryStatistics}
+        />
+
+        <PieChart
+          label={"Statistic product quantity by manufacturer"}
+          chartData={manufacturerStatistics}
+        />
+      </div>
       <OrdersTable />
     </div>
   );
