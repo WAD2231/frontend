@@ -37,3 +37,12 @@ export const getCategory = async (id) => {
     return error;
   }
 };
+
+export const updateCategory = async (id, category) => {
+  try {
+    const res = await api.put(`${CATEGORY}/${id}`, category);
+    return res;
+  } catch (error) {
+    return error;
+  }
+};

@@ -74,9 +74,11 @@ const CategoryRow = ({ category, level }) => {
                 <Eye className="h-4 w-4" />
               </Button>
             </Link>
-            <Button variant="ghost" size="icon">
-              <Pencil className="h-4 w-4" />
-            </Button>
+            <Link to={`${routes.editCategory}/${category.category_id}`}>
+              <Button variant="ghost" size="icon">
+                <Pencil className="h-4 w-4" />
+              </Button>
+            </Link>
             <Button variant="ghost" size="icon">
               <Trash2 className="h-4 w-4" />
             </Button>

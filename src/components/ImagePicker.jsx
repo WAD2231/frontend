@@ -85,14 +85,14 @@ function ImagePicker({
         </div>
         <div className="grid grid-cols-4 gap-4">
           {/* Render initial images */}
-          {initialImages?.map((image, index) => (
+          {initialImages?.length > 0 && initialImages?.map((image, index) => (
             <div
               key={`initial-${index}`}
               className="relative group border border-gray-200 rounded-lg overflow-hidden dark:border-gray-700"
             >
               <div className="aspect-square overflow-hidden rounded-lg">
                 <img
-                  src={image.image_url}
+                  src={image?.image_url || image}
                   alt={`Preview ${index + 1}`}
                   width={300}
                   height={300}

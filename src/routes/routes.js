@@ -15,6 +15,7 @@ import DetailProduct from "@/pages/admin/Product/DetailProduct";
 import OrderDetail from "@/pages/admin/Order/OrderDetail";
 import CustomerDetail from "@/pages/admin/Customer/CustomerDetail";
 import DetailCategory from "@/pages/admin/Category/DetailCategory";
+import EditCategory from "@/pages/admin/Category/EditCategory";
 
 // Client Pages
 import Home from "@/pages/user/Home";
@@ -43,6 +44,7 @@ const privateRoutes = [
   { path: routes.addCategory, components: AddCategory },
   { path: routes.category, components: Category },
   { path: `${routes.detailCategory}/:id`, components: DetailCategory },
+  { path: `${routes.editCategory}/:id`, components: EditCategory },
   { path: routes.supports, components: Support },
   { path: routes.settings, components: Setting },
 ];
