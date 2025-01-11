@@ -10,7 +10,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { X } from "lucide-react";
 import { Link } from "react-router-dom";
 import routes from "@/config/routes";
 import ImagePicker from "@/components/ImagePicker";
@@ -18,9 +17,11 @@ import SelectCategory from "@/components/SelectCategory";
 import { getAllCategories, getManufacturers } from "@/services/categoryServices";
 import { createProduct } from "@/services/productServices";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import MyAlertDialog from "@/components/MyAlertDialog";
 
 function AddProduct() {
-
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [manufacturers, setManufacturers] = useState([]);
 
@@ -55,11 +56,11 @@ function AddProduct() {
     stock: 0,
     category_id: 0,
     manufacturer_id: 0,
+    tag: "",
     images: [],
   })
 
   const handleSelectedCategory = (category_id) => {
-    console.log(category_id);
     setFields({ ...fields, category_id: category_id });
   }
 
@@ -76,20 +77,28 @@ function AddProduct() {
     formData.append("stock", fields.stock);
     formData.append("category_id", fields.category_id);
     formData.append("manufacturer_id", fields.manufacturer_id);
+    formData.append("tag", fields.tag);
     fields.images.forEach((image) => {
       formData.append("image", image);
     });
 
     const response = await createProduct(formData);
     if (response.status === 201) { 
-      console.log("Product added successfully");
-      console.log(response.data);
+      setOpen(true);
     }
 
   }
 
+  const [open, setOpen] = useState(false);
+
+  const handleContinue = () => { 
+    setOpen(false);
+    navigate(routes.product);
+  }
+
   return (
     <div className="container mx-auto p-6">
+      <MyAlertDialog isShown={open} setIsShown={setOpen} handleContinue={handleContinue} title="Product created successfully"/>
       <div className="flex items-center justify-between mb-8">
         <div className="space-y-1">
           <div className="flex items-center space-x-2 text-sm text-muted-foreground">
@@ -106,11 +115,6 @@ function AddProduct() {
           <h1 className="text-2xl font-semibold">Add Product</h1>
         </div>
         <div className="flex items-center space-x-2">
-          {/* <Button variant="ghost">
-            <X className="h-4 w-4 mr-2" />
-            Cancel
-          </Button>
-          <Button>+ Add Product</Button> */}
         </div>
       </div>
 
@@ -144,7 +148,7 @@ function AddProduct() {
               </div>
             </CardContent>
           </Card>
-          <ImagePicker title={"Media"} imageName={"Image"} multiple={true} onChange={handleSelectedImage}/>
+          <ImagePicker title={"Media"} imageName={"Image"} multiple={true} onChange={handleSelectedImage} image_urls={[]}/>
           <Card>
             <CardHeader>
               <CardTitle>Other Information</CardTitle>
@@ -195,11 +199,11 @@ function AddProduct() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label>Product Category</Label>
-                <SelectCategory categories={categories} label={"Select category"} onChange={handleSelectedCategory}/>
+                <SelectCategory categories={categories} label={"Select category"} onChange={handleSelectedCategory} selectedCategory={fields.category_id}/>
               </div>
               <div className="space-y-2">
                 <Label>Product Tags</Label>
-                <Select>
+                <Select value={fields?.tag || "new"} onValueChange={(tag) => setFields({ ...fields, tag })}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select tags" />
                   </SelectTrigger>

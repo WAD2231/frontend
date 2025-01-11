@@ -3,10 +3,23 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { X, ImageIcon } from "lucide-react";
 import { useDropzone } from "react-dropzone";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-function ImagePicker({ title, imageName, multiple = false, onChange }) {
+function ImagePicker({
+  title,
+  imageName,
+  multiple = false,
+  onChange,
+  onChangeInitialImages,
+  image_urls = [],
+}) {
   const [selectedImages, setSelectedImages] = useState([]);
+
+  const [initialImages, setInitialImages] = useState(image_urls);
+
+  useEffect(() => {
+    setInitialImages(image_urls);
+  }, [image_urls]);
 
   const onDrop = useCallback(
     (acceptedFiles) => {
@@ -36,6 +49,11 @@ function ImagePicker({ title, imageName, multiple = false, onChange }) {
     onChange(selectedImages.filter((_, i) => i !== index));
   };
 
+  const removeImageUrl = (index) => {
+    setInitialImages((prevState) => prevState.filter((_, i) => i !== index));
+    onChangeInitialImages(initialImages.filter((_, i) => i !== index));
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -62,32 +80,56 @@ function ImagePicker({ title, imageName, multiple = false, onChange }) {
           </div>
         </div>
         <div className="grid grid-cols-4 gap-4">
-          {selectedImages.length > 0 &&
-            selectedImages.map((image, index) => (
-              <div
-                key={index}
-                className="relative group border border-gray-200 rounded-lg overflow-hidden dark:border-gray-700"
-              >
-                <div className="aspect-square overflow-hidden rounded-lg">
-                  <img
-                    src={URL.createObjectURL(image)}
-                    alt={`Preview ${index + 1}`}
-                    width={300}
-                    height={300}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-                <Button
-                  variant="destructive"
-                  size="icon"
-                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                  onClick={() => removeImage(index)}
-                  aria-label={`Remove image ${index + 1}`}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+          {initialImages?.map((image, index) => (
+            <div
+              key={index}
+              className="relative group border border-gray-200 rounded-lg overflow-hidden dark:border-gray-700"
+            >
+              <div className="aspect-square overflow-hidden rounded-lg">
+                <img
+                  src={image.image_url}
+                  alt={`Preview ${index + 1}`}
+                  width={300}
+                  height={300}
+                  className="object-cover w-full h-full"
+                />
               </div>
-            ))}
+              <Button
+                variant="destructive"
+                size="icon"
+                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => removeImageUrl(index)}
+                aria-label={`Remove image ${index + 1}`}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+          {selectedImages?.map((image, index) => (
+            <div
+              key={index}
+              className="relative group border border-gray-200 rounded-lg overflow-hidden dark:border-gray-700"
+            >
+              <div className="aspect-square overflow-hidden rounded-lg">
+                <img
+                  src={URL.createObjectURL(image)}
+                  alt={`Preview ${index + 1}`}
+                  width={300}
+                  height={300}
+                  className="object-cover w-full h-full"
+                />
+              </div>
+              <Button
+                variant="destructive"
+                size="icon"
+                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => removeImage(index)}
+                aria-label={`Remove image ${index + 1}`}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>

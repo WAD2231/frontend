@@ -28,3 +28,12 @@ export const createProduct = async (product) => {
     return error;
   }
 };
+
+export const updateProduct = async (product, id) => { 
+  try {
+    const res = await api.put(`${PRODUCTS}/${id}`, product);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}

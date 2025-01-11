@@ -15,6 +15,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getProduct } from "@/services/productServices";
 import ProductStatus from "@/components/ProductStatus";
+import capitalFirstLetter from "@/lib/capitalFirstLetter";
 
 export default function DetailProduct() {
   const { id } = useParams();
@@ -25,7 +26,8 @@ export default function DetailProduct() {
       try {
         const response = await getProduct(id);
         if (response.status === 200) {
-          console.dir(response.data);
+          console.log("Product fetched successfully:", response.data);
+
           setProduct(response.data);
         }
       } catch (error) {
@@ -52,7 +54,7 @@ export default function DetailProduct() {
           </div>
           <h1 className="text-3xl font-bold">{product?.name}</h1>
         </div>
-        <Link to={routes.editProduct}>
+        <Link to={`${routes.editProduct}/${id}`}>
           <Button variant="outline">
             <Edit className="h-4 w-4 mr-2" />
             Edit
@@ -76,9 +78,7 @@ export default function DetailProduct() {
                 >
                   <CarouselContent>
                     {product?.images?.map((image, index) => (
-                      <CarouselItem
-                        key={index}
-                      >
+                      <CarouselItem key={index}>
                         <div className="p-1">
                           <Card>
                             <CardContent className="flex aspect-square items-center justify-center p-6">
@@ -109,7 +109,20 @@ export default function DetailProduct() {
             <CardContent className="space-y-4">
               <div>
                 <h3 className="font-semibold mb-2">Product Name</h3>
-                <p>{product?.name}</p>
+                <div className="flex items-center space-x-2">
+                  <p>{product?.name}</p>
+                  <Badge
+                    className={`${
+                      product?.tag === "new"
+                        ? "bg-green-600 hover:bg-green-400"
+                        : product?.tag === "featured"
+                        ? "bg-red-600 hover:bg-red-400"
+                        : "bg-yellow-300 hover:bg-yellow-200"
+                    }`}
+                  >
+                    {capitalFirstLetter(product?.tag)}
+                  </Badge>
+                </div>
               </div>
               <div>
                 <h3 className="font-semibold mb-2">Description</h3>
@@ -120,7 +133,7 @@ export default function DetailProduct() {
                 <p className="text-2xl font-bold">${product?.price}</p>
                 {parseFloat(product?.discount) && (
                   <p className="text-sm text-muted-foreground">
-                    {parseFloat(product?.discount)}% off
+                    {parseFloat(product?.discount) * 100}% off
                   </p>
                 )}
               </div>
@@ -130,12 +143,12 @@ export default function DetailProduct() {
               </div>
               <div>
                 <h3 className="font-semibold mb-2">Category</h3>
-                <Badge>{product?.category?.name}</Badge>
+                <Badge>{product?.categoryName}</Badge>
               </div>
               <div>
                 <h3 className="font-semibold mb-2">Manufacturer</h3>
                 <Badge className="bg-green-600 hover:bg-green-400">
-                  {product?.manufacturer?.name}
+                  {product?.manufacturerName}
                 </Badge>
               </div>
               <div>

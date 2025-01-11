@@ -131,7 +131,7 @@ export default function ProductsPage() {
                   </TableCell>
                   <TableCell>{product.category}</TableCell>
                   <TableCell>{product.stock}</TableCell>
-                  <TableCell>{product.price}</TableCell>
+                  <TableCell>${product.price}</TableCell>
                   <TableCell>
                     <ProductStatus stock={product.stock} />
                   </TableCell>
