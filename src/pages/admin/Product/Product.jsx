@@ -29,12 +29,14 @@ export default function ProductsPage() {
   });
 
   const currentPage = parseInt(searchParams.get("page")) || 1;
+  const [search, setSearch] = useState(searchParams.get("search") || "");
 
   useEffect(() => {
-    const fetchProducts = async ({ current_page, page_size }) => {
+    const fetchProducts = async ({ current_page, page_size, search }) => {
       const response = await getProducts({
         current_page,
         page_size,
+        search,
       });
       if (response.status === 200) {
         setProducts(response.data.products);
@@ -49,8 +51,22 @@ export default function ProductsPage() {
     fetchProducts({
       current_page: currentPage,
       page_size: paging.pageSize,
+      search: search,
     });
-  }, [currentPage]);
+  }, [currentPage, search]);
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearch(value);
+
+    const newParams = new URLSearchParams(searchParams);
+    if (value) {
+      newParams.set("search", value);
+    } else {
+      newParams.delete("search");
+    }
+    setSearchParams(newParams);
+  };
 
   return (
     <div className="p-6 space-y-6 bg-background min-h-screen w-full">
@@ -73,7 +89,12 @@ export default function ProductsPage() {
 
       <div className="bg-background rounded-lg shadow">
         <div className="p-4 border-b border-border flex items-center justify-between">
-          <Input placeholder="Search product..." className="max-w-sm" />
+          <Input
+            placeholder="Search product..."
+            className="max-w-sm"
+            onChange={handleSearch}
+            value={search}
+          />
           <div className="flex items-center space-x-4">
             <Button variant="outline" className="flex items-center space-x-2">
               <Calendar className="h-4 w-4" />
@@ -158,41 +179,52 @@ export default function ProductsPage() {
             })}
           </TableBody>
         </Table>
-
-        <div className="p-4 border-t border-border flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">
-            {`Showing ${(currentPage - 1) * paging.pageSize + 1}-${
-              (currentPage - 1) * paging.pageSize + products.length
-            } from ${paging.totalItems} products`}
+        {paging.totalPages > 1 && (
+          <div className="p-4 border-t border-border flex items-center justify-between">
+            <div className="text-sm text-muted-foreground">
+              {`Showing ${(currentPage - 1) * paging.pageSize + 1}-${
+                (currentPage - 1) * paging.pageSize + products.length
+              } from ${paging.totalItems} products`}
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === 1}
+                onClick={() => setSearchParams({ page: currentPage - 1 })}
+              >
+                Previous
+              </Button>
+              {[...Array(paging.totalPages).keys()].map((page) => {
+                return (
+                  <Button
+                    key={page}
+                    variant="outline"
+                    size="sm"
+                    className={
+                      currentPage === page + 1
+                        ? "bg-primary text-primary-foreground"
+                        : ""
+                    }
+                    onClick={() => {
+                      setSearchParams({ page: page + 1 });
+                    }}
+                  >
+                    {page + 1}
+                  </Button>
+                );
+              })}
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === paging.totalPages}
+                onClick={() => setSearchParams({ page: currentPage + 1 })}
+              >
+                Next
+              </Button>
+            </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm" disabled={currentPage === 1} onClick={() => setSearchParams({ page: currentPage - 1 })}>
-              Previous
-            </Button>
-            {[...Array(paging.totalPages).keys()].map((page) => {
-              return (
-                <Button
-                  key={page}
-                  variant="outline"
-                  size="sm"
-                  className={
-                    currentPage === page + 1
-                      ? "bg-primary text-primary-foreground"
-                      : ""
-                  }
-                  onClick={() => {
-                    setSearchParams({ page: page + 1 });
-                  }}
-                >
-                  {page + 1}
-                </Button>
-              );
-            })}
-            <Button variant="outline" size="sm" disabled={currentPage === paging.totalPages} onClick={() => setSearchParams({ page: currentPage + 1 })}>
-              Next
-            </Button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
