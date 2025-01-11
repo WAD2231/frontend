@@ -84,21 +84,14 @@ function AddProduct() {
 
     const response = await createProduct(formData);
     if (response.status === 201) { 
-      setOpen(true);
+      navigate(`${routes.detailProduct}/${response.data.product.product_id}`);
     }
 
   }
 
-  const [open, setOpen] = useState(false);
-
-  const handleContinue = () => { 
-    setOpen(false);
-    navigate(routes.product);
-  }
 
   return (
     <div className="container mx-auto p-6">
-      <MyAlertDialog isShown={open} setIsShown={setOpen} handleContinue={handleContinue} title="Product created successfully"/>
       <div className="flex items-center justify-between mb-8">
         <div className="space-y-1">
           <div className="flex items-center space-x-2 text-sm text-muted-foreground">

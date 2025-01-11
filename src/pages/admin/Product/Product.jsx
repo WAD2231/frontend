@@ -8,15 +8,26 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Calendar, Filter, Eye, Pencil, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import routes from "@/config/routes";
-import { getProducts } from "@/services/productServices";
+import { getProducts, deleteProduct } from "@/services/productServices";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import formatDate from "@/lib/formatDate";
 import ProductStatus from "@/components/ProductStatus";
+import MyAlertDialog from "@/components/MyAlertDialog";
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
 
@@ -68,8 +79,22 @@ export default function ProductsPage() {
     setSearchParams(newParams);
   };
 
+  const handleDeleteProduct = async (id) => {
+    const response = await deleteProduct(id);
+      const newProducts = products.filter((product) => product.id !== id);
+      setProducts(newProducts);
+      setOpen(true);
+  };
+
+  const [open, setOpen] = useState(false);
+
+  const handleContinue = () => { 
+    setOpen(false);
+  }
+
   return (
     <div className="p-6 space-y-6 bg-background min-h-screen w-full">
+      <MyAlertDialog isShown={open} setIsShown={setOpen} handleContinue={handleContinue} title="Product deleted successfully"/>
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Product</h1>
@@ -169,9 +194,28 @@ export default function ProductsPage() {
                           <Pencil className="h-4 w-4" />
                         </Button>
                       </Link>
-                      <Button variant="ghost" size="icon">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="flex flex-col items-center">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="text-xl">
+                              Are you sure you want to delete this product?
+                            </AlertDialogTitle>
+                          </AlertDialogHeader>
+                          <AlertDialogDescription></AlertDialogDescription>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDeleteProduct(product.id)}>Yes</AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </TableCell>
                 </TableRow>
