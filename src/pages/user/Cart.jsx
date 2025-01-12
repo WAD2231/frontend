@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useDarkMode } from "@/components/DarkModeContext";
 import routes from "@/config/routes";
 import { deleteProduct, updateProductQuantity } from "@/services/cartServices";
+import { createOrder } from "@/services/orderServices";
 
 export default function ShoppingCart({ cartItems, setCartItems }) {
   const { darkMode } = useDarkMode();
@@ -65,6 +66,32 @@ export default function ShoppingCart({ cartItems, setCartItems }) {
     const item = cartItems.find((item) => item.product.id === id);
     return sum + item?.product.price * item?.quantity * item?.product.discount;
   }, 0);
+
+  const handleCreateOrder = async () => {
+    const selectedProducts = cartItems.filter((item) =>
+      selectedItems.includes(item.product.id)
+    );
+    let total = 0;
+    const order = {
+      total: 0,
+      details: selectedProducts.map(function (item) {
+        const subtotal = (
+          item.product.price * item.quantity -
+          item.product.price * item.quantity * item.product.discount
+        ).toFixed(2);
+        total += parseFloat(subtotal);
+        return {
+          product_id: item.product.id,
+          quantity: item.quantity,
+          subtotal: parseFloat(subtotal),
+        };
+      }),
+    };
+    order.total = parseFloat(total.toFixed(2));
+    console.log(order);
+    const response = await createOrder(order);
+    console.log(response);
+  };
 
   return (
     <div
@@ -154,7 +181,9 @@ export default function ShoppingCart({ cartItems, setCartItems }) {
                         <span className="col-span-2 text-center">
                           -$
                           {item.product?.discount > 0
-                            ? (item?.product?.discount * item?.product?.price)?.toFixed(2)
+                            ? (
+                                item?.product?.discount * item?.product?.price
+                              )?.toFixed(2)
                             : 0}
                         </span>
                         <div className="col-span-2">
@@ -250,8 +279,10 @@ export default function ShoppingCart({ cartItems, setCartItems }) {
                   </div>
                 </div>
               </div>
-              <Button className="w-full mt-6">Proceed to Checkout →</Button>
-              <div className={`mt-6`}>
+              <Button className="w-full mt-6" onClick={handleCreateOrder}>
+                Proceed to Checkout →
+              </Button>
+              {/* <div className={`mt-6`}>
                 <h3 className="font-medium mb-2">Coupon Code</h3>
                 <div className="flex gap-2">
                   <Input
@@ -261,7 +292,7 @@ export default function ShoppingCart({ cartItems, setCartItems }) {
                   />
                   <Button variant="secondary">Apply</Button>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
