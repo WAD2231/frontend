@@ -22,7 +22,7 @@ export const getManufacturerStatistic = async () => {
 
 export const getRevenueStatistic = async () => { 
   try {
-    const response = await api.get(`/orders${STATISTIC}/revenue`);
+    const response = await api.get(`/orders${STATISTIC}s/revenue`);
     return response
   } catch (error) {
     return error

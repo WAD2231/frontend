@@ -390,7 +390,7 @@ export default function Profile({ user }) {
                     <TableHead>
                       <div className="flex items-center gap-1">
                         Date
-                        {_date === "date_desc" ? (
+                        {order === "date_desc" ? (
                           <ChevronDown
                             className="h-4 w-4"
                             onClick={handleSortDate}
