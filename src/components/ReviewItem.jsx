@@ -39,7 +39,7 @@ const ProductReview = ({
             <p className="text-sm font-medium text-gray-900">{review?.user?.fullname}</p>
             <div className="flex items-center mt-1">
               {renderStars(review?.rating)}
-              <span className="ml-2 text-sm text-gray-500">{review?.rating.toFixed(1)}</span>
+              <span className="ml-2 text-sm text-gray-500">{review?.rating}</span>
             </div>
           </div>
           <div className="text-sm text-gray-500">{formattedDate}</div>

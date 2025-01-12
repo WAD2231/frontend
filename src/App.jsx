@@ -87,7 +87,7 @@ function AppContent({ user, setUser, checkingAuth, setCheckingAuth }) {
             path={route.path}
             element={
               <Layout user={user} setUser={setUser}>
-                <Page />
+                <Page user={user}/>
               </Layout>
             }
           />

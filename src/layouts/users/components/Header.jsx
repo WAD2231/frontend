@@ -55,7 +55,7 @@ const Header = ({ user, setUser }) => {
     <header
       className={`${
         darkMode ? "bg-gray-900 text-white" : "bg-white text-black"
-      } fixed w-full top-0 z-50`}
+      } fixed w-full top-0 z-50 h-20`}
     >
       <nav className="px-[50px]">
         <div className="container py-3 mx-auto flex justify-between items-center">

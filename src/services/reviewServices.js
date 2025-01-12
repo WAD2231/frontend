@@ -10,3 +10,12 @@ export const getProductReviews = async ({ id, page, size }) => {
     return error;
   }
 };
+
+export const createReview = async (data) => { 
+  try {
+    const res = await api.post(REVIEWS, data);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}
