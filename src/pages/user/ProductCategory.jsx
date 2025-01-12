@@ -54,14 +54,14 @@ export default function ProductCategory() {
   }, [id, currentPage]);
 
   return (
-    <div className="container mx-auto px-4 py-8 mt-20">
+    <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-semibold mb-4">Product</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {products?.map((product) => (
-          <Link to={`${routes.productDetail}/${product?.id}`} key={product?.id}>
+          <Link to={`${routes.productDetail}/${product?.id}`} key={product?.id} className="h-full">
             <Card
               key={product?.id}
-              className="flex flex-col justify-center gap-2"
+              className="flex flex-col justify-center gap-2 h-full"
             >
               <CardHeader>
                 <div className="relative h-48 w-full mb-4 flex justify-center">

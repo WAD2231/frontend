@@ -157,7 +157,6 @@ export default function DashboardPage() {
       </div> */}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
         <BartChar
           dataKey={"Quantity"}
           chartData={newCustomerStatistics?.map((item) => {
@@ -322,78 +321,29 @@ export default function DashboardPage() {
         </Card> */}
 
         <BarChartHorizontal
-          dataKey={"quantity"}
-          chartData={
-            bestSellingProductStatistics.length > 0
-              ? bestSellingProductStatistics
-              : [
-                  {
-                    id: 5,
-                    name: "Date",
-                    quantity: 4,
-                  },
-                  {
-                    id: 3,
-                    name: "Banana",
-                    quantity: 3,
-                  },
-                  {
-                    id: 4,
-                    name: "Cherry",
-                    quantity: 2,
-                  },
-                  {
-                    id: 2,
-                    name: "Apple",
-                    quantity: 2,
-                  },
-                  {
-                    id: 1,
-                    name: "Product 1",
-                    quantity: 1,
-                  },
-                ]
-          }
+          dataKey={{
+            label: "name",
+            key: "Quantity",
+          }}
+          chartData={bestSellingProductStatistics?.map((item) => {
+            return {
+              name: item.name,
+              Quantity: item.quantity,
+            };
+          })}
           label={"Top best-selling products"}
         />
         <BarChartHorizontal
-          dataKey={"total"}
-          chartData={
-            topCustomerStatistics.length > 0
-              ? topCustomerStatistics
-              : [
-                  {
-                    id: 8,
-                    name: "Nguyễn Khánh Du",
-                    total: 200000,
-                  },
-                  {
-                    id: 7,
-                    name: "Bùi Công Anh",
-                    total: 100000,
-                  },
-                  {
-                    id: 6,
-                    name: "Nguyễn Văn A",
-                    total: 80000,
-                  },
-                  {
-                    id: 5,
-                    name: "Nguyễn Văn B",
-                    total: 70000,
-                  },
-                  {
-                    id: 4,
-                    name: "Nguyễn Văn C",
-                    total: 60000,
-                  },
-                  {
-                    id: 3,
-                    name: "Nguyễn Văn D",
-                    total: 50000,
-                  },
-                ]
-          }
+          dataKey={{
+            label: "fullname",
+            key: "Total",
+          }}
+          chartData={topCustomerStatistics?.map((item) => {
+            return {
+              fullname: item.fullname,
+              Total: item.total,
+            };
+          })}
           label={"Top customers"}
         />
 

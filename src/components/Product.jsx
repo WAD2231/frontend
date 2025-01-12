@@ -13,19 +13,19 @@ const Product = ({ id, name, price, discount, image, tag, ...props }) => {
       to={`${routes.productDetail}/${id}`}
       className="cursor-pointer min-w-[300px] flex flex-col gap-2 w-full"
     >
-      <Card className="flex flex-col justify-between items-center w-full h-full group">
-        <div className="group overflow-hidden flex justify-center p-16 relative">
+      <Card className="flex flex-col justify-center items-center w-full h-full group relative">
+        <span className="absolute top-3 left-3">
+          {discount && (
+            <button className="bg-[#DB4444] text-white px-2 py-1 rounded-md">
+              {`-${discount * 100}%`}
+            </button>
+          )}
+        </span>
+        <span className="absolute top-3 right-3">
+          <ProductTag tag={tag} />
+        </span>
+        <div className="group overflow-hidden flex justify-center p-8">
           <img src={image} alt={name} />
-          <span className="absolute top-3 left-3">
-            {discount && (
-              <button className="bg-[#DB4444] text-white px-2 py-1 rounded-md">
-                {`-${discount * 100}%`}
-              </button>
-            )}
-          </span>
-          <span className="absolute top-3 right-3">
-            <ProductTag tag={tag} />
-          </span>
         </div>
 
         <div className="flex flex-col p-4 gap-3 w-full">
@@ -35,7 +35,7 @@ const Product = ({ id, name, price, discount, image, tag, ...props }) => {
               <span className="text-lg font-bold">${price}</span>
               {discount && (
                 <span className="text-sm text-gray-500 line-through">
-                  ${((price / (1 - discount)).toFixed(2))}
+                  ${(price / (1 - discount)).toFixed(2)}
                 </span>
               )}
             </div>

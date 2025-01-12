@@ -46,3 +46,12 @@ export const deleteProduct = async (id) => {
     return error;
   }
 }
+
+export const getHomeProducts = async (max) => {  
+  try {
+    const res = await api.get(`${PRODUCTS}/home?max=${max}`);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}

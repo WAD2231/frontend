@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDarkMode } from "@/components/DarkModeContext";
 import routes from "@/config/routes";
+import { useEffect } from "react";
+import { getCart } from "@/services/cartServices";
 
 export default function ShoppingCart() {
   const { darkMode } = useDarkMode();
@@ -48,37 +50,22 @@ export default function ShoppingCart() {
   //   ],
   // });
 
-  const [cartItems, setCartItems] = useState([
-    {
-      product: {
-        id: 1,
-        name: "Laptop",
-        price: 50,
-        discount: 0.1,
-        quantity: 20,
-        images: [
-          "https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lx2c6o16dh3v4f.webp",
-          "https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lhojr3l1nv0hdd.webp",
-        ],
-      },
-      quantity: 2,
-    },
-    {
-      product: {
-        id: 2,
-        name: "Apple",
-        price: 30,
-        discount: 0.1,
-        quantity: 100,
-        images: [
-          "https://down-vn.img.susercontent.com/file/sg-11134301-7rdwa-m01cuy3krx3d85.webp",
-          "https://down-vn.img.susercontent.com/file/sg-11134301-7rdyh-m01cv6k8gwxf72.webp",
-        ],
-      },
-      quantity: 2,
-    },
-  ]);
-  const [selectedItems, setSelectedItems] = useState(cartItems.map((item) => item.product.id));
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      const response = await getCart();
+      if (response.status === 200) {
+        console.log(response.data.items);
+        setCartItems(response.data.items);
+      }
+    };
+    fetchCart();
+  }, []);
+
+  const [selectedItems, setSelectedItems] = useState(
+    cartItems?.map((item) => item.product.id)
+  );
 
   const isAllChecked =
     selectedItems.length === cartItems.length && cartItems.length > 0;
@@ -123,7 +110,7 @@ export default function ShoppingCart() {
 
   return (
     <div
-      className={`min-h-screen mt-20 px-[50px] ${
+      className={`min-h-screen px-[50px] ${
         darkMode ? "dark bg-gray-900 text-white" : "bg-gray-50"
       }`}
     >
@@ -149,97 +136,118 @@ export default function ShoppingCart() {
                 darkMode ? "bg-gray-800" : "bg-white"
               } shadow-sm`}
             >
-              <div
-                className={`p-6 ${
-                  darkMode ? "border border-gray-900" : "border border-gray-200"
-                }`}
-              >
-                <h1 className="text-2xl font-semibold mb-6">Shopping Cart</h1>
+              {cartItems.length > 0 ? (
+                <div
+                  className={`p-6 ${
+                    darkMode
+                      ? "border border-gray-900"
+                      : "border border-gray-200"
+                  }`}
+                >
+                  <h1 className="text-2xl font-semibold mb-6">Shopping Cart</h1>
 
-                {/* Header */}
-                <div className="grid grid-cols-12 gap-4 mb-4 text-sm font-medium text-muted-foreground">
-                  <div className="col-span-1">
-                    <input
-                      type="checkbox"
-                      checked={isAllChecked}
-                      onChange={toggleSelectAll}
-                    />
-                  </div>
-                  <div className="col-span-5">PRODUCTS</div>
-                  <div className="col-span-2 text-right">PRICE</div>
-                  <div className="col-span-2 text-center">QUANTITY</div>
-                  <div className="col-span-2 text-right">REMOVE</div>
-                </div>
-
-                {/* Cart Items */}
-                <div className="divide-y">
-                  {cartItems.map((item) => (
-                    <div
-                      key={item.product.id}
-                      className="grid grid-cols-12 gap-4 py-4 items-center"
-                    >
-                      <div className="col-span-1">
-                        <input
-                          type="checkbox"
-                          checked={selectedItems.includes(item.product.id)}
-                          onChange={() => toggleItemSelection(item.product.id)}
-                        />
-                      </div>
-                      <div className="col-span-5 flex gap-4 items-center">
-                        <img
-                          src={item.product.images[0]}
-                          alt={item.product.name}
-                          className="rounded-lg h-20 w-20"
-                        />
-                        <div className="flex flex-col">
-                          <span className="font-medium">{item.product.name}</span>
-                          <span className="text-sm text-muted-foreground">
-                            ${item.product.price}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="col-span-2 text-right">${item.product.price}</div>
-                      <div className="col-span-2">
-                        <div className="flex items-center justify-center gap-2">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() =>
-                              updateQuantity(item.product.id, item.quantity - 1)
-                            }
-                          >
-                            <Minus className="h-4 w-4" />
-                          </Button>
-                          <span className="w-12 text-center">
-                            {item.quantity}
-                          </span>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() =>
-                              updateQuantity(item.product.id, item.quantity + 1)
-                            }
-                          >
-                            <Plus className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="col-span-2 text-right">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-6 w-6"
-                          onClick={() => removeItem(item.product.id)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
+                  {/* Header */}
+                  <div className="grid grid-cols-12 gap-4 mb-4 text-sm font-medium text-muted-foreground">
+                    <div className="col-span-1">
+                      <input
+                        type="checkbox"
+                        checked={isAllChecked}
+                        onChange={toggleSelectAll}
+                      />
                     </div>
-                  ))}
+                    <div className="col-span-5">PRODUCTS</div>
+                    <div className="col-span-2 text-right">PRICE</div>
+                    <div className="col-span-2 text-center">QUANTITY</div>
+                    <div className="col-span-2 text-right">REMOVE</div>
+                  </div>
+
+                  {/* Cart Items */}
+                  <div className="divide-y">
+                    {cartItems.map((item) => (
+                      <div
+                        key={item.product.id}
+                        className="grid grid-cols-12 gap-4 py-4 items-center"
+                      >
+                        <div className="col-span-1">
+                          <input
+                            type="checkbox"
+                            checked={selectedItems.includes(item.product.id)}
+                            onChange={() =>
+                              toggleItemSelection(item.product.id)
+                            }
+                          />
+                        </div>
+                        <div className="col-span-5 flex gap-4 items-center">
+                          <img
+                            src={item.product.images[0]}
+                            alt={item.product.name}
+                            className="rounded-lg h-20 w-20"
+                          />
+                          <div className="flex flex-col">
+                            <span className="font-medium">
+                              {item.product.name}
+                            </span>
+                            <span className="text-sm text-muted-foreground">
+                              ${item.product.price}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="col-span-2 text-right">
+                          ${item.product.price}
+                        </div>
+                        <div className="col-span-2">
+                          <div className="flex items-center justify-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() =>
+                                updateQuantity(
+                                  item.product.id,
+                                  item.quantity - 1
+                                )
+                              }
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <span className="w-12 text-center">
+                              {item.quantity}
+                            </span>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() =>
+                                updateQuantity(
+                                  item.product.id,
+                                  item.quantity + 1
+                                )
+                              }
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="col-span-2 text-right">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={() => removeItem(item.product.id)}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="p-6">
+                  <h1 className="text-2xl font-semibold mb-6">Shopping Cart</h1>
+                  <p className="text-muted-foreground text-center">Your cart is empty</p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -268,7 +276,9 @@ export default function ShoppingCart() {
                 <div className="border-t pt-4">
                   <div className="flex justify-between">
                     <span className="font-semibold">Total</span>
-                    <span className="font-semibold">${subtotal < discount ? 0 : subtotal - discount} USD</span>
+                    <span className="font-semibold">
+                      ${subtotal < discount ? 0 : subtotal - discount} USD
+                    </span>
                   </div>
                 </div>
               </div>

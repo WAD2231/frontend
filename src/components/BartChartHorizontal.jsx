@@ -16,7 +16,7 @@ import {
 
 import { getRandomColor } from "@/lib/color"
 
-export default function BarChartHorizontal({ label, chartData, dataKey }) {
+export default function BarChartHorizontal({ label, chartData, dataKey}) {
   var color = getRandomColor()
   return (
     <Card>
@@ -30,21 +30,27 @@ export default function BarChartHorizontal({ label, chartData, dataKey }) {
             accessibilityLayer
             data={chartData}
             layout="vertical"
+            margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
           >
-            <XAxis type="number" dataKey={dataKey} hide />
+            <XAxis type="number" dataKey={dataKey.key} hide />
             <YAxis
-              dataKey="name"
+              dataKey={dataKey.label}
               type="category"
               tickLine={false}
-              tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value}
+              tickFormatter={(value) => {
+                const split = value.split(" ")
+                if (split.length > 3) {
+                  return `${split.slice(0, 3).join(" ")}...`
+                }
+                return value            
+              }}
             />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey={dataKey} fill={color} radius={5} />
+            <Bar dataKey={dataKey.key} fill={color} radius={5} />
           </BarChart>
         </ChartContainer>
       </CardContent>
