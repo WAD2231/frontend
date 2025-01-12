@@ -10,6 +10,7 @@ import {
 import { Link } from "react-router-dom";
 import { deleteProduct, updateProductQuantity } from "@/services/cartServices";
 import routes from "@/config/routes";
+import { ShoppingCart } from "lucide-react";
 
 export function CartSidebar({ open, setOpen, cartItems, setCartItems }) {
   const subtotal = cartItems?.reduce(
@@ -45,17 +46,20 @@ export function CartSidebar({ open, setOpen, cartItems, setCartItems }) {
         if (!isOpen) setOpen(false);
       }}
     >
-      <SheetContent className="h-screen flex flex-col pb-0">
+      <SheetContent className="h-screen flex flex-col pb-0 dark:bg-gray-900">
         <SheetHeader>
-          <SheetTitle>Your Cart</SheetTitle>
-          <SheetDescription></SheetDescription>
+          <SheetTitle className="text-gray-900 dark:text-gray-100 flex items-center gap-2">
+            <ShoppingCart />
+            Your Cart
+          </SheetTitle>
+          <SheetDescription className="text-gray-600 dark:text-gray-400"></SheetDescription>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto py-4">
           <div className="space-y-4">
             {cartItems?.map((item) => (
               <div
                 key={item?.product?.id}
-                className="flex items-center justify-between bg-white rounded-lg shadow-sm"
+                className="flex items-center justify-between bg-white dark:bg-gray-900 rounded-lg shadow-sm"
               >
                 <div className="flex items-center gap-4 flex-1">
                   <div className="relative flex-shrink-0">
@@ -66,25 +70,25 @@ export function CartSidebar({ open, setOpen, cartItems, setCartItems }) {
                     />
                   </div>
                   <div className="flex flex-col justify-center">
-                    <h3 className="font-medium text-[12px]">
+                    <h3 className="font-medium text-[12px] text-gray-900 dark:text-gray-100">
                       {item?.product?.name}
                     </h3>
                     <div className="flex items-center gap-2 mt-1">
                       {item?.product?.discount > 0 ? (
                         <>
-                          <span className="font-semibold text-base">
+                          <span className="font-semibold text-base text-gray-900 dark:text-gray-100">
                             $
                             {(
                               item?.product?.price *
                               (1 - item?.product?.discount)
                             ).toFixed(2)}
                           </span>
-                          <span className="text-sm text-gray-500 line-through">
+                          <span className="text-sm text-gray-500 dark:text-gray-400 line-through">
                             ${item?.product?.price}
                           </span>
                         </>
                       ) : (
-                        <span className="font-semibold text-base">
+                        <span className="font-semibold text-base text-gray-900 dark:text-gray-100">
                           ${item?.product?.price}
                         </span>
                       )}
@@ -97,7 +101,7 @@ export function CartSidebar({ open, setOpen, cartItems, setCartItems }) {
                     <Button
                       variant="outline"
                       size="icon"
-                      className="h-6 w-h-6"
+                      className="h-6 w-h-6 text-gray-700 dark:text-gray-300"
                       onClick={() => {
                         if (item?.quantity > 1)
                           handleChangeQuantity(
@@ -108,13 +112,13 @@ export function CartSidebar({ open, setOpen, cartItems, setCartItems }) {
                     >
                       <Minus className="h-2 w-2" />
                     </Button>
-                    <span className="w-4 text-center text-lg font-medium">
+                    <span className="w-4 text-center text-lg font-medium text-gray-900 dark:text-gray-100">
                       {item?.quantity}
                     </span>
                     <Button
                       variant="outline"
                       size="icon"
-                      className="h-6 w-h-6"
+                      className="h-6 w-h-6 text-gray-700 dark:text-gray-300"
                       onClick={() =>
                         handleChangeQuantity(
                           item?.product?.id,
@@ -128,7 +132,7 @@ export function CartSidebar({ open, setOpen, cartItems, setCartItems }) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-6 w-6 text-gray-500 hover:text-red-500"
+                    className="h-6 w-6 text-gray-500 hover:text-red-500 dark:hover:text-red-400"
                     onClick={() => deleteProductInCart(item?.product?.id)}
                   >
                     <Trash2 className="h-2 w-2" />
@@ -138,19 +142,26 @@ export function CartSidebar({ open, setOpen, cartItems, setCartItems }) {
             ))}
           </div>
         </div>
-        <div className="sticky bottom-0 bg-white pt-4 pb-2 border-t space-y-4">
+        <div className="sticky bottom-0 bg-white dark:bg-gray-900 pt-4 pb-2 border-t border-gray-300 dark:border-gray-700 space-y-4">
           <div className="flex items-center justify-between">
-            <span className="font-medium mb-2">Subtotal</span>
-            <span className="font-semibold">${subtotal.toFixed(2)}</span>
+            <span className="font-medium mb-2 text-gray-900 dark:text-gray-100">
+              Subtotal
+            </span>
+            <span className="font-semibold text-gray-900 dark:text-gray-100">
+              ${subtotal.toFixed(2)}
+            </span>
           </div>
           <Link to={routes.cart}>
-            <Button className="w-full bg-black text-white hover:bg-gray-900" onClick={() => setOpen(false)}>
+            <Button
+              className="w-full bg-black text-white hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600"
+              onClick={() => setOpen(false)}
+            >
               Checkout
             </Button>
           </Link>
           <Button
             variant="ghost"
-            className="w-full text-gray-600"
+            className="w-full text-gray-600 dark:text-gray-400"
             onClick={() => setOpen(false)}
           >
             Continue shopping
