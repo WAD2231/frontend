@@ -8,7 +8,7 @@ import { useDarkMode } from "@/components/DarkModeContext";
 import { getHomeProducts } from "@/services/productServices";
 import { FullWidthCarousel } from "@/components/FullWidthCarousel";
 
-const Home = () => {
+const Home = ({ setIsOpenCart, setCartItems }) => {
   const { darkMode } = useDarkMode();
 
   const [homeProducts, setHomeProducts] = useState({});
@@ -47,7 +47,11 @@ const Home = () => {
       </div>
 
       <div>
-        <FullWidthCarousel products={homeProducts?.bestSellingProducts} />
+        <FullWidthCarousel
+          products={homeProducts?.bestSellingProducts}
+          setIsOpenCart={setIsOpenCart}
+          setCartItems={setCartItems}
+        />
       </div>
 
       <div className="flex justify-between items-center my-8">
@@ -64,7 +68,11 @@ const Home = () => {
         </div>
       </div>
       <div>
-        <FullWidthCarousel products={homeProducts?.highestDiscountProducts} />
+        <FullWidthCarousel
+          setIsOpenCart={setIsOpenCart}
+          setCartItems={setCartItems}
+          products={homeProducts?.highestDiscountProducts}
+        />
       </div>
 
       <div className="flex justify-between items-center my-8">
@@ -82,7 +90,11 @@ const Home = () => {
       </div>
 
       <div>
-        <FullWidthCarousel products={homeProducts?.newProducts} />
+        <FullWidthCarousel
+          setIsOpenCart={setIsOpenCart}
+          setCartItems={setCartItems}
+          products={homeProducts?.newProducts}
+        />
       </div>
 
       <div className="flex justify-between items-center my-8">
@@ -100,7 +112,11 @@ const Home = () => {
       </div>
 
       <div>
-        <FullWidthCarousel products={homeProducts?.featuredProducts} />
+        <FullWidthCarousel
+          setIsOpenCart={setIsOpenCart}
+          setCartItems={setCartItems}
+          products={homeProducts?.featuredProducts}
+        />
       </div>
 
       {/* Services Section */}

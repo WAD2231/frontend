@@ -23,8 +23,10 @@ import {
 } from "@/components/ui/pagination";
 import { useSearchParams } from "react-router-dom";
 import routes from "@/config/routes";
+import { Button } from "@/components/ui/button";
+import { addToCart, getCart } from "@/services/cartServices";
 
-export default function ProductCategory() {
+export default function ProductCategory({ setIsOpenCart, setCartItems }) {
   const { id } = useParams();
 
   const [paging, setPaging] = useState({
@@ -53,12 +55,25 @@ export default function ProductCategory() {
     fetchProducts(id, currentPage, paging.pageSize);
   }, [id, currentPage]);
 
+  const handleAddToCart = async (productId) => {
+    const response = await addToCart(productId);
+    if (response.status === 201) {
+      const cart = await getCart();
+      setCartItems(cart.data.items);
+      setIsOpenCart(true);
+    }
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-[50px]">
       <h1 className="text-3xl font-semibold mb-4">Product</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {products?.map((product) => (
-          <Link to={`${routes.productDetail}/${product?.id}`} key={product?.id} className="h-full">
+          <Link
+            to={`${routes.productDetail}/${product?.id}`}
+            key={product?.id}
+            className="h-full"
+          >
             <Card
               key={product?.id}
               className="flex flex-col justify-center gap-2 h-full"
@@ -79,9 +94,9 @@ export default function ProductCategory() {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-600 mb-2">
+                {/* <p className="text-sm text-gray-600 mb-2">
                   {product?.description}
-                </p>
+                </p> */}
                 <div className="flex justify-between items-center mb-2">
                   <span className="font-bold text-lg">
                     ${(product?.price * (1 - product?.discount)).toFixed(2)}
@@ -100,13 +115,23 @@ export default function ProductCategory() {
                 </p>
                 <p className="text-sm text-gray-600">Stock: {product?.stock}</p>
               </CardContent>
-              <CardFooter>
-                {product?.discount > 0 && (
-                  <Badge variant="destructive" className="mr-2">
-                    -{product?.discount * 100}%
-                  </Badge>
-                )}
-                <ProductStatus stock={product?.stock} />
+              <CardFooter className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  {product?.discount > 0 && (
+                    <Badge variant="destructive" className="mr-2">
+                      -{product?.discount * 100}%
+                    </Badge>
+                  )}
+                  <ProductStatus stock={product?.stock} />
+                </div>
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleAddToCart(product?.id);
+                  }}
+                >
+                  + Add to cart
+                </Button>
               </CardFooter>
             </Card>
           </Link>

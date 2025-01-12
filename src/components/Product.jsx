@@ -2,10 +2,26 @@ import { Link } from "react-router-dom";
 import ProductTag from "./ProductTag";
 import routes from "@/config/routes";
 import { Card } from "./ui/card";
+import { addToCart, getCart } from "@/services/cartServices";
+const Product = ({
+  setCartItems,
+  setIsOpenCart,
+  id,
+  name,
+  price,
+  discount,
+  image,
+  tag,
+  ...props
+}) => {
+  const handleAddToCart = async () => {
+    const response = await addToCart(id);
 
-const Product = ({ id, name, price, discount, image, tag, ...props }) => {
-  const handleAddToCart = () => {
-    console.log(`Product ${id} added to cart`);
+    if (response.status === 201) {
+      const cart = await getCart();
+      setCartItems(cart.data.items);
+      setIsOpenCart(true);
+    }
   };
 
   return (

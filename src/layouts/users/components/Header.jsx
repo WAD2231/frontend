@@ -18,7 +18,7 @@ import { getCart } from "@/services/cartServices";
 import { getAllCategories } from "@/services/categoryServices";
 import { Input } from "@/components/ui/input";
 
-const Header = ({ user, setUser }) => {
+const Header = ({ user, setUser, cartItems, setCartItems, setIsOpenCart }) => {
   const { darkMode, toggleDarkMode } = useDarkMode();
   const [showCategories, setShowCategories] = useState(false);
   const categoriesRef = useRef(null);
@@ -38,16 +38,9 @@ const Header = ({ user, setUser }) => {
     }
   };
   const [categories, setCategories] = useState([]);
-  const [cart, setCart] = useState({});
   useEffect(() => {
     const fetchData = async () => {
-      const [cartData, categoriesData] = await Promise.all([
-        getCart(),
-        getAllCategories(),
-      ]);
-      if (cartData.status === 200) {
-        setCart(cartData.data);
-      }
+      const [categoriesData] = await Promise.all([getAllCategories()]);
       if (categoriesData.status === 200) {
         setCategories(categoriesData.data.categories);
       }
@@ -110,14 +103,12 @@ const Header = ({ user, setUser }) => {
             </div>
           </div>
           <div className="hidden md:flex gap-6 items-center w-5/12 justify-end">
-            <Link to={routes.cart}>
-              <div className="relative">
-                <ShoppingCart className="text-muted-foreground" size={26} />
-                <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                  {cart?.items?.length}
-                </span>
-              </div>
-            </Link>
+            <div className="relative cursor-pointer" onClick={() => setIsOpenCart(true)}>
+              <ShoppingCart className="text-muted-foreground" size={26} />
+              <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                {cartItems?.length}
+              </span>
+            </div>
             <div
               className={`relative w-14 h-8 flex items-center rounded-full p-1 cursor-pointer ${
                 darkMode ? "bg-gray-600" : "bg-gray-300"

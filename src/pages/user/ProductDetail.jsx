@@ -34,7 +34,8 @@ import ProductTag from "@/components/ProductTag";
 import { Badge } from "@/components/ui/badge";
 import ProductReview from "@/components/ReviewItem";
 import { createReview } from "@/services/reviewServices";
-const ProductDetail = ({ user }) => {
+import { addToCart, getCart } from "@/services/cartServices";
+const ProductDetail = ({ user, setIsOpenCart, setCartItems }) => {
   const { darkMode } = useDarkMode();
   const { id } = useParams();
 
@@ -90,8 +91,6 @@ const ProductDetail = ({ user }) => {
 
       const response = await createReview(newReviewObj);
 
-      console.log(response.data);
-
       if (response.status === 201) {
         setReviews([
           ...reviews,
@@ -110,6 +109,16 @@ const ProductDetail = ({ user }) => {
         setNewReview("");
         setNewRating(0);
       }
+    }
+  };
+
+  const handleAddToCart = async () => {
+    const response = await addToCart(id);
+
+    if (response.status === 201) {
+      const cart = await getCart();
+      setCartItems(cart.data.items);
+      setIsOpenCart(true);
     }
   };
 
@@ -172,7 +181,7 @@ const ProductDetail = ({ user }) => {
                 <div>
                   <h3 className="font-semibold mb-2">Price</h3>
                   <p className="text-2xl font-bold">${product?.price}</p>
-                  {parseFloat(product?.discount) && (
+                  {product?.discount > 0 && (
                     <p className="text-sm text-muted-foreground">
                       {parseFloat(product?.discount) * 100}% off
                     </p>
@@ -200,16 +209,7 @@ const ProductDetail = ({ user }) => {
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <div className="flex items-center border rounded-md">
-                  <Button variant="ghost" size="icon">
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <span className="px-4">1</span>
-                  <Button variant="ghost" size="icon">
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-                <Button>Buy Now</Button>
+                <Button onClick={handleAddToCart}>+ Add to cart</Button>
               </div>
             </CardContent>
           </Card>
@@ -221,6 +221,8 @@ const ProductDetail = ({ user }) => {
         <div className="grid grid-cols-4 gap-10 mt-5 h-auto">
           {product?.relatedProducts?.map((item) => (
             <Product
+              setCartItems={setCartItems}
+              setIsOpenCart={setIsOpenCart}
               key={item?.id}
               id={item?.id}
               name={item?.name}

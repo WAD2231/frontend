@@ -1,67 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Minus, Plus, Home, X } from "lucide-react";
+import { Minus, Plus, Home, X, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDarkMode } from "@/components/DarkModeContext";
 import routes from "@/config/routes";
-import { useEffect } from "react";
-import { getCart } from "@/services/cartServices";
+import { deleteProduct, updateProductQuantity } from "@/services/cartServices";
 
-export default function ShoppingCart() {
+export default function ShoppingCart({ cartItems, setCartItems }) {
   const { darkMode } = useDarkMode();
-  // const [cart, setCart] = useState({
-  //   user_id: 1,
-  //   paging: {
-  //     total_item: 5,
-  //     total_page: 3,
-  //     current_page: 1,
-  //     page_size: 2,
-  //   },
-  //   items: [
-  //     {
-  //       product: {
-  //         id: 1,
-  //         name: "Laptop",
-  //         price: 50,
-  //         discount: 0.1,
-  //         quantity: 20,
-  //         images: [
-  //           "https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lx2c6o16dh3v4f.webp",
-  //           "https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lhojr3l1nv0hdd.webp",
-  //         ],
-  //       },
-  //       quantity: 2,
-  //     },
-  //     {
-  //       product: {
-  //         id: 2,
-  //         name: "Apple",
-  //         price: 30,
-  //         discount: 0.1,
-  //         quantity: 100,
-  //         images: [
-  //           "https://down-vn.img.susercontent.com/file/sg-11134301-7rdwa-m01cuy3krx3d85.webp",
-  //           "https://down-vn.img.susercontent.com/file/sg-11134301-7rdyh-m01cv6k8gwxf72.webp",
-  //         ],
-  //       },
-  //       quantity: 2,
-  //     },
-  //   ],
-  // });
-
-  const [cartItems, setCartItems] = useState([]);
-
-  useEffect(() => {
-    const fetchCart = async () => {
-      const response = await getCart();
-      if (response.status === 200) {
-        console.log(response.data.items);
-        setCartItems(response.data.items);
-      }
-    };
-    fetchCart();
-  }, []);
 
   const [selectedItems, setSelectedItems] = useState(
     cartItems?.map((item) => item.product.id)
@@ -74,7 +21,7 @@ export default function ShoppingCart() {
     if (isAllChecked) {
       setSelectedItems([]);
     } else {
-      setSelectedItems(cartItems.map((item) => item.product.id));
+      setSelectedItems(cartItems?.map((item) => item?.product?.id));
     }
   };
 
@@ -84,18 +31,26 @@ export default function ShoppingCart() {
     );
   };
 
-  const updateQuantity = (id, newQuantity) => {
+  const updateQuantity = async (id, newQuantity) => {
     if (newQuantity < 1) return;
-    setCartItems((items) =>
-      items.map((item) =>
-        item.product.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
+
+    const response = await updateProductQuantity(id, newQuantity);
+
+    if (response.status === 200) {
+      setCartItems((items) =>
+        items.map((item) =>
+          item.product.id === id ? { ...item, quantity: newQuantity } : item
+        )
+      );
+    }
   };
 
-  const removeItem = (id) => {
-    setCartItems((items) => items.filter((item) => item.product.id !== id));
-    setSelectedItems((prev) => prev.filter((itemId) => itemId !== id));
+  const removeItem = async (id) => {
+    const response = await deleteProduct(id);
+    if (response.status === 200) {
+      setCartItems((items) => items.filter((item) => item.product.id !== id));
+      setSelectedItems((prev) => prev.filter((itemId) => itemId !== id));
+    }
   };
 
   const subtotal = selectedItems.reduce(
@@ -106,7 +61,10 @@ export default function ShoppingCart() {
     0
   );
 
-  const discount = 50;
+  const discount = selectedItems?.reduce((sum, id) => {
+    const item = cartItems.find((item) => item.product.id === id);
+    return sum + item?.product.price * item?.quantity * item?.product.discount;
+  }, 0);
 
   return (
     <div
@@ -155,10 +113,11 @@ export default function ShoppingCart() {
                         onChange={toggleSelectAll}
                       />
                     </div>
-                    <div className="col-span-5">PRODUCTS</div>
-                    <div className="col-span-2 text-right">PRICE</div>
-                    <div className="col-span-2 text-center">QUANTITY</div>
-                    <div className="col-span-2 text-right">REMOVE</div>
+                    <div className="col-span-4 text-center">Product Name</div>
+                    <div className="col-span-2 text-center">Price</div>
+                    <div className="col-span-2 text-center">Discount</div>
+                    <div className="col-span-2 text-center">Quantity</div>
+                    <div className="col-span-1 text-center">Remove</div>
                   </div>
 
                   {/* Cart Items */}
@@ -177,24 +136,27 @@ export default function ShoppingCart() {
                             }
                           />
                         </div>
-                        <div className="col-span-5 flex gap-4 items-center">
+                        <div className="col-span-4 flex gap-4 items-center">
                           <img
                             src={item.product.images[0]}
                             alt={item.product.name}
-                            className="rounded-lg h-20 w-20"
+                            className="rounded-lg h-16 w-16"
                           />
                           <div className="flex flex-col">
-                            <span className="font-medium">
+                            <span className="font-medium text-sm">
                               {item.product.name}
-                            </span>
-                            <span className="text-sm text-muted-foreground">
-                              ${item.product.price}
                             </span>
                           </div>
                         </div>
-                        <div className="col-span-2 text-right">
+                        <div className="col-span-2 text-center">
                           ${item.product.price}
                         </div>
+                        <span className="col-span-2 text-center">
+                          -$
+                          {item.product?.discount > 0
+                            ? (item?.product?.discount * item?.product?.price)?.toFixed(2)
+                            : 0}
+                        </span>
                         <div className="col-span-2">
                           <div className="flex items-center justify-center gap-2">
                             <Button
@@ -228,14 +190,14 @@ export default function ShoppingCart() {
                             </Button>
                           </div>
                         </div>
-                        <div className="col-span-2 text-right">
+                        <div className="col-span-1 text-center">
                           <Button
                             variant="ghost"
                             size="icon"
                             className="h-6 w-6"
                             onClick={() => removeItem(item.product.id)}
                           >
-                            <X className="h-4 w-4" />
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </div>
@@ -245,7 +207,9 @@ export default function ShoppingCart() {
               ) : (
                 <div className="p-6">
                   <h1 className="text-2xl font-semibold mb-6">Shopping Cart</h1>
-                  <p className="text-muted-foreground text-center">Your cart is empty</p>
+                  <p className="text-muted-foreground text-center">
+                    Your cart is empty
+                  </p>
                 </div>
               )}
             </div>
@@ -263,7 +227,7 @@ export default function ShoppingCart() {
               <div className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Sub-total</span>
-                  <span className="font-medium">${subtotal}</span>
+                  <span className="font-medium">${subtotal?.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Shipping</span>
@@ -271,13 +235,17 @@ export default function ShoppingCart() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Discount</span>
-                  <span className="font-medium">-${discount}</span>
+                  <span className="font-medium">-${discount?.toFixed(2)}</span>
                 </div>
                 <div className="border-t pt-4">
                   <div className="flex justify-between">
                     <span className="font-semibold">Total</span>
                     <span className="font-semibold">
-                      ${subtotal < discount ? 0 : subtotal - discount} USD
+                      $
+                      {subtotal < discount
+                        ? 0
+                        : (subtotal - discount).toFixed(2)}{" "}
+                      USD
                     </span>
                   </div>
                 </div>

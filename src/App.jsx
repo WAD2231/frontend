@@ -1,12 +1,20 @@
 import "./App.css";
 import AdminLayout from "./layouts/admin/AdminLayout";
-import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import { privateRoutes, publicRoutes } from "@/routes/routes";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import UserLayout from "./layouts/users/UserLayout";
 import { getMe } from "@/services/userServices";
 import { useEffect, useState } from "react";
 import Spinner from "@/components/ui/Spinner";
+import { CartSidebar } from "./components/CartSidebar";
+import { getCart } from "./services/cartServices";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -33,23 +41,23 @@ function App() {
 function AppContent({ user, setUser, checkingAuth, setCheckingAuth }) {
   const location = useLocation();
 
+  const [cartItems, setCartItems] = useState([]);
+
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await getMe();
-        if (res.status === 200) {
-          setUser(res.data);
-        } else {
-          console.warn("User not authenticated");
-        }
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      } finally {
-        setCheckingAuth(false);
+    const fetchData = async () => {
+      const [cartData, userData] = await Promise.all([getCart(), getMe()]);
+      if (cartData.status === 200) {
+        setCartItems(cartData.data.items);
       }
+      if (userData.status === 200) {
+        setUser(userData.data);
+      }
+      setCheckingAuth(false);
     };
-    fetchUser();
+    fetchData();
   }, [location.pathname, setUser, setCheckingAuth]);
+
+  const [isOpenCart, setIsOpenCart] = useState(false);
 
   if (checkingAuth) {
     return (
@@ -86,8 +94,20 @@ function AppContent({ user, setUser, checkingAuth, setCheckingAuth }) {
             key={index}
             path={route.path}
             element={
-              <Layout user={user} setUser={setUser}>
-                <Page user={user}/>
+              <Layout
+                user={user}
+                setUser={setUser}
+                cartItems={cartItems}
+                setCartItems={setCartItems}
+                setIsOpenCart={setIsOpenCart}
+              >
+                <Page user={user} setIsOpenCart={setIsOpenCart} cartItems={cartItems} setCartItems={setCartItems} />
+                <CartSidebar
+                  open={isOpenCart}
+                  setOpen={setIsOpenCart}
+                  cartItems={cartItems}
+                  setCartItems={setCartItems}
+                />
               </Layout>
             }
           />

@@ -22,8 +22,9 @@ import { getProducts } from "@/services/productServices";
 import ProductTag from "@/components/ProductTag";
 import routes from "@/config/routes";
 import capitalFirstLetter from "@/lib/capitalFirstLetter";
+import Product from "@/components/Product";
 
-export default function SearchPage() {
+export default function SearchPage({ setIsOpenCart, setCartItems }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [values, setValues] = useState([0, 1000]);
@@ -38,7 +39,7 @@ export default function SearchPage() {
 
   const price_min = searchParams.get("price_min") || 0;
 
-  const price_max= searchParams.get("price_max") || 1000;
+  const price_max = searchParams.get("price_max") || 1000;
 
   const category_id = searchParams.get("category_id") || "";
 
@@ -165,14 +166,19 @@ export default function SearchPage() {
                 </SelectContent>
               </Select>
             </div>
-            <Button className="w-full" onClick={() => {
-              const params = new URLSearchParams(searchParams);
-              params.delete("price_min");
-              params.delete("price_max");
-              params.delete("category_id");
-              params.delete("tag");
-              setSearchParams(params);
-            }}>Clear Filters</Button>
+            <Button
+              className="w-full"
+              onClick={() => {
+                const params = new URLSearchParams(searchParams);
+                params.delete("price_min");
+                params.delete("price_max");
+                params.delete("category_id");
+                params.delete("tag");
+                setSearchParams(params);
+              }}
+            >
+              Clear Filters
+            </Button>
           </div>
         </div>
         <div className="md:col-span-4">
@@ -192,103 +198,17 @@ export default function SearchPage() {
           <Suspense fallback={<div>Loading products...</div>}>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {products?.map((product) => (
-                // <Card
-                //   key={product?.name}
-                //   className="flex flex-col items-center"
-                // >
-                //   <CardContent className="p-4">
-                //     <img
-                //       src={product?.images[0].image_url}
-                //       alt={product?.name}
-                //       className="h-72 w-72 object-cover mb-4"
-                //     />
-                //     <h3 className="font-semibold text-lg mb-2">
-                //       {product?.name}
-                //     </h3>
-                //     <div className="flex items-center gap-4">
-                //       <p className="text-gray-600 dark:text-gray-300">
-                //         ${product?.price}
-                //       </p>
-                //       {product?.discount > 0 && (
-                //         <div className="text-gray-600 dark:text-gray-300">
-                //           <Badge color="red" className="text-xs">
-                //             -{product?.discount * 100}%
-                //           </Badge>
-                //         </div>
-                //       )}
-                //       <ProductTag tag={product?.tag} />
-                //     </div>
-                //   </CardContent>
-                // <CardFooter className="flex flex-col">
-                //   <div className="flex justify-between gap-12 mt-3">
-                //     <Button variant="outline">+ Add to cart</Button>
-                //     <Button>Buy Now</Button>
-                //   </div>
-                // </CardFooter>
-                // </Card>
-
-                <Link
-                  to={`${routes.productDetail}/${product?.id}`}
-                  className="min-w-[300px] flex flex-col gap-2 w-full"
-                >
-                  <Card className="flex flex-col justify-center items-center w-full h-full group relative">
-                    <span className="absolute top-3 left-3">
-                      {product?.discount && (
-                        <button className="bg-[#DB4444] text-white px-2 py-1 rounded-md">
-                          {`-${product?.discount * 100}%`}
-                        </button>
-                      )}
-                    </span>
-                    <span className="absolute top-3 right-3">
-                      <ProductTag tag={product?.tag} />
-                    </span>
-                    <div className="group overflow-hidden flex justify-center p-8">
-                      <img
-                        src={product?.images[0].image_url}
-                        alt={product?.name}
-                      />
-                    </div>
-
-                    <div className="flex flex-col p-4 gap-3 w-full">
-                      <div className="flex justify-between items-center">
-                        <h1 className="text-lg font-medium">{product?.name}</h1>
-                        <div className="flex flex-col items-end">
-                          <span className="text-lg font-bold">
-                            ${product?.price}
-                          </span>
-                          {product?.discount && (
-                            <span className="text-sm text-gray-500 line-through">
-                              $
-                              {(
-                                product?.price /
-                                (1 - product?.discount)
-                              ).toFixed(2)}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <CardFooter className="flex flex-col p-2">
-                      <div className="flex justify-between gap-12 mt-3">
-                        <Button
-                          variant="outline"
-                          onClick={(e) => {
-                            e.preventDefault();
-                          }}
-                        >
-                          + Add to cart
-                        </Button>
-                        <Button
-                          onClick={(e) => {
-                            e.preventDefault();
-                          }}
-                        >
-                          Buy Now
-                        </Button>
-                      </div>
-                    </CardFooter>
-                  </Card>
-                </Link>
+                <Product
+                  key={product.id}
+                  setCartItems={setCartItems}
+                  setIsOpenCart={setIsOpenCart}
+                  id={product?.id}
+                  name={product?.name}
+                  price={product?.price}
+                  image={product?.images[0].image_url}
+                  discount={product?.discount}
+                  tag={product?.tag}
+                />
               ))}
             </div>
           </Suspense>
