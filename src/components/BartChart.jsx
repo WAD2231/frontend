@@ -1,6 +1,13 @@
-"use client"
+"use client";
 
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts"
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  LabelList,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import {
   Card,
@@ -9,17 +16,17 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-import { getRandomColor } from "@/lib/color"
+} from "@/components/ui/chart";
+import { getRandomColor } from "@/lib/color";
 
 export default function BarChartLabel({ label, chartData, dataKey }) {
-  const color = getRandomColor()
-  
+  const color = getRandomColor();
+
   return (
     <Card>
       <CardHeader>
@@ -28,19 +35,16 @@ export default function BarChartLabel({ label, chartData, dataKey }) {
       </CardHeader>
       <CardContent>
         <ChartContainer config={{}}>
-          <BarChart
-            accessibilityLayer
-            data={chartData}
-          >
+          <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="monthYear"
               tickLine={false}
+              fontSize={13}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => {
-                return value
-              }}
+              minTickGap={0}
+              tickFormatter={(value) => value}
             />
             <YAxis type="number" hide />
             <ChartTooltip
@@ -52,17 +56,15 @@ export default function BarChartLabel({ label, chartData, dataKey }) {
                 position="top"
                 offset={12}
                 className="fill-foreground"
-                fontSize={12}
+                fontSize={14}
               />
             </Bar>
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="leading-none text-muted-foreground">
-          {label}
-        </div>
+        <div className="leading-none text-muted-foreground">{label}</div>
       </CardFooter>
     </Card>
-  )
+  );
 }

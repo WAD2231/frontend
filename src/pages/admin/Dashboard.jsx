@@ -1,11 +1,5 @@
 import { OrdersTable } from "@/components/OrderTable";
-import { SalesDashboard } from "@/components/SalesDashboard";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import routes from "@/config/routes";
-import { Calendar, ShoppingCart, Package, Wallet } from "lucide-react";
 import PieChart from "@/components/PieChart";
-import { Link } from "react-router-dom";
 import {
   getCategoryStatistic,
   getManufacturerStatistic,
@@ -14,33 +8,9 @@ import {
   getRevenueStatistic,
   getNewCustomerStatistic,
 } from "@/services/statisticServices";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
 import { useEffect, useState } from "react";
 import BarChartHorizontal from "@/components/BartChartHorizontal";
 import BartChar from "@/components/BartChart";
-
-const data = [
-  { name: "Jan", revenue: 800, sales: 400 },
-  { name: "Feb", revenue: 600, sales: 500 },
-  { name: "Mar", revenue: 800, sales: 700 },
-  { name: "Apr", revenue: 1000, sales: 800 },
-  { name: "May", revenue: 900, sales: 600 },
-  { name: "Jun", revenue: 1100, sales: 800 },
-  { name: "Jul", revenue: 1200, sales: 900 },
-  { name: "Aug", revenue: 1000, sales: 1100 },
-  { name: "Sep", revenue: 1400, sales: 1000 },
-  { name: "Oct", revenue: 1200, sales: 800 },
-  { name: "Nov", revenue: 1100, sales: 900 },
-  { name: "Dec", revenue: 1300, sales: 1000 },
-];
 
 export default function DashboardPage() {
   const [categoryStatistics, setCategoryStatistics] = useState([]);
@@ -92,7 +62,7 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="p-6 space-y-6 bg-background min-h-screen w-full">
+    <div className="p-1 space-y-6 bg-background min-h-screen w-full">
       {/* <div className="flex justify-between items-center">
         <div className="flex space-x-2">
           <Button variant="default">All Time</Button>
@@ -187,90 +157,96 @@ export default function DashboardPage() {
       </div> */}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
         <BartChar
-          dataKey={"sales"}
+          dataKey={"Quantity"}
+          chartData={newCustomerStatistics?.map((item) => {
+            return {
+              Quantity: item.quantity,
+              month: item.month,
+              year: item.year,
+              monthYear: `${item.month}/${item.year}`,
+            };
+          })}
+          label={"New customer statistics"}
+        />
+        <BartChar
+          dataKey={"Sales"}
           chartData={[
             {
               month: 1,
               year: 2024,
-              sales: 100000,
+              Sales: 60000,
+              monthYear: "1/2024",
             },
             {
               month: 12,
               year: 2024,
-              sales: 200000,
+              Sales: 60000,
               monthYear: "12/2024",
             },
             {
               month: 1,
               year: 2025,
-              sales: 100000,
+              Sales: 60000,
               monthYear: "1/2025",
             },
             {
               month: 2,
               year: 2025,
-              sales: 80000,
+              Sales: 60000,
               monthYear: "2/2025",
             },
             {
               month: 3,
               year: 2025,
-              sales: 70000,
+              Sales: 70000,
               monthYear: "3/2025",
             },
             {
-              month: 4,
-              year: 2025,
-              sales: 60000,
-              monthYear: "4/2025",
+              month: 1,
+              year: 2024,
+              Sales: 60000,
+              monthYear: "1/2024",
             },
             {
-              month: 5,
-              year: 2025,
-              sales: 50000,
-              monthYear: "5/2025",
+              month: 12,
+              year: 2024,
+              Sales: 60000,
+              monthYear: "12/2024",
             },
             {
-              month: 6,
+              month: 1,
               year: 2025,
-              sales: 40000,
-              monthYear: "6/2025",
+              Sales: 60000,
+              monthYear: "1/2025",
             },
             {
-              month: 7,
+              month: 2,
               year: 2025,
-              sales: 30000,
-              monthYear: "7/2025",
+              Sales: 60000,
+              monthYear: "2/2025",
             },
             {
-              month: 8,
+              month: 3,
               year: 2025,
-              sales: 20000,
-              monthYear: "8/2025",
+              Sales: 70000,
+              monthYear: "3/2025",
             },
             {
-              month: 9,
+              month: 2,
               year: 2025,
-              sales: 10000,
-              monthYear: "9/2025",
+              Sales: 60000,
+              monthYear: "2/2025",
             },
             {
-              month: 11,
+              month: 3,
               year: 2025,
-              sales: 2000,
-              monthYear: "11/2025",
+              Sales: 70000,
+              monthYear: "3/2025",
             },
           ]}
           label={"Sales Data: January - June 2024"}
-        />
-        <BartChar
-          dataKey={"quantity"}
-          chartData={newCustomerStatistics?.map((item) => ({
-            ...item,
-            monthYear: `${item.month}/${item.year}`,
-          }))}
-          label={"New customer statistics"}
         />
       </div>
 

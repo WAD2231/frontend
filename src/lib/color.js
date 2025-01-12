@@ -1,7 +1,6 @@
-
 export function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
+  var letters = "0123456789ABCDEF";
+  var color = "#";
   for (var i = 0; i < 6; i++) {
     color += letters[Math.floor(Math.random() * 16)];
   }
@@ -9,9 +8,12 @@ export function getRandomColor() {
 }
 
 export default (length) => {
-  let colors = []
-  for (let i = 0; i < length; i++) {
-    colors.push(getRandomColor())
+  let colors = [];
+  while (colors.length != length) {
+    var color = getRandomColor();
+    if (!colors.some((c) => c === color)) {
+      colors.push(color);
+    }
   }
-  return colors
-}
+  return colors;
+};
