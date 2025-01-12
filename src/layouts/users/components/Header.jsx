@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Search, ShoppingCart, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import routes from "@/config/routes";
 import { getCart } from "@/services/cartServices";
 import { getAllCategories } from "@/services/categoryServices";
+import { Input } from "@/components/ui/input";
 
 const Header = ({ user, setUser }) => {
   const { darkMode, toggleDarkMode } = useDarkMode();
@@ -40,7 +41,10 @@ const Header = ({ user, setUser }) => {
   const [cart, setCart] = useState({});
   useEffect(() => {
     const fetchData = async () => {
-      const [cartData, categoriesData] = await Promise.all([getCart(), getAllCategories()]);
+      const [cartData, categoriesData] = await Promise.all([
+        getCart(),
+        getAllCategories(),
+      ]);
       if (cartData.status === 200) {
         setCart(cartData.data);
       }
@@ -50,6 +54,10 @@ const Header = ({ user, setUser }) => {
     };
     fetchData();
   }, []);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [keyword, setKeyword] = useState(searchParams.get("keyword") || "");
 
   return (
     <header
@@ -75,27 +83,22 @@ const Header = ({ user, setUser }) => {
                 <div
                   className={`absolute top-full mt-2 left-0 bg-white shadow-lg border rounded z-40`}
                 >
-                  <CategoriesNav categories={categories}/>
+                  <CategoriesNav categories={categories} />
                 </div>
               )}
             </div>
             <div className="hidden md:flex space-x-8">
-              <div
-                className={`gap-4 w-96 px-5 py-1 flex items-center rounded ${
-                  darkMode ? "bg-gray-700" : "bg-[#F5F5F5]"
-                }`}
-              >
-                <input
-                  className={`w-full py-2 rounded-md bg-transparent outline-none ${
-                    darkMode
-                      ? "placeholder-gray-400 text-white"
-                      : "placeholder-gray-500"
-                  }`}
+              <div className={`gap-4 w-96 px-5 py-1 flex items-center rounded`}>
+                <Input
+                  className={`w-full py-2 rounded-md bg-transparent outline-none`}
                   type="text"
                   placeholder="What are you looking for?"
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
                 />
                 <button>
                   <Search
+                    onClick={() => navigate(`/search?keyword=${keyword}`)}
                     className={`h-4 w-4 ${
                       darkMode
                         ? "placeholder-gray-400 text-white"

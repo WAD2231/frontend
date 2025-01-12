@@ -17,9 +17,9 @@ export function FullWidthCarousel({ products }) {
       }}
       className="w-full"
     >
-      <CarouselContent className="-ml-1">
+      <CarouselContent className="-ml-16">
         {products?.map((item, index) => (
-          <CarouselItem key={item.id} className="pl-1 md:basis-1/5">
+          <CarouselItem key={item.id} className="pl-16 md:basis-1/4">
             <div className="h-full grid grid-cols-3 gap-4">
               <Product
                 key={item?.id}

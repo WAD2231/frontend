@@ -129,7 +129,7 @@ const ProductDetail = ({ user }) => {
               opts={{
                 align: "start",
               }}
-              className="w-full max-w-sm"
+              className="w-full max-w-sm mx-14"
             >
               <CarouselContent>
                 {product?.images?.map((image, index) => (

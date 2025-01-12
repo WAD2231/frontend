@@ -24,6 +24,7 @@ import Checkout from "@/pages/user/Checkout";
 import Notfound from "@/pages/user/Notfound";
 import Login from "@/pages/user/Login";
 import ProductCategory from "@/pages/user/ProductCategory";
+import SearchPage from "@/pages/user/Search";
 
 //Private Routes (for Admin)
 
@@ -52,6 +53,7 @@ const publicRoutes = [
   { path: routes.myAccount, components: Account },
   { path: routes.checkout, components: Checkout },
   { path: routes.login, components: Login },
+  { path: routes.search, components: SearchPage },
   { path: routes.notFound, components: Notfound },
   { path: `${routes.productCategory}/:id`, components: ProductCategory },
 

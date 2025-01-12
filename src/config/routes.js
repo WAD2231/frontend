@@ -23,6 +23,7 @@ const routes = {
   checkout: "/checkout",
   login: "/login",
   productCategory: "/product-category",
+  search: "/search",
   notFound: "*"
 };
 
