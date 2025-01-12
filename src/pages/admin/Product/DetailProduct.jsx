@@ -19,6 +19,7 @@ import capitalFirstLetter from "@/lib/capitalFirstLetter";
 import { getProductReviews } from "@/services/reviewServices";
 import formatDate from "@/lib/formatDate";
 import ProductReview from "@/components/ReviewItem";
+import ProductTag from "@/components/ProductTag";
 
 export default function DetailProduct() {
   const { id } = useParams();
@@ -192,17 +193,7 @@ export default function DetailProduct() {
                 <h3 className="font-semibold mb-2">Product Name</h3>
                 <div className="flex items-center space-x-2">
                   <p>{product?.name}</p>
-                  <Badge
-                    className={`${
-                      product?.tag === "new"
-                        ? "bg-green-600 hover:bg-green-400"
-                        : product?.tag === "featured"
-                        ? "bg-red-600 hover:bg-red-400"
-                        : "bg-yellow-300 hover:bg-yellow-200"
-                    }`}
-                  >
-                    {`${capitalFirstLetter(product?.tag)}`}
-                  </Badge>
+                  <ProductTag tag={product?.tag}/>
                 </div>
               </div>
               <div>

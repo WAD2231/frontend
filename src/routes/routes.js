@@ -23,6 +23,7 @@ import Account from "@/pages/user/Account";
 import Checkout from "@/pages/user/Checkout";
 import Notfound from "@/pages/user/Notfound";
 import Login from "@/pages/user/Login";
+import ProductCategory from "@/pages/user/ProductCategory";
 
 //Private Routes (for Admin)
 
@@ -46,12 +47,14 @@ const publicRoutes = [
   { path: routes.home, components: Home },
   { path: routes.wishlist, components: Wishlist },
   { path: routes.cart, components: Cart },
-  { path: routes.productDetail, components: ProductDetail },
+  { path: `${routes.productDetail}/:id`, components: ProductDetail },
   { path: routes.signUp, components: Register },
   { path: routes.myAccount, components: Account },
   { path: routes.checkout, components: Checkout },
   { path: routes.login, components: Login },
   { path: routes.notFound, components: Notfound },
+  { path: `${routes.productCategory}/:id`, components: ProductCategory },
+
 ];
 
 export { publicRoutes, privateRoutes };

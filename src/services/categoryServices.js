@@ -55,3 +55,12 @@ export const deleteCategory = async (id) => {
     return error;
   }
 }
+
+export const getProductsByCategory = async (id, currentPage, pageSize) => { 
+  try {
+    const res = await api.get(`${CATEGORY}/products/${id}?page=${currentPage}&page_size=${pageSize}`);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}

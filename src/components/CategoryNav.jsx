@@ -4,70 +4,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const categories = [
-  {
-    name: "All Category",
-    href: "#",
-  },
-  {
-    name: "Computer & Laptop",
-    href: "#",
-    subCategories: [
-      {
-        name: "Laptops",
-        href: "#",
-        subCategories: [
-          { name: "Gaming Laptops", href: "#" },
-          { name: "Business Laptops", href: "#" },
-          { name: "Student Laptops", href: "#" },
-        ],
-      },
-      {
-        name: "Desktops",
-        href: "#",
-        subCategories: [
-          { name: "Gaming PCs", href: "#" },
-          { name: "Workstations", href: "#" },
-        ],
-      },
-    ],
-  },
-  {
-    name: "SmartPhone",
-    href: "#",
-    subCategories: [
-      {
-        name: "Android",
-        href: "#",
-        subCategories: [
-          {
-            name: "Samsung",
-            href: "#",
-            subCategories: [
-              { name: "Galaxy S Series", href: "#" },
-              { name: "Galaxy A Series", href: "#" },
-            ],
-          },
-          { name: "Xiaomi", href: "#" },
-          { name: "Oppo", href: "#" },
-        ],
-      },
-      {
-        name: "iOS",
-        href: "#",
-        subCategories: [
-          { name: "iPhone 15 Series", href: "#" },
-          { name: "iPhone 14 Series", href: "#" },
-        ],
-      },
-    ],
-  },
-];
+import routes from "@/config/routes";
 
 function CategoryItem({ category, level = 0, activePath, onHover }) {
   const isActive = activePath[level] === category.name;
-  const showSubCategories = isActive && category.subCategories;
+  const showSubCategories = isActive && category.children;
 
   return (
     <li className="relative">
@@ -80,10 +21,10 @@ function CategoryItem({ category, level = 0, activePath, onHover }) {
           onHover([...activePath.slice(0, level), category.name])
         }
       >
-        <Link to={category.href} className="flex-1">
+        <Link to={`${routes.productCategory}/${category.category_id}`} className="flex-1">
           {category.name}
         </Link>
-        {category.subCategories && <ChevronRight className="h-4 w-4" />}
+        {category.children && <ChevronRight className="h-4 w-4" />}
       </div>
 
       {showSubCategories && (
@@ -92,7 +33,7 @@ function CategoryItem({ category, level = 0, activePath, onHover }) {
             "absolute left-full top-0 bg-white shadow-lg rounded-md space-y-1 p-2 z-10"
           )}
         >
-          {category.subCategories.map((subCategory) => (
+          {category.children.map((subCategory) => (
             <CategoryItem
               key={subCategory.name}
               category={subCategory}
@@ -107,7 +48,7 @@ function CategoryItem({ category, level = 0, activePath, onHover }) {
   );
 }
 
-export default function CategoriesNav() {
+export default function CategoriesNav({categories}) {
   const [activePath, setActivePath] = useState([]);
 
   return (
@@ -116,7 +57,7 @@ export default function CategoriesNav() {
       onMouseLeave={() => setActivePath([])}
     >
       <ul className="space-y-1 p-2">
-        {categories.map((category) => (
+        {categories?.map((category) => (
           <CategoryItem
             key={category.name}
             category={category}

@@ -22,6 +22,7 @@ const routes = {
   myAccount: "/my-account",
   checkout: "/checkout",
   login: "/login",
+  productCategory: "/product-category",
   notFound: "*"
 };
 

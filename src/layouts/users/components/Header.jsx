@@ -14,6 +14,8 @@ import CategoriesNav from "@/components/CategoryNav";
 import { logout } from "@/services/authServices";
 import { useNavigate } from "react-router-dom";
 import routes from "@/config/routes";
+import { getCart } from "@/services/cartServices";
+import { getAllCategories } from "@/services/categoryServices";
 
 const Header = ({ user, setUser }) => {
   const { darkMode, toggleDarkMode } = useDarkMode();
@@ -34,46 +36,20 @@ const Header = ({ user, setUser }) => {
       setUser(null);
     }
   };
-
-  const [cart, setCart] = useState({
-    user_id: 1,
-    paging: {
-      total_item: 5,
-      total_page: 3,
-      current_page: 1,
-      page_size: 2,
-    },
-    items: [
-      {
-        product: {
-          id: 1,
-          name: "Product 1",
-          price: 100000,
-          discount: 0.1,
-          quantity: 20,
-          images: [
-            "https://example.com/image1.jpg",
-            "https://example.com/image2.jpg",
-          ],
-        },
-        quantity: 2,
-      },
-      {
-        product: {
-          id: 2,
-          name: "Apple",
-          price: 1,
-          discount: 0.1,
-          quantity: 100,
-          images: [
-            "https://example.com/image3.jpg",
-            "https://example.com/image4.jpg",
-          ],
-        },
-        quantity: 2,
-      },
-    ],
-  });
+  const [categories, setCategories] = useState([]);
+  const [cart, setCart] = useState({});
+  useEffect(() => {
+    const fetchData = async () => {
+      const [cartData, categoriesData] = await Promise.all([getCart(), getAllCategories()]);
+      if (cartData.status === 200) {
+        setCart(cartData.data);
+      }
+      if (categoriesData.status === 200) {
+        setCategories(categoriesData.data.categories);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <header
@@ -99,7 +75,7 @@ const Header = ({ user, setUser }) => {
                 <div
                   className={`absolute top-full mt-2 left-0 bg-white shadow-lg border rounded z-40`}
                 >
-                  <CategoriesNav />
+                  <CategoriesNav categories={categories}/>
                 </div>
               )}
             </div>
@@ -131,13 +107,11 @@ const Header = ({ user, setUser }) => {
             </div>
           </div>
           <div className="hidden md:flex gap-6 items-center w-5/12 justify-end">
-            <Link
-              to={routes.cart}
-            >
+            <Link to={routes.cart}>
               <div className="relative">
                 <ShoppingCart className="text-muted-foreground" size={26} />
                 <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                  {cart.items.length}
+                  {cart?.items?.length}
                 </span>
               </div>
             </Link>
