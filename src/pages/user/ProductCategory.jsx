@@ -184,48 +184,52 @@ export default function ProductCategory({
           </Link>
         ))}
       </div>
-      <Pagination className="mt-8">
-        <PaginationContent>
-          <PaginationItem className="cursor-pointer">
-            <PaginationPrevious
-              onClick={() =>
-                setSearchParams({ page: parseInt(currentPage) - 1 })
-              }
-              aria-disabled={currentPage <= 1}
-              tabIndex={currentPage <= 1 ? -1 : undefined}
-              className={
-                currentPage <= 1 ? "pointer-events-none opacity-50" : undefined
-              }
-            />
-          </PaginationItem>
-          {[...Array(paging.totalPages).keys()].map((page) => (
-            <PaginationItem key={page} className="cursor-pointer">
-              <PaginationLink
-                onClick={() => {
-                  setSearchParams({ page: page + 1 });
-                }}
-                isActive={currentPage == page + 1}
-              >
-                {page + 1}
-              </PaginationLink>
+      {paging.totalPages > 1 && (
+        <Pagination className="mt-8">
+          <PaginationContent>
+            <PaginationItem className="cursor-pointer">
+              <PaginationPrevious
+                onClick={() =>
+                  setSearchParams({ page: parseInt(currentPage) - 1 })
+                }
+                aria-disabled={currentPage <= 1}
+                tabIndex={currentPage <= 1 ? -1 : undefined}
+                className={
+                  currentPage <= 1
+                    ? "pointer-events-none opacity-50"
+                    : undefined
+                }
+              />
             </PaginationItem>
-          ))}
-          <PaginationItem className="cursor-pointer">
-            <PaginationNext
-              onClick={() =>
-                setSearchParams({ page: parseInt(currentPage) + 1 })
-              }
-              aria-disabled={currentPage >= paging.totalPages}
-              tabIndex={currentPage >= paging.totalPages ? -1 : undefined}
-              className={
-                currentPage >= paging.totalPages
-                  ? "pointer-events-none opacity-50"
-                  : undefined
-              }
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+            {[...Array(paging.totalPages).keys()].map((page) => (
+              <PaginationItem key={page} className="cursor-pointer">
+                <PaginationLink
+                  onClick={() => {
+                    setSearchParams({ page: page + 1 });
+                  }}
+                  isActive={currentPage == page + 1}
+                >
+                  {page + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            <PaginationItem className="cursor-pointer">
+              <PaginationNext
+                onClick={() =>
+                  setSearchParams({ page: parseInt(currentPage) + 1 })
+                }
+                aria-disabled={currentPage >= paging.totalPages}
+                tabIndex={currentPage >= paging.totalPages ? -1 : undefined}
+                className={
+                  currentPage >= paging.totalPages
+                    ? "pointer-events-none opacity-50"
+                    : undefined
+                }
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
     </div>
   );
 }

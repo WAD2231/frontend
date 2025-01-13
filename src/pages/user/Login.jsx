@@ -1,14 +1,12 @@
 import anh from "@/assets/image-form.png";
-import { useDarkMode } from "@/components/DarkModeContext";
-import { login, loginFacebook, loginGoogle } from "@/services/authServices";
+import { login } from "@/services/authServices";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Facebook, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import routes from "@/config/routes";
-const Login = () => {
-  const { darkMode } = useDarkMode();
 
+const Login = () => {
   const [fields, setFields] = useState({
     username: "",
     password: "",
@@ -38,16 +36,8 @@ const Login = () => {
   };
 
   return (
-    <div
-      className={`min-h-screen flex items-center justify-center p-6 ${
-        darkMode ? "bg-gray-900" : "bg-gray-50"
-      }`}
-    >
-      <div
-        className={`max-w-4xl w-full flex rounded-lg shadow-lg overflow-hidden ${
-          darkMode ? "bg-gray-800" : "bg-white"
-        }`}
-      >
+    <div className="min-h-screen flex items-center justify-center p-6 dark:bg-gray-900 bg-gray-50">
+      <div className="max-w-4xl w-full flex rounded-lg shadow-lg overflow-hidden dark:bg-gray-800 bg-white">
         {/* Image Section */}
         <div className="w-1/2 bg-blue-50 hidden md:block">
           <div className="relative h-full flex items-center justify-center">
@@ -62,18 +52,10 @@ const Login = () => {
         {/* Form Section */}
         <div className="w-full md:w-1/2 p-8">
           <div className="max-w-md mx-auto">
-            <h2
-              className={`text-2xl font-bold mb-2 ${
-                darkMode ? "text-white" : "text-gray-900"
-              }`}
-            >
+            <h2 className="text-2xl font-bold mb-2 dark:text-white text-gray-900">
               Log in to Exclusive
             </h2>
-            <p
-              className={`text-sm mb-6 ${
-                darkMode ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
+            <p className="text-sm mb-6 dark:text-gray-400 text-gray-600">
               Enter your details below
             </p>
             {error && (
@@ -91,12 +73,7 @@ const Login = () => {
                   onChange={(e) =>
                     setFields({ ...fields, username: e.target.value })
                   }
-                  className={`w-full px-4 py-3 rounded-lg outline-none transition
-                    ${
-                      darkMode
-                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500"
-                        : "border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    }`}
+                  className="w-full px-4 py-3 rounded-lg outline-none transition dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
 
@@ -108,12 +85,7 @@ const Login = () => {
                   onChange={(e) =>
                     setFields({ ...fields, password: e.target.value })
                   }
-                  className={`w-full px-4 py-3 rounded-lg outline-none transition
-                    ${
-                      darkMode
-                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500"
-                        : "border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    }`}
+                  className="w-full px-4 py-3 rounded-lg outline-none transition dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
 
@@ -128,13 +100,12 @@ const Login = () => {
 
                 <a
                   href="#"
-                  className={`text-sm hover:underline ${
-                    darkMode ? "text-red-400" : "text-red-500"
-                  }`}
+                  className="text-sm hover:underline dark:text-red-400 text-red-500"
                 >
                   Forgot Password?
                 </a>
               </div>
+
               <div className="space-y-4 w-full max-w-sm mx-auto">
                 <Button
                   variant="outline"
@@ -175,9 +146,7 @@ const Login = () => {
                     Don't have an account?{" "}
                     <Link
                       to={routes.signUp}
-                      className={`text-sm hover:underline ${
-                        darkMode ? "text-red-400" : "text-red-500"
-                      }`}
+                      className="text-sm hover:underline dark:text-red-400 text-red-500"
                     >
                       Sign up
                     </Link>

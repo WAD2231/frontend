@@ -15,7 +15,6 @@ import EditCategory from "@/pages/admin/Category/EditCategory";
 
 // Client Pages
 import Home from "@/pages/user/Home";
-import Wishlist from "@/pages/user/Wishlist";
 import Cart from "@/pages/user/Cart";
 import ProductDetail from "@/pages/user/ProductDetail";
 import Register from "@/pages/user/Register";
@@ -49,7 +48,6 @@ const privateRoutes = [
 //Private Routes (for User)
 const publicRoutes = [
   { path: routes.home, components: Home },
-  { path: routes.wishlist, components: Wishlist },
   { path: routes.cart, components: Cart },
   { path: `${routes.productDetail}/:id`, components: ProductDetail },
   { path: routes.signUp, components: Register },

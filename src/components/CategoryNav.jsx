@@ -15,7 +15,9 @@ function CategoryItem({ category, level = 0, activePath, onHover }) {
       <div
         className={cn(
           "flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer rounded-md",
-          isActive && "bg-orange-500 text-white hover:bg-orange-600"
+          isActive && "bg-orange-500 text-white hover:bg-orange-600",
+          // Add dark mode support for the background color and text color
+          "dark:hover:bg-gray-700 dark:bg-gray-800 dark:text-white dark:hover:text-white"
         )}
         onMouseEnter={() =>
           onHover([...activePath.slice(0, level), category.name])
@@ -33,7 +35,7 @@ function CategoryItem({ category, level = 0, activePath, onHover }) {
       {showSubCategories && (
         <ul
           className={cn(
-            "absolute left-full top-0 bg-white shadow-lg rounded-md space-y-1 p-2 z-10 min-w-[230px]"
+            "absolute left-full top-0 bg-white dark:bg-gray-800 shadow-lg rounded-md space-y-1 p-2 z-10 min-w-[230px]"
           )}
         >
           {category.children.map((subCategory) => (
@@ -56,7 +58,7 @@ export default function CategoriesNav({ categories }) {
 
   return (
     <nav
-      className="relative w-64 bg-white shadow-lg"
+      className="relative w-64 bg-white dark:bg-gray-900 shadow-lg"
       onMouseLeave={() => setActivePath([])}
     >
       <ul className="space-y-1 p-2">

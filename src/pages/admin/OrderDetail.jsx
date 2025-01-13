@@ -8,6 +8,7 @@ import {
   Truck,
   MapPin,
   UserCircle,
+  Phone,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";

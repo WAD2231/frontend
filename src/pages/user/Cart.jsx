@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Minus, Plus, Home, X, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useDarkMode } from "@/components/DarkModeContext";
 import routes from "@/config/routes";
 import { deleteProduct, updateProductQuantity } from "@/services/cartServices";
 import { createOrder } from "@/services/orderServices";
@@ -12,8 +10,6 @@ import MyAlertDialog from "@/components/MyAlertDialog";
 import Dialog from "@/components/Dialog";
 
 export default function ShoppingCart({ user, cartItems, setCartItems }) {
-  const { darkMode } = useDarkMode();
-
   const [selectedItems, setSelectedItems] = useState(
     cartItems?.items?.map((item) => item.product.id)
   );
@@ -190,11 +186,7 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
   };
 
   return (
-    <div
-      className={`min-h-screen px-[50px] ${
-        darkMode ? "dark bg-gray-900 text-white" : "bg-gray-50"
-      }`}
-    >
+    <div className="min-h-screen px-[50px] bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
       <MyAlertDialog
         isShown={openMA}
         setIsShown={setOpenMA}
@@ -218,19 +210,9 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2">
-            <div
-              className={`rounded-lg ${
-                darkMode ? "bg-gray-800" : "bg-white"
-              } shadow-sm`}
-            >
+            <div className="rounded-lg bg-white dark:bg-gray-800 shadow-sm">
               {cartItems?.items?.length > 0 ? (
-                <div
-                  className={`p-6 ${
-                    darkMode
-                      ? "border border-gray-900"
-                      : "border border-gray-200"
-                  }`}
-                >
+                <div className="p-6 dark:border-gray-900 border border-gray-200">
                   <h1 className="text-2xl font-semibold mb-6">Shopping Cart</h1>
 
                   {/* Header */}
@@ -323,12 +305,11 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
                         </div>
                         <div className="col-span-1 text-center">
                           <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
+                            variant="link"
+                            className="text-red-500"
                             onClick={() => removeItem(item.product.id)}
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
                       </div>
@@ -336,64 +317,44 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
                   </div>
                 </div>
               ) : (
-                <div className="p-6">
-                  <h1 className="text-2xl font-semibold mb-6">Shopping Cart</h1>
-                  <p className="text-muted-foreground text-center">
-                    Your cart is empty
-                  </p>
+                <div className="text-center text-lg py-8">
+                  Your cart is empty
                 </div>
               )}
             </div>
           </div>
 
-          <div className="lg:col-span-1">
-            <div
-              className={`rounded-lg ${
-                darkMode
-                  ? "bg-gray-800 border border-gray-900"
-                  : "bg-white border border-gray-200"
-              } shadow-sm p-6`}
-            >
-              <h2 className="text-xl font-semibold mb-4">Cart Totals</h2>
-              <div className="space-y-4">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Sub-total</span>
-                  <span className="font-medium">${subtotal?.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Shipping</span>
-                  <span className="text-green-600">Free</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Discount</span>
-                  <span className="font-medium">-${discount?.toFixed(2)}</span>
-                </div>
-                <div className="border-t pt-4">
-                  <div className="flex justify-between">
-                    <span className="font-semibold">Total</span>
-                    <span className="font-semibold">
-                      $
-                      {subtotal < discount
-                        ? 0
-                        : (subtotal - discount).toFixed(2)}{" "}
-                      USD
-                    </span>
-                  </div>
-                </div>
+          {/* Order Summary */}
+          <div>
+            <div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
+              <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
+              <div className="flex justify-between mb-4 text-sm">
+                <span>Subtotal</span>
+                <span>${subtotal?.toFixed(2)}</span>
               </div>
+              <div className="flex justify-between mb-4 text-sm">
+                <span>Discount</span>
+                <span>-${discount?.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-lg font-semibold">
+                <span>Total</span>
+                <span>${(subtotal - discount).toFixed(2)}</span>
+              </div>
+
               <Button className="w-full mt-6" onClick={handleCreateOrder}>
-                Proceed to Checkout →
+                Checkout
               </Button>
-              <Dialog
-                open={isOpen}
-                setOpen={setIsOpen}
-                label={label}
-                handleAction={handleAction}
-              ></Dialog>
             </div>
           </div>
         </div>
       </div>
+
+      <Dialog
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        title={label}
+        handleAction={handleAction}
+      />
     </div>
   );
 }

@@ -91,7 +91,6 @@ export default function DashboardPage() {
         setBestSellingProductStatistics(bestSellingProductStatisticData.data);
       }
       if (topCustomerStatisticData.status === 200) {
-        console.log(topCustomerStatisticData.data);
         setTopCustomerStatistics(topCustomerStatisticData.data);
       }
       if (revenueStatisticData.status === 200) {

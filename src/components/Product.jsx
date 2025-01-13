@@ -4,6 +4,7 @@ import routes from "@/config/routes";
 import { Card } from "./ui/card";
 import { addToCart, getCart } from "@/services/cartServices";
 import updateLocalCart from "@/lib/updateCart";
+
 const Product = ({
   cartItems,
   setCartItems,
@@ -18,9 +19,7 @@ const Product = ({
 }) => {
   const handleAddToCart = async () => {
     if (cartItems.isLocal) {
-      const isExisted = cartItems?.items?.some(
-        (item) => item.product.id == id
-      );
+      const isExisted = cartItems?.items?.some((item) => item.product.id == id);
       setCartItems((prev) => {
         let newItems;
         if (isExisted) {
@@ -73,7 +72,7 @@ const Product = ({
       to={`${routes.productDetail}/${id}`}
       className="cursor-pointer min-w-[300px] flex flex-col gap-2 w-full"
     >
-      <Card className="flex flex-col justify-center items-center w-full h-full group relative">
+      <Card className="flex flex-col justify-center items-center w-full h-full group relative dark:bg-gray-800 dark:text-white bg-white">
         <span className="absolute top-3 left-3">
           {discount && (
             <button className="bg-[#DB4444] text-white px-2 py-1 rounded-md">
@@ -90,11 +89,11 @@ const Product = ({
 
         <div className="flex flex-col p-4 gap-3 w-full">
           <div className="flex justify-between items-center">
-            <h1 className="text-lg font-medium">{name}</h1>
+            <h1 className="text-lg font-medium dark:text-white">{name}</h1>
             <div className="flex flex-col items-end">
               <span className="text-lg font-bold">${price}</span>
               {discount && (
-                <span className="text-sm text-gray-500 line-through">
+                <span className="text-sm text-gray-500 dark:text-gray-400 line-through">
                   ${(price / (1 - discount)).toFixed(2)}
                 </span>
               )}
@@ -107,7 +106,7 @@ const Product = ({
                 e.preventDefault();
                 handleAddToCart();
               }}
-              className="bg-black text-white py-2 rounded-md hover:bg-gray-800 duration-300 w-full"
+              className="bg-black text-white py-2 rounded-md hover:bg-gray-800 duration-300 w-full dark:hover:bg-gray-600"
             >
               Add to cart
             </button>
