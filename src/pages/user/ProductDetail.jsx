@@ -1,4 +1,3 @@
-import { useDarkMode } from "@/components/DarkModeContext";
 import star_full from "@/assets/icon-star-full.png";
 import Product from "@/components/Product";
 import { Button } from "@/components/ui/button";
@@ -37,7 +36,6 @@ import { createReview } from "@/services/reviewServices";
 import { addToCart, getCart } from "@/services/cartServices";
 import updateLocalCart from "@/lib/updateCart";
 const ProductDetail = ({ user, setIsOpenCart, setCartItems, cartItems }) => {
-  const { darkMode } = useDarkMode();
   const { id } = useParams();
 
   const [reviews, setReviews] = useState([]);
@@ -161,9 +159,9 @@ const ProductDetail = ({ user, setIsOpenCart, setCartItems, cartItems }) => {
 
   return (
     <div
-      className={` px-[130px] ${
-        darkMode ? "bg-gray-900 text-white" : "bg-white text-black"
-      }`}
+      className={` px-[130px] 
+       dark:bg-gray-900 dark:text-white bg-white text-black
+      `}
     >
       <div className="flex flex-col gap-5 my-5">
         <h1 className="text-2xl font-bold">Product Detail</h1>
@@ -274,7 +272,7 @@ const ProductDetail = ({ user, setIsOpenCart, setCartItems, cartItems }) => {
           </div>
         </div>
       )}
-      <Card className="mt-5">
+      <Card className="mt-5 dark:bg-gray-800 dark:text-white">
         <CardHeader>
           <CardTitle>Product Reviews</CardTitle>
         </CardHeader>
@@ -286,26 +284,26 @@ const ProductDetail = ({ user, setIsOpenCart, setCartItems, cartItems }) => {
               </div>
             ))
           ) : (
-            <p>No reviews available</p>
+            <p className="dark:text-gray-400">No reviews available</p>
           )}
         </CardContent>
-        <div className="space-y-4 p-4 border rounded-md">
+        <div className="space-y-4 p-4 border rounded-md dark:border-gray-700">
           <h3 className="text-lg font-bold">Add a Review</h3>
           <textarea
             value={newReview}
             onChange={(e) => setNewReview(e.target.value)}
             placeholder="Write your review here..."
-            className="w-full p-2 border rounded-md"
+            className="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white dark:border-gray-600"
           />
           <div className="flex items-center space-x-4">
-            <label htmlFor="rating" className="font-medium">
+            <label htmlFor="rating" className="font-medium dark:text-white">
               Rating:
             </label>
             <select
               id="rating"
               value={newRating}
               onChange={(e) => setNewRating(Number(e.target.value))}
-              className="p-2 border rounded-md"
+              className="p-2 border rounded-md dark:bg-gray-700 dark:text-white dark:border-gray-600"
             >
               <option value="0">Select Rating</option>
               {[1, 2, 3, 4, 5].map((rate) => (
@@ -317,13 +315,13 @@ const ProductDetail = ({ user, setIsOpenCart, setCartItems, cartItems }) => {
           </div>
           <button
             onClick={handleAddReview}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500"
           >
             Submit
           </button>
         </div>
         {paging.totalPages > 1 && (
-          <div className="p-4 border-t border-border flex items-center justify-between">
+          <div className="p-4 border-t border-border flex items-center justify-between dark:border-gray-700">
             <div className="flex items-center space-x-2">
               <Button
                 variant="outline"

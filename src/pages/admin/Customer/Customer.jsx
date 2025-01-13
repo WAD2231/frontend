@@ -128,10 +128,10 @@ export default function Customer() {
               onChange={handleSearch}
             />
           </div>
-          <Button variant="outline" size="sm">
+          {/* <Button variant="outline" size="sm">
             <Filter className="h-4 w-4 mr-2" />
             Filters
-          </Button>
+          </Button> */}
         </div>
 
         <Table>

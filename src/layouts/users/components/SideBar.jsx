@@ -50,36 +50,6 @@ const SideBar = () => {
 
   return (
     <div className="flex translate-y-[-50px] gap-8">
-      <ul className='flex flex-col gap-5 w-[15%] pt-10 pr-5 border-r-[1px]'>
-        <li className='flex gap-7 justify-between'>
-          <span className='hover:underline cursor-pointer'>Woman&#39;s Fashion</span>{" "}
-        </li>
-        <li className='flex gap-7 justify-between'>
-          <span className='hover:underline cursor-pointer'>Men&#39;s Fashion</span>{" "}
-        </li>
-        <li>
-          <span className='hover:underline cursor-pointer'>Electronics</span>
-        </li>
-        <li>
-          <span className='hover:underline cursor-pointer'>Home & Lifestyle</span>
-        </li>
-        <li>
-          <span className='hover:underline cursor-pointer'>Medicine</span>
-        </li>
-        <li>
-          <span className='hover:underline cursor-pointer'>Sports & Outdoor</span>
-        </li>
-        <li>
-          <span className='hover:underline cursor-pointer'>Baby&rsquo;s & Toys</span>
-        </li>
-        <li>
-          <span className='hover:underline cursor-pointer'>Groceries & Pets</span>
-        </li>
-        <li>
-          <span className='hover:underline cursor-pointer'>Health & Beauty</span>
-        </li>
-      </ul>
-
       {/* Banner Slider */}
       <div className="flex-1 pt-10">
         <div className="relative h-[344px] bg-black text-white overflow-hidden rounded-lg">

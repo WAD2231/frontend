@@ -19,7 +19,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Calendar, Filter, Eye, Pencil, Trash2 } from "lucide-react";
+import {
+  Calendar,
+  Filter,
+  Eye,
+  Pencil,
+  Trash2,
+  ChevronRight,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import routes from "@/config/routes";
 import { getProducts, deleteProduct } from "@/services/productServices";
@@ -42,6 +51,9 @@ export default function ProductsPage() {
   });
 
   let currentPage = parseInt(searchParams.get("page")) || 1;
+
+  const order = searchParams.get("order") || "";
+
   const [search, setSearch] = useState(searchParams.get("search") || "");
 
   const debounceSearchValue = useDebounce(search, 500);
@@ -52,6 +64,7 @@ export default function ProductsPage() {
         current_page,
         page_size,
         search,
+        order: order,
       });
       if (response.status === 200) {
         setProducts(response.data.products);
@@ -68,7 +81,7 @@ export default function ProductsPage() {
       page_size: paging.pageSize,
       search: debounceSearchValue,
     });
-  }, [currentPage, debounceSearchValue]);
+  }, [currentPage, debounceSearchValue, order]);
 
   const handleSearch = (e) => {
     const value = e.target.value;
@@ -87,6 +100,27 @@ export default function ProductsPage() {
   const handleContinue = () => {
     setOpen(false);
   };
+
+  const handleSortPrice = () => {
+    let newOrder = order === "price_asc" ? "price_desc" : "price_asc";
+    const params = new URLSearchParams(searchParams);
+    params.set("order", newOrder);
+    setSearchParams(params);
+  };
+
+  const handleSortName = () => {
+    let newOrder = searchParams.get("order") === "product_name_asc" ? "product_name_desc" : "product_name_asc";
+    const params = new URLSearchParams(searchParams);
+    params.set("order", newOrder);
+    setSearchParams(params);
+  };
+
+  const handleSortCreatedAt = () => { 
+    let newOrder = searchParams.get("order") === "created_at_asc" ? "created_at_desc" : "created_at_asc";
+    const params = new URLSearchParams(searchParams);
+    params.set("order", newOrder);
+    setSearchParams(params);
+  }
 
   return (
     <div className="p-6 space-y-6 bg-background min-h-screen w-full">
@@ -121,7 +155,7 @@ export default function ProductsPage() {
             onChange={handleSearch}
             value={search}
           />
-          <div className="flex items-center space-x-4">
+          {/* <div className="flex items-center space-x-4">
             <Button variant="outline" className="flex items-center space-x-2">
               <Calendar className="h-4 w-4" />
               <span>Select Dates</span>
@@ -130,7 +164,7 @@ export default function ProductsPage() {
               <Filter className="h-4 w-4" />
               <span>Filters</span>
             </Button>
-          </div>
+          </div> */}
         </div>
 
         <Table>
@@ -139,12 +173,42 @@ export default function ProductsPage() {
               <TableHead className="w-12">
                 <input type="checkbox" className="rounded border-input" />
               </TableHead>
-              <TableHead className="w-1/5">Product</TableHead>
+              <TableHead className="w-1/5">
+                <div className="flex items-center gap-2">
+                  <div>Product Name</div>
+                  {order === "product_name_asc" ? (
+                    <ChevronDown className="h-4 w-4" onClick={handleSortName} />
+                  ) : (
+                    <ChevronUp className="h-4 w-4" onClick={handleSortName} />
+                  )}
+                </div>
+              </TableHead>
               <TableHead className="w-1/6">Category</TableHead>
               <TableHead className="w-1/6">Stock</TableHead>
-              <TableHead className="w-1/6">Price</TableHead>
+              <TableHead className="w-1/6">
+                <div className="flex items-center gap-2">
+                  <div>Price</div>
+                  {order === "price_asc" ? (
+                    <ChevronDown
+                      className="h-4 w-4"
+                      onClick={handleSortPrice}
+                    />
+                  ) : (
+                    <ChevronUp className="h-4 w-4" onClick={handleSortPrice} />
+                  )}
+                </div>
+              </TableHead>
               <TableHead className="w-1/6">Status</TableHead>
-              <TableHead className="w-1/6">Added</TableHead>
+              <TableHead className="w-1/6">
+                <div className="flex items-center gap-2">
+                  <div>Added</div>
+                  {order === "created_at_asc" ? (
+                    <ChevronDown className="h-4 w-4" onClick={handleSortCreatedAt} />
+                  ) : (
+                    <ChevronUp className="h-4 w-4" onClick={handleSortCreatedAt} />
+                  )}
+                </div>
+              </TableHead>
               <TableHead className="w-1/6">Action</TableHead>
             </TableRow>
           </TableHeader>

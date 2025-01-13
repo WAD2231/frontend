@@ -45,6 +45,8 @@ export default function SearchPage({ setIsOpenCart, setCartItems, cartItems }) {
 
   const tag = searchParams.get("tag") || "";
 
+  const order = searchParams.get("order") || "";
+
   const [paging, setPaging] = useState({
     pageSize: 6,
     totalItems: 0,
@@ -63,6 +65,7 @@ export default function SearchPage({ setIsOpenCart, setCartItems, cartItems }) {
           price_min,
           category_id,
           tag,
+          order
         }),
       ]);
       if (categoriesData.status === 200) {
@@ -78,7 +81,7 @@ export default function SearchPage({ setIsOpenCart, setCartItems, cartItems }) {
       }
     };
     fetchData();
-  }, [keyword, currentPage, price_min, price_max, category_id, tag]);
+  }, [keyword, currentPage, price_min, price_max, category_id, tag, order]);
 
   const applyPriceFilter = () => {
     const params = new URLSearchParams(searchParams);
@@ -183,15 +186,21 @@ export default function SearchPage({ setIsOpenCart, setCartItems, cartItems }) {
         </div>
         <div className="md:col-span-4">
           <div className="mb-4 items-end">
-            <Select>
+            <Select
+              onValueChange={(value) => {
+                const params = new URLSearchParams(searchParams);
+                params.set("order", value);
+                setSearchParams(params);
+              }}
+            >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="price_asc">Price: Low to High</SelectItem>
                 <SelectItem value="price_desc">Price: High to Low</SelectItem>
-                <SelectItem value="name_asc">Name: A to Z</SelectItem>
-                <SelectItem value="name_desc">Name: Z to A</SelectItem>
+                <SelectItem value="product_name_asc">Name: A to Z</SelectItem>
+                <SelectItem value="product_name_desc">Name: Z to A</SelectItem>
               </SelectContent>
             </Select>
           </div>

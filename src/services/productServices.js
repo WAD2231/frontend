@@ -10,10 +10,11 @@ export const getProducts = async ({
   category_id = "",
   price_min = "",
   price_max = "",
+  order = "",
 }) => {
   try {
     const res = await api.get(
-      `${PRODUCTS}?current_page=${current_page}&page_size=${page_size}&search=${search}&tag=${tag}&category_id=${category_id}&price_min=${price_min}&price_max=${price_max}`
+      `${PRODUCTS}?current_page=${current_page}&page_size=${page_size}&search=${search}&tag=${tag}&category_id=${category_id}&price_min=${price_min}&price_max=${price_max}&order=${order}`
     );
     return res;
   } catch (error) {

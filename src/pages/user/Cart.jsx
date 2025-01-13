@@ -1,19 +1,15 @@
+import Dialog from "@/components/Dialog";
+import MyAlertDialog from "@/components/MyAlertDialog";
+import { Button } from "@/components/ui/button";
+import routes from "@/config/routes";
+import updateLocalCart from "@/lib/updateCart";
+import { updateProductQuantity } from "@/services/cartServices";
+import { createOrder } from "@/services/orderServices";
+import { Home, Minus, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Minus, Plus, Home, X, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useDarkMode } from "@/components/DarkModeContext";
-import routes from "@/config/routes";
-import { deleteProduct, updateProductQuantity } from "@/services/cartServices";
-import { createOrder } from "@/services/orderServices";
-import updateLocalCart from "@/lib/updateCart";
-import MyAlertDialog from "@/components/MyAlertDialog";
-import Dialog from "@/components/Dialog";
 
 export default function ShoppingCart({ user, cartItems, setCartItems }) {
-  const { darkMode } = useDarkMode();
-
   const [selectedItems, setSelectedItems] = useState(
     cartItems?.items?.map((item) => item.product.id)
   );
@@ -190,11 +186,7 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
   };
 
   return (
-    <div
-      className={`min-h-screen px-[50px] ${
-        darkMode ? "dark bg-gray-900 text-white" : "bg-gray-50"
-      }`}
-    >
+    <div className="min-h-screen px-[50px] dark:bg-gray-900 bg-gray-50 text-white">
       <MyAlertDialog
         isShown={openMA}
         setIsShown={setOpenMA}
@@ -206,35 +198,29 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
         <div className="flex items-center gap-2 text-sm mb-8">
           <Link
             to={routes.home}
-            className="flex items-center gap-1 hover:text-primary"
+            className="flex items-center gap-1 hover:text-primary dark:text-white text-black"
           >
             <Home className="h-4 w-4" />
             Home
           </Link>
-          <span>/</span>
-          <span className="text-muted-foreground">Shopping Cart</span>
+          <span className="dark:text-white text-black">/</span>
+          <span className="text-muted-foreground dark:text-white text-black">
+            Shopping Cart
+          </span>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2">
-            <div
-              className={`rounded-lg ${
-                darkMode ? "bg-gray-800" : "bg-white"
-              } shadow-sm`}
-            >
+            <div className="rounded-lg dark:bg-gray-800 bg-white shadow-sm">
               {cartItems?.items?.length > 0 ? (
-                <div
-                  className={`p-6 ${
-                    darkMode
-                      ? "border border-gray-900"
-                      : "border border-gray-200"
-                  }`}
-                >
-                  <h1 className="text-2xl font-semibold mb-6">Shopping Cart</h1>
+                <div className="p-6 dark:border-gray-900 border border-gray-200">
+                  <h1 className="text-2xl font-semibold mb-6 dark:text-white text-black">
+                    Shopping Cart
+                  </h1>
 
                   {/* Header */}
-                  <div className="grid grid-cols-12 gap-4 mb-4 text-sm font-medium text-muted-foreground">
+                  <div className="grid grid-cols-12 gap-4 mb-4 text-sm font-medium text-muted-foreground dark:text-white text-black">
                     <div className="col-span-1">
                       <input
                         type="checkbox"
@@ -272,15 +258,15 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
                             className="rounded-lg h-16 w-16"
                           />
                           <div className="flex flex-col">
-                            <span className="font-medium text-sm">
+                            <span className="font-medium dark:text-white text-black text-sm">
                               {item.product.name}
                             </span>
                           </div>
                         </div>
-                        <div className="col-span-2 text-center">
+                        <div className="col-span-2 text-center dark:text-white text-black">
                           ${item.product.price}
                         </div>
-                        <span className="col-span-2 text-center">
+                        <span className="col-span-2 text-center dark:text-white text-black">
                           -$
                           {item.product?.discount > 0
                             ? (
@@ -293,35 +279,38 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
                             <Button
                               variant="outline"
                               size="icon"
-                              className="h-8 w-8"
-                              onClick={() =>
+                              className="h-8 w-8 dark:text-white text-black"
+                              onClick={() => {
+                                console.log(item.product.id, item.quantity - 1);
+
                                 updateQuantity(
                                   item.product.id,
                                   item.quantity - 1
-                                )
-                              }
+                                );
+                              }}
                             >
-                              <Minus className="h-4 w-4" />
+                              <Minus className="h-4 w-4 dark:text-white text-black" />
                             </Button>
-                            <span className="w-12 text-center">
+                            <span className="w-12 text-center dark:text-white text-black">
                               {item.quantity}
                             </span>
                             <Button
                               variant="outline"
                               size="icon"
-                              className="h-8 w-8"
-                              onClick={() =>
+                              className="h-8 w-8 dark:text-white text-black"
+                              onClick={() => {
+                                console.log(item.product.id, item.quantity - 1);
                                 updateQuantity(
                                   item.product.id,
                                   item.quantity + 1
-                                )
-                              }
+                                );
+                              }}
                             >
-                              <Plus className="h-4 w-4" />
+                              <Plus className="h-4 w-4 dark:text-white text-black" />
                             </Button>
                           </div>
                         </div>
-                        <div className="col-span-1 text-center">
+                        <div className="col-span-1 text-center dark:text-white text-black">
                           <Button
                             variant="ghost"
                             size="icon"
@@ -337,8 +326,10 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
                 </div>
               ) : (
                 <div className="p-6">
-                  <h1 className="text-2xl font-semibold mb-6">Shopping Cart</h1>
-                  <p className="text-muted-foreground text-center">
+                  <h1 className="text-2xl font-semibold mb-6 dark:text-white text-black">
+                    Shopping Cart
+                  </h1>
+                  <p className="text-muted-foreground text-center dark:text-white text-black">
                     Your cart is empty
                   </p>
                 </div>
@@ -347,18 +338,16 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
           </div>
 
           <div className="lg:col-span-1">
-            <div
-              className={`rounded-lg ${
-                darkMode
-                  ? "bg-gray-800 border border-gray-900"
-                  : "bg-white border border-gray-200"
-              } shadow-sm p-6`}
-            >
-              <h2 className="text-xl font-semibold mb-4">Cart Totals</h2>
+            <div className="rounded-lg dark:bg-gray-800 dark:border-gray-900 bg-white border border-gray-200 shadow-sm p-6">
+              <h2 className="text-xl font-semibold mb-4 dark:text-white text-black">
+                Cart Totals
+              </h2>
               <div className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Sub-total</span>
-                  <span className="font-medium">${subtotal?.toFixed(2)}</span>
+                  <span className="font-medium dark:text-white text-black">
+                    ${subtotal?.toFixed(2)}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Shipping</span>
@@ -366,13 +355,17 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Discount</span>
-                  <span className="font-medium">-${discount?.toFixed(2)}</span>
+                  <span className="font-medium dark:text-white text-black">
+                    -${discount?.toFixed(2)}
+                  </span>
                 </div>
                 <div className="border-t pt-4">
                   <div className="flex justify-between">
-                    <span className="font-semibold">Total</span>
-                    <span className="font-semibold">
-                      $
+                    <span className="font-semibold dark:text-white text-black">
+                      Total
+                    </span>
+                    <span className="font-semibold dark:text-white text-black">
+                      $$
                       {subtotal < discount
                         ? 0
                         : (subtotal - discount).toFixed(2)}{" "}

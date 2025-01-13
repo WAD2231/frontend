@@ -7,7 +7,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useDarkMode } from "@/components/DarkModeContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState, useRef, useEffect } from "react";
 import CategoriesNav from "@/components/CategoryNav";
@@ -17,9 +16,9 @@ import routes from "@/config/routes";
 import { getCart } from "@/services/cartServices";
 import { getAllCategories } from "@/services/categoryServices";
 import { Input } from "@/components/ui/input";
+import ModeToggle from "@/components/ModeToggle";
 
 const Header = ({ user, setUser, cartItems, setCartItems, setIsOpenCart }) => {
-  const { darkMode, toggleDarkMode } = useDarkMode();
   const [showCategories, setShowCategories] = useState(false);
   const categoriesRef = useRef(null);
   const navigate = useNavigate();
@@ -53,11 +52,7 @@ const Header = ({ user, setUser, cartItems, setCartItems, setIsOpenCart }) => {
   const [keyword, setKeyword] = useState(searchParams.get("keyword") || "");
 
   return (
-    <header
-      className={`${
-        darkMode ? "bg-gray-900 text-white" : "bg-white text-black"
-      } fixed w-full top-0 z-50 h-20`}
-    >
+    <header className="bg-white text-black dark:bg-gray-900 dark:text-white fixed w-full top-0 z-50 h-20">
       <nav className="px-[50px]">
         <div className="container py-3 mx-auto flex justify-between items-center">
           <div className="flex items-center justify-between w-7/12">
@@ -73,17 +68,15 @@ const Header = ({ user, setUser, cartItems, setCartItems, setIsOpenCart }) => {
                 All Categories
               </Button>
               {showCategories && (
-                <div
-                  className={`absolute top-full mt-2 left-0 bg-white shadow-lg border rounded z-40`}
-                >
+                <div className="absolute top-full mt-2 left-0 bg-white dark:bg-gray-800 shadow-lg border dark:border-gray-700 rounded z-40">
                   <CategoriesNav categories={categories} />
                 </div>
               )}
             </div>
             <div className="hidden md:flex space-x-8">
-              <div className={`gap-4 w-96 px-5 py-1 flex items-center rounded`}>
+              <div className="gap-4 w-96 px-5 py-1 flex items-center rounded">
                 <Input
-                  className={`w-full py-2 rounded-md bg-transparent outline-none`}
+                  className="w-full py-2 rounded-md bg-transparent outline-none dark:placeholder-gray-400 dark:text-white"
                   type="text"
                   placeholder="What are you looking for?"
                   value={keyword}
@@ -92,35 +85,26 @@ const Header = ({ user, setUser, cartItems, setCartItems, setIsOpenCart }) => {
                 <button>
                   <Search
                     onClick={() => navigate(`/search?keyword=${keyword}`)}
-                    className={`h-4 w-4 ${
-                      darkMode
-                        ? "placeholder-gray-400 text-white"
-                        : "placeholder-gray-500 text-gray-900"
-                    }`}
+                    className="h-4 w-4 text-gray-900 dark:text-white"
                   />
                 </button>
               </div>
             </div>
           </div>
           <div className="hidden md:flex gap-6 items-center w-5/12 justify-end">
-            <div className="relative cursor-pointer" onClick={() => setIsOpenCart(true)}>
-              <ShoppingCart className="text-muted-foreground" size={26} />
+            <div
+              className="relative cursor-pointer"
+              onClick={() => setIsOpenCart(true)}
+            >
+              <ShoppingCart
+                className="text-muted-foreground dark:text-gray-400"
+                size={26}
+              />
               <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full w-4 h-4 flex items-center justify-center">
                 {cartItems?.items?.length}
               </span>
             </div>
-            <div
-              className={`relative w-14 h-8 flex items-center rounded-full p-1 cursor-pointer ${
-                darkMode ? "bg-gray-600" : "bg-gray-300"
-              }`}
-              onClick={toggleDarkMode}
-            >
-              <div
-                className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform ${
-                  darkMode ? "translate-x-6" : ""
-                }`}
-              ></div>
-            </div>
+            <ModeToggle />
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -130,7 +114,7 @@ const Header = ({ user, setUser, cartItems, setCartItems, setIsOpenCart }) => {
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  {user && user?.permission === 1 && (
+                  {user?.permission === 1 && (
                     <Link to={routes.dashboard}>
                       <DropdownMenuItem>
                         <User className="mr-2 h-4 w-4" />

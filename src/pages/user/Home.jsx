@@ -3,14 +3,11 @@ import SideBar from "@/layouts/users/components/SideBar";
 import icon_service1 from "@/assets/icon-service-car.png";
 import icon_service2 from "@/assets/icon-service-contact.png";
 import icon_service3 from "@/assets/icon-service-security.png";
-import { useDarkMode } from "@/components/DarkModeContext";
 
 import { getHomeProducts } from "@/services/productServices";
 import { FullWidthCarousel } from "@/components/FullWidthCarousel";
 
 const Home = ({ setIsOpenCart, setCartItems, cartItems }) => {
-  const { darkMode } = useDarkMode();
-
   const [homeProducts, setHomeProducts] = useState({});
 
   useEffect(() => {
@@ -24,22 +21,14 @@ const Home = ({ setIsOpenCart, setCartItems, cartItems }) => {
   }, []);
 
   return (
-    <div
-      className={`max-w-full mx-auto px-[50px] py-12 ${
-        darkMode ? "bg-gray-900 text-white" : ""
-      }`}
-    >
+    <div className="max-w-full mx-auto px-[50px] py-12 dark:bg-gray-900 dark:text-white bg-gray-50">
       <>
         <SideBar />
       </>
       <div className="flex justify-between items-center mb-8">
         <div className="space-y-4">
           <div className="flex items-center gap-20">
-            <h2
-              className={`text-3xl font-semibold ${
-                darkMode ? "text-white" : ""
-              }`}
-            >
+            <h2 className="text-3xl font-semibold dark:text-white text-gray-900">
               Best Selling Product
             </h2>
           </div>
@@ -58,11 +47,7 @@ const Home = ({ setIsOpenCart, setCartItems, cartItems }) => {
       <div className="flex justify-between items-center my-8">
         <div className="space-y-4">
           <div className="flex items-center gap-20">
-            <h2
-              className={`text-3xl font-semibold ${
-                darkMode ? "text-white" : ""
-              }`}
-            >
+            <h2 className="text-3xl font-semibold dark:text-white text-gray-900">
               Discounted Products
             </h2>
           </div>
@@ -80,11 +65,7 @@ const Home = ({ setIsOpenCart, setCartItems, cartItems }) => {
       <div className="flex justify-between items-center my-8">
         <div className="space-y-4">
           <div className="flex items-center gap-20">
-            <h2
-              className={`text-3xl font-semibold ${
-                darkMode ? "text-white" : ""
-              }`}
-            >
+            <h2 className="text-3xl font-semibold dark:text-white text-gray-900">
               New Arrivals
             </h2>
           </div>
@@ -103,11 +84,7 @@ const Home = ({ setIsOpenCart, setCartItems, cartItems }) => {
       <div className="flex justify-between items-center my-8">
         <div className="space-y-4">
           <div className="flex items-center gap-20">
-            <h2
-              className={`text-3xl font-semibold ${
-                darkMode ? "text-white" : ""
-              }`}
-            >
+            <h2 className="text-3xl font-semibold dark:text-white text-gray-900">
               Featured Products
             </h2>
           </div>
@@ -124,11 +101,7 @@ const Home = ({ setIsOpenCart, setCartItems, cartItems }) => {
       </div>
 
       {/* Services Section */}
-      <div
-        className={`flex mt-14 items-center mb-10 justify-evenly ${
-          darkMode ? "text-white" : ""
-        }`}
-      >
+      <div className="flex mt-14 items-center mb-10 justify-evenly dark:text-white">
         {[
           {
             icon: icon_service1,
@@ -149,9 +122,7 @@ const Home = ({ setIsOpenCart, setCartItems, cartItems }) => {
           <div key={index} className="flex flex-col items-center gap-2">
             <img src={service.icon} alt={service.title} />
             <h3 className="text-xl font-semibold">{service.title}</h3>
-            <p className={darkMode ? "text-gray-300" : ""}>
-              {service.description}
-            </p>
+            <p className="dark:text-gray-300">{service.description}</p>
           </div>
         ))}
       </div>
