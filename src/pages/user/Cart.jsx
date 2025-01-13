@@ -7,6 +7,7 @@ import { useDarkMode } from "@/components/DarkModeContext";
 import routes from "@/config/routes";
 import { deleteProduct, updateProductQuantity } from "@/services/cartServices";
 import { createOrder } from "@/services/orderServices";
+import updateLocalCart from "@/lib/updateCart";
 
 export default function ShoppingCart({ user, cartItems, setCartItems }) {
   const { darkMode } = useDarkMode();
@@ -16,7 +17,7 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
   );
 
   const isAllChecked =
-    selectedItems.length === cartItems?.items?.length &&
+    selectedItems?.length === cartItems?.items?.length &&
     cartItems?.items?.length > 0;
 
   const toggleSelectAll = () => {
@@ -36,26 +37,62 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
   const updateQuantity = async (id, newQuantity) => {
     if (newQuantity < 1) return;
 
+    if (cartItems?.isLocal) {
+      setCartItems((prev) => {
+        const newItems = prev?.items?.map((item) => {
+          if (item.product.id == id) {
+            return { ...item, quantity: newQuantity };
+          }
+          return item;
+        });
+        updateLocalCart({ items: newItems });
+        return {
+          items: newItems,
+          isLocal: true,
+        };
+      });
+      return;
+    }
+
     const response = await updateProductQuantity(id, newQuantity);
 
     if (response.status === 200) {
-      setCartItems((items) =>
-        items.map((item) =>
+      setCartItems((prev) => {
+        const newItems = prev?.items?.map((item) =>
           item.product.id === id ? { ...item, quantity: newQuantity } : item
-        )
-      );
+        );
+        return {
+          items: newItems,
+          isLocal: false,
+        };
+      });
     }
   };
 
   const removeItem = async (id) => {
+    if (cartItems?.isLocal) { 
+      setCartItems((prev) => {
+        const newItems = prev?.items?.filter((item) => item.product.id !== id);
+        updateLocalCart({ items: newItems });
+        return {
+          items: newItems,
+          isLocal: true,
+        };
+      });
+      return
+    }
     const response = await deleteProduct(id);
     if (response.status === 200) {
-      setCartItems((items) => items.filter((item) => item.product.id !== id));
+      const newItems = cartItems?.items?.filter((item) => item.product.id !== id);
+      setCartItems({
+        items: newItems,
+        isLocal: false,
+      });
       setSelectedItems((prev) => prev.filter((itemId) => itemId !== id));
     }
   };
 
-  const subtotal = selectedItems.reduce(
+  const subtotal = selectedItems?.reduce(
     (sum, id) =>
       sum +
         cartItems?.items?.find((item) => item.product.id === id)?.product
