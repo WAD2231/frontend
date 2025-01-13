@@ -35,18 +35,19 @@ export default function BarChartLabel({ label, chartData, dataKey }) {
       </CardHeader>
       <CardContent>
         <ChartContainer config={{}}>
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart accessibilityLayer data={chartData} margin={{ top: 0, right: 0, left: 0, bottom: 0  }} >
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="monthYear"
               tickLine={false}
-              fontSize={13}
+              fontSize={12}
               tickMargin={10}
               axisLine={false}
               minTickGap={0}
               tickFormatter={(value) => value}
+              interval={0}
             />
-            <YAxis type="number" hide />
+            <YAxis type="number" hide tickCount={200} tick={{ fontSize: 14, width: 250 }} />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}

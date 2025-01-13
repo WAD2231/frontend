@@ -1,4 +1,12 @@
-import { OrdersTable } from "@/components/OrderTable";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import PieChart from "@/components/PieChart";
 import {
   getCategoryStatistic,
@@ -27,136 +35,6 @@ import routes from "@/config/routes";
 import { getAllOrders } from "@/services/orderServices";
 import formatDate from "@/lib/formatDate";
 import capitalFirstLetter from "@/lib/capitalFirstLetter";
-
-const orders = [
-  {
-    id: "#302012",
-    product: "Handmade Pouch",
-    additionalProducts: "+3 other products",
-    date: "1 min ago",
-    customer: {
-      name: "John Bushmill",
-      email: "johnb@mail.com",
-    },
-    total: "$121.00",
-    payment: "Mastercard",
-    status: "Processing",
-  },
-  {
-    id: "#302011",
-    product: "Smartwatch E2",
-    additionalProducts: "+1 other products",
-    date: "1 min ago",
-    customer: {
-      name: "Ilham Budi A",
-      email: "ilhambudi@mail.com",
-    },
-    total: "$590.00",
-    payment: "Visa",
-    status: "Processing",
-  },
-  {
-    id: "#302002",
-    product: "Smartwatch E1",
-    date: "5 hour ago",
-    customer: {
-      name: "Mohammad Karim",
-      email: "m_karim@mail.com",
-    },
-    total: "$125.00",
-    payment: "Transfer",
-    status: "Shipped",
-  },
-  {
-    id: "#301901",
-    product: "Headphone G1 Pro",
-    additionalProducts: "+1 other products",
-    date: "1 day ago",
-    customer: {
-      name: "Linda Blair",
-      email: "lindablair@mail.com",
-    },
-    total: "$348.00",
-    payment: "Paypal",
-    status: "Shipped",
-  },
-  {
-    id: "#301900",
-    product: "Iphone X",
-    date: "2 day ago",
-    customer: {
-      name: "Josh Adam",
-      email: "josh.adam@mail.com",
-    },
-    total: "$607.00",
-    payment: "Visa",
-    status: "Delivered",
-  },
-  {
-    id: "#301881",
-    product: "Puma Shoes",
-    additionalProducts: "+1 other products",
-    date: "5 Jan 2023",
-    customer: {
-      name: "Sin Tae",
-      email: "sin_tae@mail.com",
-    },
-    total: "$234.00",
-    payment: "Visa",
-    status: "Cancelled",
-  },
-  {
-    id: "#301643",
-    product: "Imac 2021",
-    date: "1 Jan 2023",
-    customer: {
-      name: "Rajesh Masvidal",
-      email: "rajesh_m@mail.com",
-    },
-    total: "$760.00",
-    payment: "Transfer",
-    status: "Shipped",
-  },
-  {
-    id: "#301600",
-    product: "Nike Shoes",
-    additionalProducts: "+1 other products",
-    date: "24 Dec 2022",
-    customer: {
-      name: "Fajar Surya",
-      email: "surya@mail.com",
-    },
-    total: "$400.00",
-    payment: "Mastercard",
-    status: "Delivered",
-  },
-  {
-    id: "#301555",
-    product: "Lego Car",
-    additionalProducts: "+4 other products",
-    date: "2 Dec 2022",
-    customer: {
-      name: "Francis Greg",
-      email: "francisg@mail.com",
-    },
-    total: "$812.00",
-    payment: "Paypal",
-    status: "Delivered",
-  },
-  {
-    id: "#301002",
-    product: "Skincare Alia 1",
-    additionalProducts: "+1 other products",
-    date: "2 Dec 2022",
-    customer: {
-      name: "Linda Blair",
-      email: "lindablair@mail.com",
-    },
-    total: "$123.00",
-    payment: "Paypal",
-    status: "Delivered",
-  },
-];
 
 export default function DashboardPage() {
   const [categoryStatistics, setCategoryStatistics] = useState([]);
@@ -270,7 +148,10 @@ export default function DashboardPage() {
 
   return (
     <div className="p-1 space-y-6 bg-background min-h-screen w-full">
-      <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
+      <div className="flex items-center space-x-2">
+        <h2 className="text-xl font-semibold">Statistics</h2>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <BartChar
           dataKey={"Quantity"}
           chartData={newCustomerStatistics?.map((item) => {
@@ -287,10 +168,7 @@ export default function DashboardPage() {
           dataKey={"Revenue"}
           chartData={revenueStatistics?.map((item) => {
             return {
-              Revenue: (item.revenue > 1000
-                ? item.revenue / 1000
-                : item.revenue
-              ).toFixed(0),
+              Revenue: Math.round(item.revenue),
               month: item.month,
               year: item.year,
               monthYear: `${item.month}/${item.year}`,
@@ -344,22 +222,25 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <h2 className="text-xl font-semibold">Recent Orders</h2>
-            <Badge
-              variant="secondary"
-              className="bg-primary/10 text-primary dark:bg-primary/20"
-            >
-              +2 Orders
-            </Badge>
           </div>
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm">
-              <Filter className="h-4 w-4 mr-2" />
-              Filters
-            </Button>
-            <Button size="sm" className="bg-primary text-primary-foreground">
-              See More
-            </Button>
-          </div>
+          <Select
+            onValueChange={(value) => {
+              const params = new URLSearchParams(searchParams);
+              params.set("status", value);
+              setSearchParams(params);
+            }}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Status</SelectLabel>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="rounded-lg border bg-card">
@@ -419,7 +300,6 @@ export default function DashboardPage() {
                 <TableHead>
                   <div className="flex items-center space-x-1">
                     <span>Status</span>
-                    <ChevronDown className="h-4 w-4" />
                   </div>
                 </TableHead>
                 <TableHead>Action</TableHead>
@@ -484,9 +364,6 @@ export default function DashboardPage() {
                           <Eye className="h-4 w-4" />
                         </Button>
                       </Link>
-                      <Button variant="ghost" size="icon">
-                        <Link2 className="h-4 w-4" />
-                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>

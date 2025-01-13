@@ -5,7 +5,7 @@ export const createOrder = async (order) => {
     const res = await api.post("/orders", order);
     return res;
   } catch (error) {
-    return error.response;
+    return error;
   }
 };
 
@@ -16,7 +16,7 @@ export const getOrderHistory = async (order, date, status, page, size) => {
     );
     return res;
   } catch (error) {
-    return error.response;
+    return error;
   }
 };
 
@@ -27,6 +27,15 @@ export const getAllOrders = async (sort, status, page, size) => {
     );
     return res;
   } catch (error) {
-    return error.response;
+    return error;
   }
 };
+
+export const getOrderById = async (id) => { 
+  try {
+    const res = await api.get(`/orders/detail/${id}`);
+    return res;
+  } catch (error) {
+    return error
+  }
+}

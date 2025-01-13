@@ -27,11 +27,30 @@ import {
   Box,
   PackageCheck,
   PackageX,
+  UserCircle,
 } from "lucide-react";
-import { Link } from "react-router-dom";
-import routes from "@/config/routes";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getOrderById } from "@/services/orderServices";
+import capitalFirstLetter from "@/lib/capitalFirstLetter";
+import formatDate from "@/lib/formatDate";
 
 export default function OrderDetail() {
+  const { id } = useParams();
+
+  const [order, setOrder] = useState({});
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      const response = await getOrderById(id);
+      if (response.status === 200) {
+        console.log(response.data);
+        setOrder(response.data);
+      }
+    };
+    fetchOrder();
+  }, [id]);
+
   return (
     <div className="container mx-auto p-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
@@ -45,26 +64,6 @@ export default function OrderDetail() {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Select defaultValue="processing">
-            <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="Select status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="processing">Processing</SelectItem>
-              <SelectItem value="shipped">Shipped</SelectItem>
-              <SelectItem value="delivered">Delivered</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button variant="outline">
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </Button>
-          <Button>
-            <FileCheck className="h-4 w-4 mr-2" />
-            Invoice
-          </Button>
-        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -72,10 +71,9 @@ export default function OrderDetail() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm font-medium">Order #302011</div>
-                <Badge variant="secondary" className="mt-1">
-                  Processing
-                </Badge>
+                <div className="text-sm font-medium">
+                  Order #{order?.order_id}
+                </div>
               </div>
             </div>
           </CardHeader>
@@ -84,21 +82,23 @@ export default function OrderDetail() {
               <Calendar className="h-4 w-4 text-muted-foreground" />
               <div className="text-sm">
                 <div className="font-medium">Added</div>
-                <div className="text-muted-foreground">12 Dec 2022</div>
+                <div className="text-muted-foreground">
+                  {formatDate(order?.order_date)}
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <CreditCard className="h-4 w-4 text-muted-foreground" />
               <div className="text-sm">
                 <div className="font-medium">Payment Method</div>
-                <div className="text-muted-foreground">Visa</div>
+                <div className="text-muted-foreground">Online</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Truck className="h-4 w-4 text-muted-foreground" />
               <div className="text-sm">
-                <div className="font-medium">Shipping Method</div>
-                <div className="text-muted-foreground">Flat Shipping</div>
+                <div className="font-medium">Shipping Fee</div>
+                <div className="text-muted-foreground">$0</div>
               </div>
             </div>
           </CardContent>
@@ -110,30 +110,70 @@ export default function OrderDetail() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center gap-3">
-              <User className="h-4 w-4 text-muted-foreground" />
+              <img
+                src={order?.user?.avatar}
+                alt="avatar"
+                className="w-4 h-4 rounded-lg"
+              />
               <div className="text-sm">
-                <div className="font-medium">Customer</div>
-                <div className="text-muted-foreground">Josh Adam</div>
+                <div className="font-medium">Full name</div>
+                <div className="text-muted-foreground">
+                  {order?.user?.fullname}
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Mail className="h-4 w-4 text-muted-foreground" />
+              <UserCircle className="h-4 w-4 text-muted-foreground" />
               <div className="text-sm">
-                <div className="font-medium">Email</div>
-                <div className="text-muted-foreground">josh.adam@mail.com</div>
+                <div className="font-medium">Username</div>
+                <div className="text-muted-foreground">
+                  @{order?.user?.username}
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Phone className="h-4 w-4 text-muted-foreground" />
               <div className="text-sm">
                 <div className="font-medium">Phone</div>
-                <div className="text-muted-foreground">909 427 2910</div>
+                <div className="text-muted-foreground">
+                  {order?.user?.phone}
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
+          <CardHeader>
+            <CardTitle>Address</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-muted-foreground" />
+                <div className="text-sm text-muted-foreground">
+                  {order?.user?.address}
+                </div>
+              </div>
+            </div>
+            <Separator />
+            <CardTitle>Order Status</CardTitle>
+            <Badge
+              variant="outline"
+              className={
+                order.status === "pending"
+                  ? "border-orange-200 bg-orange-100 text-orange-700 dark:border-orange-800 dark:bg-orange-900 dark:text-orange-300"
+                  : order.status === "completed"
+                  ? "border-green-200 bg-green-100 text-green-700 dark:border-green-800 dark:bg-green-900 dark:text-green-300"
+                  : "border-red-200 bg-red-100 text-red-700 dark:border-red-800 dark:bg-red-900 dark:text-red-300"
+              }
+            >
+              {capitalFirstLetter(order?.status)}
+            </Badge>
+          </CardContent>
+        </Card>
+
+        {/* <Card>
           <CardHeader>
             <CardTitle>Document</CardTitle>
           </CardHeader>
@@ -160,182 +200,67 @@ export default function OrderDetail() {
               </div>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-        <div className="md:col-span-2 space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-6">
+        <div className="space-y-6">
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Order List</CardTitle>
-                <Badge variant="secondary">2 Products</Badge>
+                <Badge variant="secondary">
+                  {order?.details?.length} Products
+                </Badge>
               </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="grid grid-cols-12 gap-4 text-sm text-muted-foreground">
                   <div className="col-span-4">Product</div>
-                  <div className="col-span-2">SKU</div>
-                  <div className="col-span-2">QTY</div>
+                  <div className="col-span-2">Category</div>
+                  <div className="col-span-2">Quantity</div>
                   <div className="col-span-2">Price</div>
                   <div className="col-span-2">Total</div>
                 </div>
                 <Separator />
                 <div className="space-y-4">
-                  <div className="grid grid-cols-12 gap-4 items-center">
-                    <div className="col-span-4 flex items-center gap-3">
-                      <div className="w-12 h-12 bg-muted rounded-lg" />
-                      <div>
-                        <div className="font-medium">Smartwatch E2</div>
-                        <div className="text-sm text-muted-foreground">
-                          Black
+                  {order?.details?.map((item) => {
+                    return (
+                      <div className="grid grid-cols-12 gap-4 items-center">
+                        <div className="col-span-4 flex items-center gap-3">
+                          <img src={item?.product?.images[0]} alt={item?.product?.name} className="w-12 h-12 rounded-lg" />
+                          <div>
+                            <div className="font-medium">{item?.product?.name}</div>
+                            <div className="text-sm text-muted-foreground">
+                            {item?.product?.manufacturer?.name}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-span-2 text-sm">{item?.product?.category?.name}</div>
+                        <div className="col-span-2 text-sm">{item?.quantity}</div>
+                        <div className="col-span-2 text-sm">${item?.product?.price}</div>
+                        <div className="col-span-2 text-sm font-medium">
+                        ${item?.subtotal}
                         </div>
                       </div>
-                    </div>
-                    <div className="col-span-2 text-sm">302011</div>
-                    <div className="col-span-2 text-sm">1 pcs</div>
-                    <div className="col-span-2 text-sm">$400.00</div>
-                    <div className="col-span-2 text-sm font-medium">
-                      $400.00
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-12 gap-4 items-center">
-                    <div className="col-span-4 flex items-center gap-3">
-                      <div className="w-12 h-12 bg-muted rounded-lg" />
-                      <div>
-                        <div className="font-medium">Headphone G1 Pro</div>
-                        <div className="text-sm text-muted-foreground">
-                          Black Gray
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-span-2 text-sm">302011</div>
-                    <div className="col-span-2 text-sm">1 pcs</div>
-                    <div className="col-span-2 text-sm">$185.00</div>
-                    <div className="col-span-2 text-sm font-medium">
-                      $185.00
-                    </div>
-                  </div>
+                    );
+                  })}
                 </div>
                 <Separator />
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Subtotal</span>
-                    <span className="font-medium">$585.00</span>
+                    <span className="font-medium">${order?.total}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">VAT (0%)</span>
+                    <span className="text-muted-foreground">Shipping Fee</span>
                     <span className="font-medium">$0</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Shipping Rate</span>
-                    <span className="font-medium">$5.00</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between text-sm">
                     <span className="font-medium">Grand Total</span>
-                    <span className="font-medium">$590.00</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Address</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm font-medium">Billing</span>
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  1833 Bel Meadow Drive, Fontana, California 92335, USA
-                </div>
-              </div>
-              <Separator />
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm font-medium">Shipping</span>
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  1833 Bel Meadow Drive, Fontana, California 92335, USA
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Order Status</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-600 dark:text-green-400">
-                    <CheckCircle2 className="h-4 w-4" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-medium">Order Placed</div>
-                    <div className="text-xs text-muted-foreground">
-                      An order has been placed.
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      12/12/2022, 03:00
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                    <Clock className="h-4 w-4" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-medium">Processing</div>
-                    <div className="text-xs text-muted-foreground">
-                      Seller has processed your order.
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      12/12/2022, 03:15
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 opacity-50">
-                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
-                    <Box className="h-4 w-4" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-medium">Packed</div>
-                    <div className="text-xs text-muted-foreground">
-                      DD/MM/YY, 00:00
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 opacity-50">
-                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
-                    <PackageCheck className="h-4 w-4" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-medium">Shipping</div>
-                    <div className="text-xs text-muted-foreground">
-                      DD/MM/YY, 00:00
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 opacity-50">
-                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
-                    <PackageX className="h-4 w-4" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-medium">Delivered</div>
-                    <div className="text-xs text-muted-foreground">
-                      DD/MM/YY, 00:00
-                    </div>
+                    <span className="font-medium">${order?.total}</span>
                   </div>
                 </div>
               </div>

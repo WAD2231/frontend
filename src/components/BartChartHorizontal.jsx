@@ -40,8 +40,8 @@ export default function BarChartHorizontal({ label, chartData, dataKey}) {
               axisLine={false}
               tickFormatter={(value) => {
                 const split = value.split(" ")
-                if (split.length > 3) {
-                  return `${split.slice(0, 3).join(" ")}...`
+                if (split.length > 2) {
+                  return `${split.slice(0, 2).join(" ")}...`
                 }
                 return value            
               }}
