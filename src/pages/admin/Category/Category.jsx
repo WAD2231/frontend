@@ -176,10 +176,10 @@ export default function Category() {
           <h1 className="text-2xl font-semibold">Categories</h1>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <Button variant="outline">
+          {/* <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
             Export
-          </Button>
+          </Button> */}
           <Link to={routes.addCategory} className="btn btn-primary">
             <Button>+ Add Category</Button>
           </Link>
