@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -8,147 +8,34 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
+import routes from "@/config/routes";
+import {
+  getAllCategories,
+  deleteCategory as apiDeleteCategory,
+} from "@/services/categoryServices";
+import formatDate from "@/lib/formatDate";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import {
   ChevronDown,
   ChevronRight,
-  Filter,
   Download,
   Eye,
   Pencil,
   Trash2,
 } from "lucide-react";
-import { Link } from "react-router-dom";
-import routes from "@/config/routes";
-const categories = [
-  {
-    id: "1",
-    name: "Electronics",
-    description: "All electronic devices and accessories",
-    sales: 25000,
-    stock: 1500,
-    added: "29 Dec 2022",
-    children: [
-      {
-        id: "1-1",
-        name: "Smartphones",
-        description: "Our smartphone include all the big brands",
-        sales: 3245,
-        stock: 132,
-        added: "21 Oct 2022",
-      },
-      {
-        id: "1-2",
-        name: "Audio",
-        description:
-          "Our big range of audio devices makes it easy to upgrade your device at a great price",
-        sales: 10405,
-        stock: 400,
-        added: "12 Dec 2022",
-        children: [
-          {
-            id: "1-2-1",
-            name: "Headphones",
-            description: "Premium quality headphones",
-            sales: 5200,
-            stock: 200,
-            added: "12 Dec 2022",
-          },
-          {
-            id: "1-2-2",
-            name: "Speakers",
-            description: "Wireless and wired speakers",
-            sales: 5205,
-            stock: 200,
-            added: "12 Dec 2022",
-          },
-        ],
-      },
-      {
-        id: "1-3",
-        name: "PC Desktop",
-        description: "Our computers include all the big brands",
-        sales: 1100,
-        stock: 98,
-        added: "21 Oct 2022",
-      },
-    ],
-  },
-  {
-    id: "2",
-    name: "Fashion",
-    description: "Trendy fashion items",
-    sales: 28000,
-    stock: 2500,
-    added: "24 Dec 2022",
-    children: [
-      {
-        id: "2-1",
-        name: "Bag & Pouch",
-        description: "Great fashion, great selections, great prices",
-        sales: 15020,
-        stock: 901,
-        added: "29 Dec 2022",
-      },
-      {
-        id: "2-2",
-        name: "Shoes",
-        description: "Whatever your activity needs are, we've got you covered",
-        sales: 11902,
-        stock: 1201,
-        added: "21 Oct 2022",
-      },
-      {
-        id: "2-3",
-        name: "Hat",
-        description: "Great fashion, great selections, great prices",
-        sales: 720,
-        stock: 720,
-        added: "19 Sep 2022",
-      },
-    ],
-  },
-  {
-    id: "3",
-    name: "Accessories",
-    description: "Various accessories",
-    sales: 15000,
-    stock: 3000,
-    added: "19 Sep 2022",
-    children: [
-      {
-        id: "3-1",
-        name: "Watch",
-        description:
-          "Our range of watches are perfect whether you're looking to upgrade",
-        sales: 4901,
-        stock: 451,
-        added: "24 Dec 2022",
-      },
-      {
-        id: "3-2",
-        name: "Camera",
-        description:
-          "You'll find exactly what you're looking for with our huge range of cameras",
-        sales: 329,
-        stock: 199,
-        added: "10 Aug 2022",
-      },
-    ],
-  },
-  {
-    id: "4",
-    name: "Camera",
-    description:
-      "You'll find exactly what you're looking for with our huge range of cameras",
-    sales: 329,
-    stock: 199,
-    added: "10 Aug 2022",
-  },
-];
+import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
 
-// eslint-disable-next-line react/prop-types
-const CategoryRow = ({ category, level }) => {
+const CategoryRow = ({ category, level, handleDeleteCategory }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -162,8 +49,7 @@ const CategoryRow = ({ category, level }) => {
             className="flex items-center gap-3"
             style={{ paddingLeft: `${level * 24}px` }}
           >
-            {/* eslint-disable-next-line react/prop-types */}
-            {category?.children && (
+            {category?.children?.length > 0 && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -177,51 +63,107 @@ const CategoryRow = ({ category, level }) => {
                 )}
               </Button>
             )}
-             {/* eslint-disable-next-line react/prop-types */}
-            {!category?.children && <div className="w-4" />}
-            <div className="w-8 h-8 bg-muted rounded-lg shrink-0" />
+            {!category?.children?.length && <div className="w-4" />}
+            <img
+              src={category?.thumbnail}
+              alt={category?.name}
+              className="w-8 h-8"
+            />
             <div>
-               {/* eslint-disable-next-line react/prop-types */}
               <div className="font-medium">{category.name}</div>
               <div className="text-sm text-muted-foreground">
-                 {/* eslint-disable-next-line react/prop-types */}
                 {category.description}
               </div>
             </div>
           </div>
         </TableCell>
-         {/* eslint-disable-next-line react/prop-types */}
-        <TableCell>{category.sales.toLocaleString()}</TableCell>
-         {/* eslint-disable-next-line react/prop-types */}
-        <TableCell>{category.stock.toLocaleString()}</TableCell>
-         {/* eslint-disable-next-line react/prop-types */}
-        <TableCell>{category.added}</TableCell>
+        {/* <TableCell>{category?.sales?.toLocaleString()}</TableCell> */}
+        <TableCell>{category?.product_in_category}</TableCell>
+        <TableCell>{formatDate(category?.created_at)}</TableCell>
         <TableCell>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon">
-              <Eye className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <Pencil className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <Trash2 className="h-4 w-4" />
-            </Button>
+            <Link to={`${routes.detailCategory}/${category.category_id}`}>
+              <Button variant="ghost" size="icon">
+                <Eye className="h-4 w-4" />
+              </Button>
+            </Link>
+            <Link to={`${routes.editCategory}/${category.category_id}`}>
+              <Button variant="ghost" size="icon">
+                <Pencil className="h-4 w-4" />
+              </Button>
+            </Link>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="flex flex-col items-center">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-xl">
+                    Are you sure you want to delete this category?
+                  </AlertDialogTitle>
+                </AlertDialogHeader>
+                <AlertDialogDescription></AlertDialogDescription>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => handleDeleteCategory(category.category_id)}
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </TableCell>
       </TableRow>
       {isExpanded &&
-      //  eslint-disable-next-line react/prop-types
-        category?.children && 
-        //  eslint-disable-next-line react/prop-types
-        category?.children.map((child) => (
-          <CategoryRow key={child.id} category={child} level={level + 1} />
+        category?.children?.map((child) => (
+          <CategoryRow
+            key={child.category_id}
+            category={child}
+            level={level + 1}
+            handleDeleteCategory={handleDeleteCategory}
+          />
         ))}
     </>
   );
 };
 
 export default function Category() {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await getAllCategories();
+      if (response.status === 200) {
+        setCategories(response.data.categories);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const deleteCategory = async (categoryId) => {
+    try {
+      const response = await apiDeleteCategory(categoryId);
+      const updatedCategories = removeCategoryById(categories, categoryId);
+      setCategories(updatedCategories);
+    } catch (error) {
+      console.error("Failed to delete category:", error);
+    }
+  };
+
+  const removeCategoryById = (categories, categoryId) => {
+    return categories
+      .filter((category) => category.category_id !== categoryId)
+      .map((category) => ({
+        ...category,
+        children: removeCategoryById(category.children || [], categoryId),
+      }));
+  };
+
   return (
     <div className="container mx-auto p-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
@@ -243,81 +185,31 @@ export default function Category() {
           </Link>
         </div>
       </div>
-
       <div className="rounded-lg border bg-card">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center justify-between p-4 border-b">
-          <div className="relative w-full md:w-80">
-            <Input placeholder="Search category..." className="pl-4" />
-          </div>
-          <Button variant="outline" size="sm">
-            <Filter className="h-4 w-4 mr-2" />
-            Filters
-          </Button>
-        </div>
-
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="w-12">
                 <input type="checkbox" className="rounded border-input" />
               </TableHead>
-              <TableHead>
-                <div className="flex items-center gap-1">
-                  Category
-                  <ChevronDown className="h-4 w-4" />
-                </div>
-              </TableHead>
-              <TableHead>
-                <div className="flex items-center gap-1">
-                  Sales
-                  <ChevronDown className="h-4 w-4" />
-                </div>
-              </TableHead>
-              <TableHead>
-                <div className="flex items-center gap-1">
-                  Stock
-                  <ChevronDown className="h-4 w-4" />
-                </div>
-              </TableHead>
-              <TableHead>
-                <div className="flex items-center gap-1">
-                  Added
-                  <ChevronDown className="h-4 w-4" />
-                </div>
-              </TableHead>
+              <TableHead>Category</TableHead>
+              {/* <TableHead>Sales</TableHead> */}
+              <TableHead>No. Products</TableHead>
+              <TableHead>Added</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {categories.map((category) => (
-              <CategoryRow key={category.id} category={category} level={0} />
+              <CategoryRow
+                key={category.category_id}
+                category={category}
+                level={0}
+                handleDeleteCategory={deleteCategory}
+              />
             ))}
           </TableBody>
         </Table>
-
-        <div className="flex flex-col gap-4 md:flex-row md:items-center justify-between p-4 border-t">
-          <div className="text-sm text-muted-foreground">
-            Showing 1-10 from 15
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm" disabled>
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-primary text-primary-foreground"
-            >
-              1
-            </Button>
-            <Button variant="outline" size="sm">
-              2
-            </Button>
-            <Button variant="outline" size="sm">
-              Next
-            </Button>
-          </div>
-        </div>
       </div>
     </div>
   );

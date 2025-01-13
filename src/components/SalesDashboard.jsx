@@ -216,11 +216,8 @@ export function SalesDashboard() {
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <div>
             <CardTitle className="text-base font-medium">
-              Sales by Location
+              Top Spending Customers
             </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Sales performance by location
-            </p>
           </div>
           <Button variant="ghost" size="icon">
             <MoreVertical className="h-4 w-4" />

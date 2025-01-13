@@ -1,71 +1,119 @@
-import star_full from "@/assets/icon-star-full.png";
-import havit_pad from "@/assets/havit-pad.png";
-import icon_heart from "@/assets/icon-heart.png";
-import icon_eye from "@/assets/icon-eye.png";
 import { Link } from "react-router-dom";
+import ProductTag from "./ProductTag";
+import routes from "@/config/routes";
+import { Card } from "./ui/card";
+import { addToCart, getCart } from "@/services/cartServices";
+import updateLocalCart from "@/lib/updateCart";
+const Product = ({
+  cartItems,
+  setCartItems,
+  setIsOpenCart,
+  id,
+  name,
+  price,
+  discount,
+  image,
+  tag,
+  ...props
+}) => {
+  const handleAddToCart = async () => {
+    if (cartItems.isLocal) {
+      const isExisted = cartItems?.items?.some(
+        (item) => item.product.id == id
+      );
+      setCartItems((prev) => {
+        let newItems;
+        if (isExisted) {
+          newItems = prev.items.map((item) => {
+            if (item.product.id == id) {
+              return {
+                ...item,
+                quantity: item.quantity + 1,
+              };
+            }
+            return item;
+          });
+        } else {
+          newItems = [
+            ...prev.items,
+            {
+              product: {
+                id,
+                name,
+                price,
+                discount,
+                images: [image],
+                tag,
+              },
+              quantity: 1,
+            },
+          ];
+        }
+        updateLocalCart({ items: newItems });
+        return { items: newItems, isLocal: true };
+      });
+      setIsOpenCart(true);
+      return;
+    }
 
-const Product = ({ name, price, discount, image, isNew, ...props }) => {
-  const listItems = [
-    //   { id: 1, Name: "HAIT HV-G92 Gamepad", sale: "40%", price: "300" },
-  ];
+    const response = await addToCart(id);
 
-  for (let i = 0; i < 5; i++) {
-    listItems.push(
-      <span>
-        <img src={star_full} />
-      </span>
-    );
-  }
+    if (response.status === 201) {
+      const cart = await getCart();
+      setCartItems({
+        items: cart.data.items,
+        isLocal: false,
+      });
+      setIsOpenCart(true);
+    }
+  };
+
   return (
-    <Link to={"/product-detail"}>
-      <div className='cursor-pointer min-w-[300px] flex flex-col gap-2'>
-        {/* {listItems.map()
-        } */}
-        <div className='bg-[#F5F5F5] group overflow-hidden flex justify-center p-16 relative'>
-          <img src={image ? image : havit_pad} alt='' />
-          <span className='absolute top-3 left-3'>
-            {discount && (
-              <button className='bg-[#DB4444] text-white px-2 py-1 rounded-md'>
-                {`-${discount}%`}
-              </button>
-            )}
-          </span>
-          <span className='absolute top-3 left-3'>
-            {isNew && (
-              <button className='bg-[#00FF66] text-white px-2 py-1 rounded-md'>
-                New
-              </button>
-            )}
-          </span>
-          <div className='flex flex-col absolute gap-2 top-3 right-3'>
-            <button className='bg-white w-fit p-2 rounded-full'>
-              <img className='w-7' src={icon_heart} alt='' />
+    <Link
+      to={`${routes.productDetail}/${id}`}
+      className="cursor-pointer min-w-[300px] flex flex-col gap-2 w-full"
+    >
+      <Card className="flex flex-col justify-center items-center w-full h-full group relative">
+        <span className="absolute top-3 left-3">
+          {discount && (
+            <button className="bg-[#DB4444] text-white px-2 py-1 rounded-md">
+              {`-${discount * 100}%`}
             </button>
-            <button className='bg-white w-fit p-2 rounded-full'>
-              <img className='w-7' src={icon_eye} alt='' />
+          )}
+        </span>
+        <span className="absolute top-3 right-3">
+          <ProductTag tag={tag} />
+        </span>
+        <div className="group overflow-hidden flex justify-center p-8">
+          <img src={image} alt={name} />
+        </div>
+
+        <div className="flex flex-col p-4 gap-3 w-full">
+          <div className="flex justify-between items-center">
+            <h1 className="text-lg font-medium">{name}</h1>
+            <div className="flex flex-col items-end">
+              <span className="text-lg font-bold">${price}</span>
+              {discount && (
+                <span className="text-sm text-gray-500 line-through">
+                  ${(price / (1 - discount)).toFixed(2)}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                handleAddToCart();
+              }}
+              className="bg-black text-white py-2 rounded-md hover:bg-gray-800 duration-300 w-full"
+            >
+              Add to cart
             </button>
           </div>
-          <button className='bg-black py-2 duration-300 text-white w-full absolute group-hover:translate-y-0 translate-y-[100%] bottom-0 right-0'>
-            Add to cart
-          </button>
         </div>
-        <p>{name ? name : "HAIT HV-G92 Gamepad"}</p>
-        <div>
-          {discount ? (
-            <>
-              <span className='text-[#DB4444]'>
-                ${(price * (100 - discount)) / 100}
-              </span>{" "}
-              <span className='text-[#ccc] line-through'>${price}</span>
-            </>
-          ) : price ? (
-            <span className='text-[#DB4444]'>${price}</span>
-          ) : (
-            <span className='text-[#DB4444]'>${100}</span>
-          )}
-        </div>
-        <div className='flex items-center gap-1'>{listItems} (88)</div>
-      </div>
+      </Card>
     </Link>
   );
 };

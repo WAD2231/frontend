@@ -5,7 +5,6 @@ const ThemeProviderContext = createContext({
   setTheme: () => null,
 });
 
-// eslint-disable-next-line react/prop-types
 export function ThemeProvider({ children, defaultTheme = "system", storageKey = "vite-ui-theme", ...props }) {
   const [theme, setTheme] = useState(() => localStorage.getItem(storageKey) || defaultTheme);
 

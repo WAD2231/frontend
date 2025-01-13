@@ -1,13 +1,21 @@
 import { DarkModeProvider } from "@/components/DarkModeContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-// eslint-disable-next-line react/prop-types
-function UserLayout({ children }) {
+
+function UserLayout({ user, children, setUser, cartItems, setCartItems, setIsOpenCart }) {
   return (
     <DarkModeProvider>
-      <Header />
-      <div className="App">{children}</div>
-      <Footer />
+      <div className="flex flex-col min-h-screen">
+        <Header
+          user={user}
+          setUser={setUser}
+          cartItems={cartItems}
+          setCartItems={setCartItems}
+          setIsOpenCart={setIsOpenCart}
+        />
+        <div className="mt-20">{children}</div>
+        <Footer />
+      </div>
     </DarkModeProvider>
   );
 }

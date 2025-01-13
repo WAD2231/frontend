@@ -1,12 +1,12 @@
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
-// eslint-disable-next-line react/prop-types
-function AdminLayout({ children }) {
+function AdminLayout({user, children, setUser }) {
   return (
-    <div className="flex h-screen overflow-hidden">
+    // h-screen: Take the full height of the screen
+    <div className="flex overflow-hidden">
       <Navbar />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
+        <Header user={user} setUser={setUser}/>
         <main className="flex-1 overflow-y-auto bg-background px-4 py-6">
           {children}
         </main>

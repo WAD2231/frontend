@@ -1,182 +1,375 @@
 import { useDarkMode } from "@/components/DarkModeContext";
-import detail1 from "@/assets/product-detail/detail1.png";
-import detail2 from "@/assets/product-detail/detail2.png"; 
-import detail3 from "@/assets/product-detail/detail3.png";
-import detail4 from "@/assets/product-detail/detail4.png";
-import maind from "@/assets/product-detail/detail-main.png";
 import star_full from "@/assets/icon-star-full.png";
-import car from "@/assets/product-detail/icon-delivery.png";
-import ireturn from "@/assets/product-detail/Icon-return.png";
-import heart from "@/assets/icon-heart.png";
-import laptop from "@/assets/product-images/laptop.png";
-import screen from "@/assets/product-images/screen.png";
-import gamepad2 from "@/assets/product-images/gamepad2.png";
-import keyboard from "@/assets/product-images/keyboard.png";
 import Product from "@/components/Product";
-import Button from "@/components/Button";
-
-const just = [
- {
-   name: "ASUS FHD Gaming Laptop",
-   price: 1160,
-   discount: 35,
-   image: laptop,
- },
- {
-   name: "IPS LCD Gaming Monitor",
-   price: 1260,
-   discount: null,
-   image: screen,
- },
- {
-   name: "HAVIT HV-G92 Gamepad",
-   price: 560,
-   discount: null,
-   image: gamepad2,
-   isNew: true,
- },
- {
-   name: "AK-900 Wired Keyboard",
-   price: 200,
-   discount: null,
-   image: keyboard,
- },
-];
+import { Button } from "@/components/ui/button";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const listItems = [];
 
 for (let i = 0; i < 5; i++) {
- listItems.push(
-   <span>
-     <img src={star_full} />
-   </span>
- );
+  listItems.push(
+    <span key={i}>
+      <img src={star_full} />
+    </span>
+  );
 }
 
-const ProductDetail = () => {
- const { darkMode } = useDarkMode();
+import { useState } from "react";
+import { getProduct } from "@/services/productServices";
+import { getProductReviews } from "@/services/reviewServices";
 
- return (
-   <div className={` px-[130px] py-11 ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
-     <p>
-       Account / Gaming /{" "}
-       <span className='font-semibold'>Havit HV G-92 Gamepad</span>
-     </p>
-     <div className='flex gap-8 my-8'>
-       <div className='flex flex-col gap-5'>
-         <span className={`w-[170px] h-[170px] flex items-center justify-center ${darkMode ? 'bg-gray-800' : 'bg-[#f5f5f5]'}`}>
-           <img src={detail1} />
-         </span>
-         <span className={`w-[170px] h-[170px] flex items-center justify-center ${darkMode ? 'bg-gray-800' : 'bg-[#f5f5f5]'}`}>
-           <img src={detail2} />
-         </span>
-         <span className={`w-[170px] h-[170px] flex items-center justify-center ${darkMode ? 'bg-gray-800' : 'bg-[#f5f5f5]'}`}>
-           <img src={detail3} />
-         </span>
-         <span className={`w-[170px] h-[170px] flex items-center justify-center ${darkMode ? 'bg-gray-800' : 'bg-[#f5f5f5]'}`}>
-           <img src={detail4} />
-         </span>
-       </div>
-       <div className={`flex-1 justify-center flex items-center px-10 ${darkMode ? 'bg-gray-800' : 'bg-[#f5f5f5]'}`}>
-         <img src={maind} />
-       </div>
-       <div className='flex flex-1 flex-col gap-6 pl-10'>
-         <p className='text-2xl font-semibold'>Havit HV G-92 Gamepad</p>
-         <p className='flex items-center gap-4'>
-           <span className='flex items-center gap-1'>
-             {listItems} (150 Reviews)
-           </span>{" "}
-           |{" "}
-           <span className='text-[#00FF66] text-sm font-normal'>In Stock</span>
-         </p>
-         <p className='text-xl'>$192.00</p>
-         <p>
-           PlayStation 5 Controller Skin High quality vinyl with air channel
-           adhesive for easy bubble free install & mess free removal Pressure
-           sensitive.
-         </p>
-         <hr className={darkMode ? 'border-gray-700' : ''} />
-         <div className='flex items-center gap-5'>
-           <p>Colours:</p>
-           <div className='flex items-center gap-2'>
-             <div className='bg-[#A0BCE0] border-[2px] border-black w-[25px] h-[24px] rounded-full'></div>
-             <div className='bg-[#E07575] rounded-full w-[26px] h-[26px]'></div>
-           </div>
-         </div>
-         <div className='flex items-center gap-4'>
-           Size:{" "}
-           <div className={`flex items-center w-[40px] cursor-pointer border-[1px] rounded justify-center px-2 py-[6px] ${darkMode ? 'text-white border-gray-600' : 'text-black border-black'} bg-transparent hover:bg-[#DB4444] hover:text-white duration-300`}>
-             XS
-           </div>{" "}
-           <div className={`flex items-center w-[40px] cursor-pointer border-[1px] rounded justify-center px-2 py-[6px] ${darkMode ? 'text-white border-gray-600' : 'text-black border-black'} bg-transparent hover:bg-[#DB4444] hover:text-white duration-300`}>
-             S
-           </div>{" "}
-           <div className={`flex items-center w-[40px] cursor-pointer border-[1px] rounded justify-center px-2 py-[6px] ${darkMode ? 'text-white border-gray-600' : 'text-black border-black'} bg-transparent hover:bg-[#DB4444] hover:text-white duration-300`}>
-             M
-           </div>{" "}
-           <div className={`flex items-center w-[40px] cursor-pointer border-[1px] rounded justify-center px-2 py-[6px] ${darkMode ? 'text-white border-gray-600' : 'text-black border-black'} bg-transparent hover:bg-[#DB4444] hover:text-white duration-300`}>
-             L
-           </div>{" "}
-           <div className={`flex items-center w-[40px] cursor-pointer border-[1px] rounded justify-center px-2 py-[6px] ${darkMode ? 'text-white border-gray-600' : 'text-black border-black'} bg-transparent hover:bg-[#DB4444] hover:text-white duration-300`}>
-             XL
-           </div>
-         </div>
-         <div className='flex items-center gap-3'>
-           <div className={`flex border-[1px] rounded ${darkMode ? 'border-gray-600' : 'border-black'}`}>
-             <button className='px-4 rounded py-[10px] text-xl'>-</button>
-             <p className={`border-[1px] flex-grow px-8 py-[10px] text-xl ${darkMode ? 'border-gray-600' : 'border-black'}`}>
-               2
-             </p>
-             <button className='px-4 rounded py-[10px] text-xl text-white bg-[#DB4444]'>
-               +
-             </button>
-           </div>
-           <Button isPrimary={true}>Buy Now</Button>
-           <button className={`border-[2px] rounded px-3 py-[10px] ${darkMode ? 'border-gray-600' : 'border-black'}`}>
-             <img src={heart} />
-           </button>
-         </div>
-         <div>
-           <div className={`flex gap-2 items-center px-4 py-3 border-[1px] ${darkMode ? 'border-gray-600' : 'border-black'}`}>
-             <img src={car} />
-             <div>
-               <p className='font-medium'>Free Delivery</p>
-               <span className='text-sm'>
-                 Enter your postal code for Delivery Availability
-               </span>
-             </div>
-           </div>
-           <div className={`flex border-t-transparent gap-2 items-center px-4 py-3 border-[1px] ${darkMode ? 'border-gray-600' : 'border-black'}`}>
-             <img src={ireturn} />
-             <div>
-               <p className='font-medium'>Free Delivery</p>
-               <span className='text-sm'>
-                 Free 30 Days Delivery Returns. Details
-               </span>
-             </div>
-           </div>
-         </div>
-       </div>
-     </div>
-     <div>
-       <ul className='grid grid-cols-4 gap-10 mt-5'>
-         {just.map((item, index) => {
-           return (
-             <li key={index}>
-               <Product
-                 name={item?.name}
-                 price={item?.price}
-                 image={item?.image}
-                 discount={item?.discount}
-                 isNew={item?.isNew}
-               />
-             </li>
-           );
-         })}
-       </ul>
-     </div>
-   </div>
- );
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Minus, Plus, Star, StarHalf } from "lucide-react";
+import ProductStatus from "@/components/ProductStatus";
+import ProductTag from "@/components/ProductTag";
+import { Badge } from "@/components/ui/badge";
+import ProductReview from "@/components/ReviewItem";
+import { createReview } from "@/services/reviewServices";
+import { addToCart, getCart } from "@/services/cartServices";
+import updateLocalCart from "@/lib/updateCart";
+const ProductDetail = ({ user, setIsOpenCart, setCartItems, cartItems }) => {
+  const { darkMode } = useDarkMode();
+  const { id } = useParams();
+
+  const [reviews, setReviews] = useState([]);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const currentPage = searchParams.get("page") || 1;
+
+  const [product, setProduct] = useState({});
+
+  const [paging, setPaging] = useState({
+    totalPages: 0,
+    pageSize: 4,
+    totalItems: 0,
+  });
+
+  useEffect(() => {
+    const fetchData = async (id, currentPage, pageSize) => {
+      const [productData, reviewsData] = await Promise.all([
+        getProduct(id),
+        getProductReviews({
+          id: id,
+          page: currentPage,
+          size: pageSize,
+        }),
+      ]);
+      if (productData.status === 200) {
+        setProduct(productData.data);
+      }
+      if (reviewsData.status === 200) {
+        setReviews(reviewsData.data.reviews);
+        setPaging({
+          totalPages: reviewsData.data.paging.total_page,
+          pageSize: reviewsData.data.paging.page_size,
+          totalItems: reviewsData.data.paging.total_item,
+        });
+      }
+    };
+    fetchData(id, currentPage, paging.pageSize);
+  }, [currentPage, id]);
+
+  const [newReview, setNewReview] = useState("");
+  const [newRating, setNewRating] = useState(0);
+
+  const handleAddReview = async () => {
+    if (newReview.trim() && newRating > 0) {
+      const newReviewObj = {
+        content: newReview,
+        rating: newRating,
+        product_id: id,
+      };
+
+      const response = await createReview(newReviewObj);
+
+      if (response.status === 201) {
+        setReviews([
+          ...reviews,
+          {
+            id: 10,
+            content: newReview,
+            rating: newRating,
+            posted_at: new Date().toISOString(),
+            user: {
+              fullname: user?.fullname,
+              avatar: user?.avatar,
+            },
+          },
+          ,
+        ]);
+        setNewReview("");
+        setNewRating(0);
+      }
+    }
+  };
+
+  const handleAddToCart = async () => {
+    if (cartItems?.isLocal) {
+      const isExisted = cartItems?.items?.some(
+        (item) => item.product.id == id
+      );
+      setCartItems((prev) => {
+        let newItems;
+        if (isExisted) {
+          newItems = prev.items.map((item) => {
+            if (item.product.id == id) {
+              return {
+                ...item,
+                quantity: item.quantity + 1,
+              };
+            }
+            return item;
+          });
+        } else {
+          newItems = [
+            ...prev.items,
+            {
+              product: {
+                id,
+                name: product?.name,
+                price: product?.price,
+                discount: product?.discount,
+                images: [product?.images[0]?.image_url],
+                tag: product?.tag,
+              },
+              quantity: 1,
+            },
+          ];
+        }
+        updateLocalCart({ items: newItems });
+        return { items: newItems, isLocal: true };
+      });
+      setIsOpenCart(true);
+      return;
+    }
+    const response = await addToCart(id);
+
+    if (response.status === 201) {
+      const cart = await getCart();
+      setCartItems({ items: cart.data.items, isLocal: false });
+      setIsOpenCart(true);
+    }
+  };
+
+  return (
+    <div
+      className={` px-[130px] ${
+        darkMode ? "bg-gray-900 text-white" : "bg-white text-black"
+      }`}
+    >
+      <div className="flex flex-col gap-5 my-5">
+        <h1 className="text-2xl font-bold">Product Detail</h1>
+      </div>
+      <Card>
+        <div className="my-8 grid grid-cols-3">
+          <div className="flex items-center justify-center">
+            <Carousel
+              opts={{
+                align: "start",
+              }}
+              className="w-full max-w-sm mx-14"
+            >
+              <CarouselContent>
+                {product?.images?.map((image, index) => (
+                  <CarouselItem key={index}>
+                    <div className="p-1">
+                      <Card>
+                        <CardContent className="flex aspect-square items-center justify-center p-6">
+                          <img
+                            src={image.image_url}
+                            alt={`Product image ${index + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </div>
+          <Card className="mr-10 col-span-2">
+            <CardHeader>
+              <CardTitle>Product Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <h3 className="font-semibold mb-2">Product Name</h3>
+                <div className="flex items-center space-x-2">
+                  <p>{product?.name}</p>
+                  <ProductTag tag={product?.tag} />
+                </div>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-2">Description</h3>
+                <p>{product?.description}</p>
+              </div>
+              <div className="flex items-start gap-20">
+                <div>
+                  <h3 className="font-semibold mb-2">Price</h3>
+                  <p className="text-2xl font-bold">${product?.price}</p>
+                  {product?.discount > 0 && (
+                    <p className="text-sm text-muted-foreground">
+                      {parseFloat(product?.discount) * 100}% off
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Quantity in Stock</h3>
+                  <p>{product?.stock}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-20">
+                <div>
+                  <h3 className="font-semibold mb-2">Category</h3>
+                  <Badge>{product?.categoryName}</Badge>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Manufacturer</h3>
+                  <Badge className="bg-green-600 hover:bg-green-400">
+                    {product?.manufacturerName}
+                  </Badge>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Status</h3>
+                  <ProductStatus stock={product?.stock} />
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <Button onClick={handleAddToCart}>+ Add to cart</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </Card>
+      <div className="grid grid-cols-2"></div>
+      <div>
+        <div className="font-bold text-3xl mt-5">Related Products</div>
+        <div className="grid grid-cols-4 gap-10 mt-5 h-auto">
+          {product?.relatedProducts?.map((item) => (
+            <Product
+              cartItems={cartItems}
+              setCartItems={setCartItems}
+              setIsOpenCart={setIsOpenCart}
+              key={item?.id}
+              id={item?.id}
+              name={item?.name}
+              price={item?.price}
+              image={item?.images[0].image_url}
+              discount={item?.discount}
+              tag={item?.tag}
+            />
+          ))}
+        </div>
+      </div>
+      <Card className="mt-5">
+        <CardHeader>
+          <CardTitle>Product Reviews</CardTitle>
+        </CardHeader>
+        <CardContent className="grid grid-cols-2 gap-4">
+          {reviews?.length ? (
+            reviews?.map((review, index) => (
+              <div key={index} className="space-y-2">
+                <ProductReview review={review} />
+              </div>
+            ))
+          ) : (
+            <p>No reviews available</p>
+          )}
+        </CardContent>
+        <div className="space-y-4 p-4 border rounded-md">
+          <h3 className="text-lg font-bold">Add a Review</h3>
+          <textarea
+            value={newReview}
+            onChange={(e) => setNewReview(e.target.value)}
+            placeholder="Write your review here..."
+            className="w-full p-2 border rounded-md"
+          />
+          <div className="flex items-center space-x-4">
+            <label htmlFor="rating" className="font-medium">
+              Rating:
+            </label>
+            <select
+              id="rating"
+              value={newRating}
+              onChange={(e) => setNewRating(Number(e.target.value))}
+              className="p-2 border rounded-md"
+            >
+              <option value="0">Select Rating</option>
+              {[1, 2, 3, 4, 5].map((rate) => (
+                <option key={rate} value={rate}>
+                  {rate} Star{rate > 1 && "s"}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            onClick={handleAddReview}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          >
+            Submit
+          </button>
+        </div>
+        {paging.totalPages > 1 && (
+          <div className="p-4 border-t border-border flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage == 1}
+                onClick={() =>
+                  setSearchParams({ page: parseInt(currentPage) - 1 })
+                }
+              >
+                Previous
+              </Button>
+              {[...Array(paging.totalPages).keys()].map((page) => {
+                return (
+                  <Button
+                    key={page}
+                    variant="outline"
+                    size="sm"
+                    className={
+                      currentPage == page + 1
+                        ? "bg-primary text-primary-foreground"
+                        : ""
+                    }
+                    onClick={() => {
+                      setSearchParams({ page: page + 1 });
+                    }}
+                  >
+                    {page + 1}
+                  </Button>
+                );
+              })}
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage == paging.totalPages}
+                onClick={() =>
+                  setSearchParams({ page: parseInt(currentPage) + 1 })
+                }
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        )}
+      </Card>
+    </div>
+  );
 };
 
 export default ProductDetail;

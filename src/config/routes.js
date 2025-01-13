@@ -7,12 +7,10 @@ const routes = {
   detailProduct: `${ADMIN}/products/detail`,
   customers: `${ADMIN}/customers`,
   customerDetail: `${ADMIN}/customers/detail`,
-  analytics: `${ADMIN}/analytics`,
-  supports: `${ADMIN}/supports`,
-  settings: `${ADMIN}/settings`,
   category: `${ADMIN}/category`,
   addCategory: `${ADMIN}/category/add`,
-  orders: `${ADMIN}/orders`,
+  detailCategory: `${ADMIN}/category/detail`,
+  editCategory: `${ADMIN}/category/edit`,
   orderDetail: `${ADMIN}/orders/detail`,
   
   // Client routes
@@ -20,12 +18,14 @@ const routes = {
   wishlist: "/wishlist",
   cart: "/cart",
   productDetail: "/product-detail",
-  contact: "/contact",
-  about: "/about",
   signUp: "/sign-up",
   myAccount: "/my-account",
   checkout: "/checkout",
   login: "/login",
+  productCategory: "/product-category",
+  search: "/search",
+  profile: "/profile",
+  editProfile: "/profile/edit",
   notFound: "*"
 };
 

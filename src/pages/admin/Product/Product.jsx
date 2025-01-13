@@ -8,39 +8,94 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Calendar, Filter, Eye, Pencil, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import routes from "@/config/routes";
-const products = [
-  {
-    id: "1",
-    name: "Handmade Pouch",
-    variants: "3 Variants",
-    sku: "302012",
-    category: "Bag & Pouch",
-    stock: 10,
-    price: "$121.00",
-    status: "Low Stock",
-    added: "29 Dec 2022",
-  },
-  {
-    id: "2",
-    name: "Smartwatch E2",
-    variants: "2 Variants",
-    sku: "302011",
-    category: "Watch",
-    stock: 204,
-    price: "$590.00",
-    status: "Published",
-    added: "24 Dec 2022",
-  },
-  // Add more products as needed
-];
-
+import { getProducts, deleteProduct } from "@/services/productServices";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import formatDate from "@/lib/formatDate";
+import ProductStatus from "@/components/ProductStatus";
+import MyAlertDialog from "@/components/MyAlertDialog";
+import useDebounce from "@/hooks/useDebounce";
+import { MyPagination } from "@/components/Pagination";
 export default function ProductsPage() {
+  const [products, setProducts] = useState([]);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [paging, setPaging] = useState({
+    totalPages: 0,
+    pageSize: 15,
+    totalItems: 0,
+  });
+
+  let currentPage = parseInt(searchParams.get("page")) || 1;
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+
+  const debounceSearchValue = useDebounce(search, 500);
+
+  useEffect(() => {
+    const fetchProducts = async ({ current_page, page_size, search }) => {
+      const response = await getProducts({
+        current_page,
+        page_size,
+        search,
+      });
+      if (response.status === 200) {
+        setProducts(response.data.products);
+        setPaging({
+          totalPages: response.data.paging.total_page,
+          pageSize: response.data.paging.page_size,
+          totalItems: response.data.paging.total_item,
+        });
+      }
+    };
+
+    fetchProducts({
+      current_page: currentPage,
+      page_size: paging.pageSize,
+      search: debounceSearchValue,
+    });
+  }, [currentPage, debounceSearchValue]);
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearch(value);
+  };
+
+  const handleDeleteProduct = async (id) => {
+    const response = await deleteProduct(id);
+    const newProducts = products.filter((product) => product.id !== id);
+    setProducts(newProducts);
+    setOpen(true);
+  };
+
+  const [open, setOpen] = useState(false);
+
+  const handleContinue = () => {
+    setOpen(false);
+  };
+
   return (
     <div className="p-6 space-y-6 bg-background min-h-screen w-full">
+      <MyAlertDialog
+        isShown={open}
+        setIsShown={setOpen}
+        handleContinue={handleContinue}
+        title="Product deleted successfully"
+      />
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Product</h1>
@@ -51,7 +106,7 @@ export default function ProductsPage() {
           </div>
         </div>
         <div className="flex items-center space-x-4">
-          <Button variant="outline">Export</Button>
+          {/* <Button variant="outline">Export</Button> */}
           <Link to={routes.addProduct}>
             <Button>+ Add Product</Button>
           </Link>
@@ -60,7 +115,12 @@ export default function ProductsPage() {
 
       <div className="bg-background rounded-lg shadow">
         <div className="p-4 border-b border-border flex items-center justify-between">
-          <Input placeholder="Search product..." className="max-w-sm" />
+          <Input
+            placeholder="Search product..."
+            className="max-w-sm"
+            onChange={handleSearch}
+            value={search}
+          />
           <div className="flex items-center space-x-4">
             <Button variant="outline" className="flex items-center space-x-2">
               <Calendar className="h-4 w-4" />
@@ -89,93 +149,95 @@ export default function ProductsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell>
-                  <input type="checkbox" className="rounded border-input" />
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-muted rounded" />
-                    <div>
-                      <div className="font-medium">{product.name}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {product.variants}
+            {products?.map((product, index) => {
+              let status = "Available";
+              if (product.stock === 0) {
+                status = "Out of Stock";
+              } else if (product.stock <= 10) {
+                status = "Low Stock";
+              }
+              return (
+                <TableRow key={index}>
+                  <TableCell>
+                    <input type="checkbox" className="rounded border-input" />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center space-x-3">
+                      <img
+                        src={product?.images[0]?.image_url}
+                        alt={product.name}
+                        className="h-10 w-10 rounded-md"
+                      />
+                      <div>
+                        <div className="font-medium">{product.name}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {product.variants}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </TableCell>
-                <TableCell>{product.category}</TableCell>
-                <TableCell>{product.stock}</TableCell>
-                <TableCell>{product.price}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant="outline"
-                    className={
-                      product.status === "Low Stock"
-                        ? "border-orange-200 bg-orange-100 text-orange-700 dark:border-orange-800 dark:bg-orange-900 dark:text-orange-300"
-                        : product.status === "Shipped"
-                        ? "border-blue-200 bg-blue-100 text-blue-700 dark:border-blue-800 dark:bg-blue-900 dark:text-blue-300"
-                        : product.status === "Published"
-                        ? "border-green-200 bg-green-100 text-green-700 dark:border-green-800 dark:bg-green-900 dark:text-green-300"
-                        : "border-red-200 bg-red-100 text-red-700 dark:border-red-800 dark:bg-red-900 dark:text-red-300"
-                    }
-                  >
-                    {product.status}
-                  </Badge>
-                </TableCell>
-                <TableCell>{product.added}</TableCell>
-                <TableCell>
-                  <div className="flex items-center space-x-3">
-                    <Link to={`${routes.detailProduct}/${product.id}`}>
-                      <Button variant="ghost" size="icon">
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                    </Link>
-                    <Link to={`${routes.editProduct}/${product.id}`}>
-                      <Button variant="ghost" size="icon">
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                    </Link>
-                    <Button variant="ghost" size="icon">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                  <TableCell>{product.category}</TableCell>
+                  <TableCell>{product.stock}</TableCell>
+                  <TableCell>${product.price}</TableCell>
+                  <TableCell>
+                    <ProductStatus stock={product.stock} />
+                  </TableCell>
+                  <TableCell>{formatDate(product?.created_at)}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center space-x-3">
+                      <Link to={`${routes.detailProduct}/${product.id}`}>
+                        <Button variant="ghost" size="icon">
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </Link>
+                      <Link to={`${routes.editProduct}/${product.id}`}>
+                        <Button variant="ghost" size="icon">
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      </Link>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="flex flex-col items-center">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="text-xl">
+                              Are you sure you want to delete this product?
+                            </AlertDialogTitle>
+                          </AlertDialogHeader>
+                          <AlertDialogDescription></AlertDialogDescription>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleDeleteProduct(product.id)}
+                            >
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
 
-        <div className="p-4 border-t border-border flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">
-            Showing 1-10 from 100
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm" disabled>
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-primary text-primary-foreground"
-            >
-              1
-            </Button>
-            <Button variant="outline" size="sm">
-              2
-            </Button>
-            <Button variant="outline" size="sm">
-              3
-            </Button>
-            <Button variant="outline" size="sm">
-              ...
-            </Button>
-            <Button variant="outline" size="sm">
-              Next
-            </Button>
-          </div>
-        </div>
+        {paging?.totalPages > 0 && (
+          <MyPagination
+            currentPage={currentPage}
+            setCurrentPage={(page) => {
+              const params = new URLSearchParams(searchParams);
+              params.set("page", page);
+              setSearchParams(params);
+            }}
+            totalPages={paging.totalPages}
+            totalPagesToDisplay={Math.min(10, paging.totalPages)}
+          />
+        )}
       </div>
     </div>
   );
