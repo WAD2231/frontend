@@ -24,7 +24,7 @@ import routes from "@/config/routes";
 import capitalFirstLetter from "@/lib/capitalFirstLetter";
 import Product from "@/components/Product";
 
-export default function SearchPage({ setIsOpenCart, setCartItems }) {
+export default function SearchPage({ setIsOpenCart, setCartItems, cartItems }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [values, setValues] = useState([0, 2000]);
@@ -200,6 +200,7 @@ export default function SearchPage({ setIsOpenCart, setCartItems }) {
               {products?.map((product) => (
                 <Product
                   key={product.id}
+                  cartItems={cartItems}
                   setCartItems={setCartItems}
                   setIsOpenCart={setIsOpenCart}
                   id={product?.id}

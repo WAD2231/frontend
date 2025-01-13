@@ -35,7 +35,7 @@ import { Badge } from "@/components/ui/badge";
 import ProductReview from "@/components/ReviewItem";
 import { createReview } from "@/services/reviewServices";
 import { addToCart, getCart } from "@/services/cartServices";
-const ProductDetail = ({ user, setIsOpenCart, setCartItems }) => {
+const ProductDetail = ({ user, setIsOpenCart, setCartItems, cartItems }) => {
   const { darkMode } = useDarkMode();
   const { id } = useParams();
 
@@ -113,11 +113,49 @@ const ProductDetail = ({ user, setIsOpenCart, setCartItems }) => {
   };
 
   const handleAddToCart = async () => {
+    if (cartItems?.isLocal) {
+      const isExisted = cartItems?.items?.some(
+        (item) => item.product.id === id
+      );
+      setCartItems((prev) => {
+        let newItems;
+        if (isExisted) {
+          newItems = prev.items.map((item) => {
+            if (item.product.id === id) {
+              return {
+                ...item,
+                quantity: item.quantity + 1,
+              };
+            }
+            return item;
+          });
+        } else {
+          newItems = [
+            ...prev.items,
+            {
+              product: {
+                id,
+                name,
+                price,
+                discount,
+                images: [image],
+                tag,
+              },
+              quantity: 1,
+            },
+          ];
+        }
+        updateLocalCart({ items: newItems });
+        return { items: newItems, isLocal: true };
+      });
+      setIsOpenCart(true);
+      return;
+    }
     const response = await addToCart(id);
 
     if (response.status === 201) {
       const cart = await getCart();
-      setCartItems(cart.data.items);
+      setCartItems({ items: cart.data.items, isLocal: false });
       setIsOpenCart(true);
     }
   };
@@ -221,6 +259,7 @@ const ProductDetail = ({ user, setIsOpenCart, setCartItems }) => {
         <div className="grid grid-cols-4 gap-10 mt-5 h-auto">
           {product?.relatedProducts?.map((item) => (
             <Product
+              cartItems={cartItems}
               setCartItems={setCartItems}
               setIsOpenCart={setIsOpenCart}
               key={item?.id}

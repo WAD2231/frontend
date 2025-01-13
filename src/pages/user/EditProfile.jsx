@@ -2,6 +2,9 @@ import ImagePicker from "@/components/ImagePicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { updateProfile } from "@/services/userServices";
+import routes from "@/config/routes";
+import { useNavigate } from "react-router-dom";
 
 export default function EditProfile({ user }) {
   const [newUser, setNewUser] = useState({
@@ -9,24 +12,31 @@ export default function EditProfile({ user }) {
     avatar: [user.avatar],
   });
 
+  const navigate = useNavigate();
+
   const handleSelectedAvatar = (images) => {
     setNewUser({ ...newUser, image: images[0], avatar: [] });
   };
 
-  const handleUpdateProfile = () => {
+  const handleUpdateProfile = async () => {
     const formData = new FormData();
     formData.append("fullname", newUser.fullname);
     formData.append("phone", newUser.phone);
     formData.append("address", newUser.address);
-    if (newUser?.avatar.length !== 0) {
+    if (newUser?.avatar.length === 0) {
       formData.append("avatar", newUser.image);
     }
-    // console.log({
-    //   fullname: newUser?.fullname,
-    //   phone: newUser?.phone,
-    //   address: newUser?.address,
-    //   avatar: newUser?.image,
-    // });
+    console.log({
+      fullname: newUser?.fullname,
+      phone: newUser?.phone,
+      address: newUser?.address,
+      avatar: newUser?.image,
+    });
+
+    const response = await updateProfile(formData);
+    if (response.status === 200) {
+      navigate(`${routes.profile}`);
+    }
   };
 
   return (

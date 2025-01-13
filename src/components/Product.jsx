@@ -60,7 +60,10 @@ const Product = ({
 
     if (response.status === 201) {
       const cart = await getCart();
-      setCartItems(cart.data.items);
+      setCartItems({
+        items: cart.data.items,
+        isLocal: false,
+      });
       setIsOpenCart(true);
     }
   };
