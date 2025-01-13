@@ -1,11 +1,6 @@
 import "./App.css";
 import AdminLayout from "./layouts/admin/AdminLayout";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { privateRoutes, publicRoutes } from "@/routes/routes";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import UserLayout from "./layouts/users/UserLayout";
@@ -13,7 +8,8 @@ import { getMe } from "@/services/userServices";
 import { useEffect, useState } from "react";
 import Spinner from "@/components/ui/Spinner";
 import { CartSidebar } from "./components/CartSidebar";
-import { getCart } from "./services/cartServices";
+import { getCart, updateMultipleProducts } from "./services/cartServices";
+import updateLocalCart from "./lib/updateCart";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -73,6 +69,21 @@ function AppContent({ user, setUser, checkingAuth, setCheckingAuth }) {
       }
       if (userData.status === 200) {
         setUser(userData.data);
+        const cart = checkLocalCart();
+        if (cart.items.length > 0) {
+          const items = cart.items.map((item) => ({
+            product_id: item?.product?.id,
+            quantity: item.quantity,
+          }));
+          await updateMultipleProducts(items);
+          updateLocalCart({ items: [] });
+          setCartItems((prev) => {
+            return {
+              isLocal: false,
+              items: [...prev.items, ...cart.items],
+            };
+          });
+        }
       }
       setCheckingAuth(false);
     };

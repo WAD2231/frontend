@@ -19,13 +19,13 @@ const Product = ({
   const handleAddToCart = async () => {
     if (cartItems.isLocal) {
       const isExisted = cartItems?.items?.some(
-        (item) => item.product.id === id
+        (item) => item.product.id == id
       );
       setCartItems((prev) => {
         let newItems;
         if (isExisted) {
           newItems = prev.items.map((item) => {
-            if (item.product.id === id) {
+            if (item.product.id == id) {
               return {
                 ...item,
                 quantity: item.quantity + 1,

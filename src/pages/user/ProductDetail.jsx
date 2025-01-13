@@ -35,6 +35,7 @@ import { Badge } from "@/components/ui/badge";
 import ProductReview from "@/components/ReviewItem";
 import { createReview } from "@/services/reviewServices";
 import { addToCart, getCart } from "@/services/cartServices";
+import updateLocalCart from "@/lib/updateCart";
 const ProductDetail = ({ user, setIsOpenCart, setCartItems, cartItems }) => {
   const { darkMode } = useDarkMode();
   const { id } = useParams();
@@ -115,13 +116,13 @@ const ProductDetail = ({ user, setIsOpenCart, setCartItems, cartItems }) => {
   const handleAddToCart = async () => {
     if (cartItems?.isLocal) {
       const isExisted = cartItems?.items?.some(
-        (item) => item.product.id === id
+        (item) => item.product.id == id
       );
       setCartItems((prev) => {
         let newItems;
         if (isExisted) {
           newItems = prev.items.map((item) => {
-            if (item.product.id === id) {
+            if (item.product.id == id) {
               return {
                 ...item,
                 quantity: item.quantity + 1,
@@ -135,11 +136,11 @@ const ProductDetail = ({ user, setIsOpenCart, setCartItems, cartItems }) => {
             {
               product: {
                 id,
-                name,
-                price,
-                discount,
-                images: [image],
-                tag,
+                name: product?.name,
+                price: product?.price,
+                discount: product?.discount,
+                images: [product?.images[0]?.image_url],
+                tag: product?.tag,
               },
               quantity: 1,
             },

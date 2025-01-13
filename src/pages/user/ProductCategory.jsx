@@ -63,13 +63,13 @@ export default function ProductCategory({
   const handleAddToCart = async (product) => {
     if (cartItems.isLocal) {
       const isExisted = cartItems?.items?.some(
-        (item) => item.product.id === product.id
+        (item) => item.product.id == product.id
       );
       setCartItems((prev) => {
         let newItems;
         if (isExisted) {
           newItems = prev.items.map((item) => {
-            if (item.product.id === product.id) {
+            if (item.product.id == product.id) {
               return {
                 ...item,
                 quantity: item.quantity + 1,
