@@ -201,7 +201,7 @@ export default function ProductsPage() {
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="flex flex-col items-center">
+                        <AlertDialogContent className="flex flex-col items-center w-auto">
                           <AlertDialogHeader>
                             <AlertDialogTitle className="text-xl">
                               Are you sure you want to delete this product?

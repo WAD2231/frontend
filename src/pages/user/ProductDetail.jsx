@@ -115,9 +115,7 @@ const ProductDetail = ({ user, setIsOpenCart, setCartItems, cartItems }) => {
 
   const handleAddToCart = async () => {
     if (cartItems?.isLocal) {
-      const isExisted = cartItems?.items?.some(
-        (item) => item.product.id == id
-      );
+      const isExisted = cartItems?.items?.some((item) => item.product.id == id);
       setCartItems((prev) => {
         let newItems;
         if (isExisted) {
@@ -255,25 +253,27 @@ const ProductDetail = ({ user, setIsOpenCart, setCartItems, cartItems }) => {
         </div>
       </Card>
       <div className="grid grid-cols-2"></div>
-      <div>
-        <div className="font-bold text-3xl mt-5">Related Products</div>
-        <div className="grid grid-cols-4 gap-10 mt-5 h-auto">
-          {product?.relatedProducts?.map((item) => (
-            <Product
-              cartItems={cartItems}
-              setCartItems={setCartItems}
-              setIsOpenCart={setIsOpenCart}
-              key={item?.id}
-              id={item?.id}
-              name={item?.name}
-              price={item?.price}
-              image={item?.images[0].image_url}
-              discount={item?.discount}
-              tag={item?.tag}
-            />
-          ))}
+      {product?.relatedProducts?.length > 0 && (
+        <div>
+          <div className="font-bold text-3xl mt-5">Related Products</div>
+          <div className="grid grid-cols-4 gap-10 mt-5 h-auto">
+            {product?.relatedProducts?.map((item) => (
+              <Product
+                cartItems={cartItems}
+                setCartItems={setCartItems}
+                setIsOpenCart={setIsOpenCart}
+                key={item?.id}
+                id={item?.id}
+                name={item?.name}
+                price={item?.price}
+                image={item?.images[0].image_url}
+                discount={item?.discount}
+                tag={item?.tag}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
       <Card className="mt-5">
         <CardHeader>
           <CardTitle>Product Reviews</CardTitle>

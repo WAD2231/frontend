@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Minus, Plus, Home, X, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,9 @@ import { useDarkMode } from "@/components/DarkModeContext";
 import routes from "@/config/routes";
 import { deleteProduct, updateProductQuantity } from "@/services/cartServices";
 import { createOrder } from "@/services/orderServices";
+import updateLocalCart from "@/lib/updateCart";
+import MyAlertDialog from "@/components/MyAlertDialog";
+import Dialog from "@/components/Dialog";
 
 export default function ShoppingCart({ user, cartItems, setCartItems }) {
   const { darkMode } = useDarkMode();
@@ -16,7 +19,7 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
   );
 
   const isAllChecked =
-    selectedItems.length === cartItems?.items?.length &&
+    selectedItems?.length === cartItems?.items?.length &&
     cartItems?.items?.length > 0;
 
   const toggleSelectAll = () => {
@@ -36,26 +39,64 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
   const updateQuantity = async (id, newQuantity) => {
     if (newQuantity < 1) return;
 
+    if (cartItems?.isLocal) {
+      setCartItems((prev) => {
+        const newItems = prev?.items?.map((item) => {
+          if (item.product.id == id) {
+            return { ...item, quantity: newQuantity };
+          }
+          return item;
+        });
+        updateLocalCart({ items: newItems });
+        return {
+          items: newItems,
+          isLocal: true,
+        };
+      });
+      return;
+    }
+
     const response = await updateProductQuantity(id, newQuantity);
 
     if (response.status === 200) {
-      setCartItems((items) =>
-        items.map((item) =>
+      setCartItems((prev) => {
+        const newItems = prev?.items?.map((item) =>
           item.product.id === id ? { ...item, quantity: newQuantity } : item
-        )
-      );
+        );
+        return {
+          items: newItems,
+          isLocal: false,
+        };
+      });
     }
   };
 
   const removeItem = async (id) => {
+    if (cartItems?.isLocal) {
+      setCartItems((prev) => {
+        const newItems = prev?.items?.filter((item) => item.product.id !== id);
+        updateLocalCart({ items: newItems });
+        return {
+          items: newItems,
+          isLocal: true,
+        };
+      });
+      return;
+    }
     const response = await deleteProduct(id);
     if (response.status === 200) {
-      setCartItems((items) => items.filter((item) => item.product.id !== id));
+      const newItems = cartItems?.items?.filter(
+        (item) => item.product.id !== id
+      );
+      setCartItems({
+        items: newItems,
+        isLocal: false,
+      });
       setSelectedItems((prev) => prev.filter((itemId) => itemId !== id));
     }
   };
 
-  const subtotal = selectedItems.reduce(
+  const subtotal = selectedItems?.reduce(
     (sum, id) =>
       sum +
         cartItems?.items?.find((item) => item.product.id === id)?.product
@@ -70,11 +111,43 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
     return sum + item?.product.price * item?.quantity * item?.product.discount;
   }, 0);
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [label, setLabel] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleAction = () => {
+    if (label === "Please log in to before checkout") {
+      navigate(`${routes.login}`);
+    } else if (label === "Please update your information before checkout") {
+      navigate(`${routes.editProfile}`);
+    } else if (label === "Please select items to checkout") {
+      setIsOpen(false);
+    } else {
+      setIsOpen(false);
+    }
+  };
+
+  const [openMA, setOpenMA] = useState(false);
+
   const handleCreateOrder = async () => {
+    if (selectedItems.length === 0) {
+      setLabel("Please select items to checkout");
+      setIsOpen(true);
+    }
+
     if (!user) {
-      console.log("Please login to continue");
+      setLabel("Please log in to before checkout");
+      setIsOpen(true);
       return;
     }
+
+    if (!user?.address || !user?.phone) {
+      setLabel("Please update your information before checkout");
+      setIsOpen(true);
+      return;
+    }
+
     const selectedProducts = cartItems?.items?.filter((item) =>
       selectedItems.includes(item.product.id)
     );
@@ -95,9 +168,25 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
       }),
     };
     order.total = parseFloat(total.toFixed(2));
-    console.log(order);
     const response = await createOrder(order);
-    console.log(response);
+    if (response.status === 201) {
+      setOpenMA(true);
+      setCartItems({
+        items: cartItems?.items?.filter(
+          (item) => !selectedItems.includes(item.product.id)
+        ),
+        isLocal: false,
+      });
+      setSelectedItems([]);
+    } else {
+      setLabel(response.data.message);
+      setIsOpen(true);
+    }
+  };
+
+  const handleContinue = () => {
+    setOpenMA(false);
+    navigate(`${routes.profile}`);
   };
 
   return (
@@ -106,6 +195,12 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
         darkMode ? "dark bg-gray-900 text-white" : "bg-gray-50"
       }`}
     >
+      <MyAlertDialog
+        isShown={openMA}
+        setIsShown={setOpenMA}
+        title={"Payment successfully"}
+        handleContinue={handleContinue}
+      />
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm mb-8">
@@ -289,17 +384,12 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
               <Button className="w-full mt-6" onClick={handleCreateOrder}>
                 Proceed to Checkout →
               </Button>
-              {/* <div className={`mt-6`}>
-                <h3 className="font-medium mb-2">Coupon Code</h3>
-                <div className="flex gap-2">
-                  <Input
-                    type="text"
-                    placeholder="Enter coupon code"
-                    className="flex-1"
-                  />
-                  <Button variant="secondary">Apply</Button>
-                </div>
-              </div> */}
+              <Dialog
+                open={isOpen}
+                setOpen={setIsOpen}
+                label={label}
+                handleAction={handleAction}
+              ></Dialog>
             </div>
           </div>
         </div>

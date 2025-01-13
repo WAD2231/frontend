@@ -1,4 +1,6 @@
 import { useDarkMode } from "@/components/DarkModeContext";
+import routes from "@/config/routes";
+import { Link } from "react-router-dom";
 
 const Notfound = () => {
   const { darkMode } = useDarkMode();
@@ -35,12 +37,12 @@ const Notfound = () => {
         }`}>
           Your visited page not found. You may go home page.
         </p>
-        <a
-          href='/'
+        <Link
+          to={routes.home}
           className='inline-block px-8 py-3 bg-red-500 text-white rounded hover:bg-red-600 transition duration-200'
         >
           Back to home page
-        </a>
+        </Link>
       </div>
     </div>
   );

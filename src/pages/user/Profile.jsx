@@ -12,7 +12,6 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import {
   Calendar as CalendarIcon,
-  Filter,
   ChevronDown,
   User,
   Phone,
@@ -23,7 +22,7 @@ import {
 import formatDate from "@/lib/formatDate";
 import { useEffect, useState } from "react";
 import { getOrderHistory } from "@/services/orderServices";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import capitalFirstLetter from "@/lib/capitalFirstLetter";
 
 import { format } from "date-fns";
@@ -46,6 +45,7 @@ import {
 import routes from "@/config/routes";
 
 export default function Profile({ user }) {
+  const navigate = useNavigate();
   const [date, setDate] = useState();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -211,7 +211,7 @@ export default function Profile({ user }) {
                       Total Balance
                     </p>
                     <div className="flex items-baseline gap-2">
-                      <h3 className="text-2xl font-bold">{1243}</h3>
+                      <h3 className="text-2xl font-bold">{Math.round(user?.balance).toLocaleString('vn')}</h3>
                     </div>
                   </div>
                 </div>
@@ -411,7 +411,14 @@ export default function Profile({ user }) {
                 <TableBody>
                   {orders?.length > 0 ? (
                     orders?.map((order) => (
-                      <TableRow key={order?.order_id}>
+                      <TableRow
+                        key={order?.order_id}
+                        onClick={() =>
+                          navigate(
+                            `${routes.orderDetailClient}/${order?.order_id}`
+                          )
+                        }
+                      >
                         <TableCell className="font-medium">
                           #{order?.order_id}
                         </TableCell>
