@@ -27,7 +27,7 @@ import Product from "@/components/Product";
 export default function SearchPage({ setIsOpenCart, setCartItems }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [values, setValues] = useState([0, 1000]);
+  const [values, setValues] = useState([0, 2000]);
 
   const [categories, setCategories] = useState([]);
 
@@ -101,7 +101,7 @@ export default function SearchPage({ setIsOpenCart, setCartItems }) {
                 value={values}
                 onValueChange={setValues}
                 min={0}
-                max={1000}
+                max={2000}
                 step={5}
               />
               <Button className="w-full mt-5" onClick={applyPriceFilter}>

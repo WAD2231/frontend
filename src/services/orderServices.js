@@ -20,6 +20,24 @@ export const getOrderHistory = async (order, date, status, page, size) => {
   }
 };
 
+export const getOrderHistoryById = async (
+  id,
+  order,
+  date,
+  status,
+  page,
+  size
+) => {
+  try {
+    const res = await api.get(
+      `/orders/history/${id}?order=${order}&date=${date}&status=${status}&page=${page}&size=${size}`
+    );
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const getAllOrders = async (sort, status, page, size) => {
   try {
     const res = await api.get(
@@ -31,11 +49,11 @@ export const getAllOrders = async (sort, status, page, size) => {
   }
 };
 
-export const getOrderById = async (id) => { 
+export const getOrderById = async (id) => {
   try {
     const res = await api.get(`/orders/detail/${id}`);
     return res;
   } catch (error) {
-    return error
+    return error;
   }
-}
+};

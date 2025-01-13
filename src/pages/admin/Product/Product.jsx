@@ -84,20 +84,25 @@ export default function ProductsPage() {
 
   const handleDeleteProduct = async (id) => {
     const response = await deleteProduct(id);
-      const newProducts = products.filter((product) => product.id !== id);
-      setProducts(newProducts);
-      setOpen(true);
+    const newProducts = products.filter((product) => product.id !== id);
+    setProducts(newProducts);
+    setOpen(true);
   };
 
   const [open, setOpen] = useState(false);
 
-  const handleContinue = () => { 
+  const handleContinue = () => {
     setOpen(false);
-  }
+  };
 
   return (
     <div className="p-6 space-y-6 bg-background min-h-screen w-full">
-      <MyAlertDialog isShown={open} setIsShown={setOpen} handleContinue={handleContinue} title="Product deleted successfully"/>
+      <MyAlertDialog
+        isShown={open}
+        setIsShown={setOpen}
+        handleContinue={handleContinue}
+        title="Product deleted successfully"
+      />
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Product</h1>
@@ -199,10 +204,7 @@ export default function ProductsPage() {
                       </Link>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                          >
+                          <Button variant="ghost" size="icon">
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </AlertDialogTrigger>
@@ -215,7 +217,11 @@ export default function ProductsPage() {
                           <AlertDialogDescription></AlertDialogDescription>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDeleteProduct(product.id)}>Delete</AlertDialogAction>
+                            <AlertDialogAction
+                              onClick={() => handleDeleteProduct(product.id)}
+                            >
+                              Delete
+                            </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>
@@ -238,7 +244,11 @@ export default function ProductsPage() {
                 variant="outline"
                 size="sm"
                 disabled={currentPage === 1}
-                onClick={() => setSearchParams({ page: currentPage - 1 })}
+                onClick={() => {
+                  const params = new URLSearchParams(searchParams);
+                  params.set("page", currentPage - 1);
+                  setSearchParams(params);
+                }}
               >
                 Previous
               </Button>
@@ -254,7 +264,9 @@ export default function ProductsPage() {
                         : ""
                     }
                     onClick={() => {
-                      setSearchParams({ page: page + 1 });
+                      const params = new URLSearchParams(searchParams);
+                      params.set("page", page + 1);
+                      setSearchParams(params);
                     }}
                   >
                     {page + 1}
@@ -265,7 +277,11 @@ export default function ProductsPage() {
                 variant="outline"
                 size="sm"
                 disabled={currentPage === paging.totalPages}
-                onClick={() => setSearchParams({ page: currentPage + 1 })}
+                onClick={() => {
+                  const params = new URLSearchParams(searchParams);
+                  params.set("page", currentPage + 1);
+                  setSearchParams(params);
+                }}
               >
                 Next
               </Button>

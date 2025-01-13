@@ -77,8 +77,8 @@ const CategoryRow = ({ category, level, handleDeleteCategory }) => {
             </div>
           </div>
         </TableCell>
-        <TableCell>{category?.sales?.toLocaleString()}</TableCell>
-        <TableCell>{category?.stock?.toLocaleString()}</TableCell>
+        {/* <TableCell>{category?.sales?.toLocaleString()}</TableCell> */}
+        <TableCell>{category?.product_in_category}</TableCell>
         <TableCell>{formatDate(category?.created_at)}</TableCell>
         <TableCell>
           <div className="flex items-center gap-2">
@@ -193,8 +193,8 @@ export default function Category() {
                 <input type="checkbox" className="rounded border-input" />
               </TableHead>
               <TableHead>Category</TableHead>
-              <TableHead>Sales</TableHead>
-              <TableHead>Stock</TableHead>
+              {/* <TableHead>Sales</TableHead> */}
+              <TableHead>No. Products</TableHead>
               <TableHead>Added</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>

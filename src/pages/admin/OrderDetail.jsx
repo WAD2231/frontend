@@ -29,11 +29,12 @@ import {
   PackageX,
   UserCircle,
 } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getOrderById } from "@/services/orderServices";
 import capitalFirstLetter from "@/lib/capitalFirstLetter";
 import formatDate from "@/lib/formatDate";
+import routes from "@/config/routes";
 
 export default function OrderDetail() {
   const { id } = useParams();
@@ -172,35 +173,6 @@ export default function OrderDetail() {
             </Badge>
           </CardContent>
         </Card>
-
-        {/* <Card>
-          <CardHeader>
-            <CardTitle>Document</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-3">
-              <FileText className="h-4 w-4 text-muted-foreground" />
-              <div className="text-sm">
-                <div className="font-medium">Invoice</div>
-                <div className="text-muted-foreground">INV-32011</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Package className="h-4 w-4 text-muted-foreground" />
-              <div className="text-sm">
-                <div className="font-medium">Shipping</div>
-                <div className="text-muted-foreground">SHP-2011REG</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Gift className="h-4 w-4 text-muted-foreground" />
-              <div className="text-sm">
-                <div className="font-medium">Rewards</div>
-                <div className="text-muted-foreground">480 point</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card> */}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-6">
@@ -224,26 +196,43 @@ export default function OrderDetail() {
                   <div className="col-span-2">Total</div>
                 </div>
                 <Separator />
-                <div className="space-y-4">
+                <div className="flex flex-col gap-2">
                   {order?.details?.map((item) => {
                     return (
-                      <div className="grid grid-cols-12 gap-4 items-center">
-                        <div className="col-span-4 flex items-center gap-3">
-                          <img src={item?.product?.images[0]} alt={item?.product?.name} className="w-12 h-12 rounded-lg" />
-                          <div>
-                            <div className="font-medium">{item?.product?.name}</div>
-                            <div className="text-sm text-muted-foreground">
-                            {item?.product?.manufacturer?.name}
+                      <Link
+                        to={`${routes.detailProduct}/${item?.product?.id}`}
+                        key={item?.product?.id}
+                      >
+                        <div className="grid grid-cols-12 gap-4 items-center">
+                          <div className="col-span-4 flex items-center gap-3">
+                            <img
+                              src={item?.product?.images[0]}
+                              alt={item?.product?.name}
+                              className="w-10 h-10 rounded-lg"
+                            />
+                            <div>
+                              <div className="font-medium">
+                                {item?.product?.name}
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                {item?.product?.manufacturer?.name}
+                              </div>
                             </div>
                           </div>
+                          <div className="col-span-2 text-sm">
+                            {item?.product?.category?.name}
+                          </div>
+                          <div className="col-span-2 text-sm">
+                            {item?.quantity}
+                          </div>
+                          <div className="col-span-2 text-sm">
+                            ${item?.product?.price}
+                          </div>
+                          <div className="col-span-2 text-sm font-medium">
+                            ${item?.subtotal}
+                          </div>
                         </div>
-                        <div className="col-span-2 text-sm">{item?.product?.category?.name}</div>
-                        <div className="col-span-2 text-sm">{item?.quantity}</div>
-                        <div className="col-span-2 text-sm">${item?.product?.price}</div>
-                        <div className="col-span-2 text-sm font-medium">
-                        ${item?.subtotal}
-                        </div>
-                      </div>
+                      </Link>
                     );
                   })}
                 </div>

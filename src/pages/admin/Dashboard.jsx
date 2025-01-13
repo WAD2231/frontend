@@ -30,13 +30,16 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Filter, Eye, Link2, ChevronDown } from "lucide-react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import routes from "@/config/routes";
 import { getAllOrders } from "@/services/orderServices";
 import formatDate from "@/lib/formatDate";
 import capitalFirstLetter from "@/lib/capitalFirstLetter";
 
 export default function DashboardPage() {
+
+  const navigate = useNavigate();
+
   const [categoryStatistics, setCategoryStatistics] = useState([]);
   const [manufacturerStatistics, setManufacturerStatistics] = useState([]);
   const [bestSellingProductStatistics, setBestSellingProductStatistics] =
@@ -307,7 +310,7 @@ export default function DashboardPage() {
             </TableHeader>
             <TableBody>
               {orders?.map((order) => (
-                <TableRow key={order?.order_id}>
+                <TableRow key={order?.order_id} onClick={() => navigate(`${routes.orderDetail}/${order.order_id}`)}>
                   <TableCell>
                     <input type="checkbox" className="rounded border-input" />
                   </TableCell>
