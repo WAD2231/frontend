@@ -231,14 +231,16 @@ export default function Customer() {
             )}
           </TableBody>
         </Table>
-        <MyPagination
-          currentPage={currentPage}
-          setCurrentPage={(page) => {
-            setSearchParams({ page });
-          }}
-          totalPages={paging.totalPages}
-          totalPagesToDisplay={10}
-        />
+        {paging?.totalPages > 0 && (
+          <MyPagination
+            currentPage={currentPage}
+            setCurrentPage={(page) => {
+              setSearchParams({ page });
+            }}
+            totalPages={paging.totalPages}
+            totalPagesToDisplay={10}
+          />
+        )}
       </div>
     </div>
   );

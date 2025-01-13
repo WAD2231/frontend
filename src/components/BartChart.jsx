@@ -47,7 +47,7 @@ export default function BarChartLabel({ label, chartData, dataKey }) {
               tickFormatter={(value) => value}
               interval={0}
             />
-            <YAxis type="number" hide tickCount={200} tick={{ fontSize: 14, width: 250 }} />
+            <YAxis type="number" hide tickCount={400} tick={{ fontSize: 14, width: 250 }} />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}

@@ -29,16 +29,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Filter, Eye, Link2, ChevronDown } from "lucide-react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Eye, ChevronDown } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
 import routes from "@/config/routes";
 import { getAllOrders } from "@/services/orderServices";
 import formatDate from "@/lib/formatDate";
 import capitalFirstLetter from "@/lib/capitalFirstLetter";
+import { MyPagination } from "@/components/Pagination";
 
 export default function DashboardPage() {
-
-  const navigate = useNavigate();
 
   const [categoryStatistics, setCategoryStatistics] = useState([]);
   const [manufacturerStatistics, setManufacturerStatistics] = useState([]);
@@ -55,7 +54,7 @@ export default function DashboardPage() {
   const [paging, setPaging] = useState({
     totalPages: 0,
     totalItems: 0,
-    pageSize: 70,
+    pageSize: 10,
   });
 
   const currentPage = parseInt(searchParams.get("page")) || 1;
@@ -310,7 +309,9 @@ export default function DashboardPage() {
             </TableHeader>
             <TableBody>
               {orders?.map((order) => (
-                <TableRow key={order?.order_id} onClick={() => navigate(`${routes.orderDetail}/${order.order_id}`)}>
+                <TableRow
+                  key={order?.order_id}
+                >
                   <TableCell>
                     <input type="checkbox" className="rounded border-input" />
                   </TableCell>
@@ -373,61 +374,17 @@ export default function DashboardPage() {
               ))}
             </TableBody>
           </Table>
-          {paging.totalPages > 1 && (
-            <div className="p-4 border-t border-border flex items-center justify-between">
-              <div className="text-sm text-muted-foreground">
-                {`Showing ${(currentPage - 1) * paging.pageSize + 1}-${
-                  (currentPage - 1) * paging.pageSize + orders.length
-                } from ${paging.totalItems} orders`}
-              </div>
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={currentPage === 1}
-                  onClick={() => {
-                    const prams = new URLSearchParams(searchParams);
-                    prams.set("page", currentPage - 1);
-                    setSearchParams(prams);
-                  }}
-                >
-                  Previous
-                </Button>
-                {[...Array(paging.totalPages).keys()].map((page) => {
-                  return (
-                    <Button
-                      key={page}
-                      variant="outline"
-                      size="sm"
-                      className={
-                        currentPage === page + 1
-                          ? "bg-primary text-primary-foreground"
-                          : ""
-                      }
-                      onClick={() => {
-                        const prams = new URLSearchParams(searchParams);
-                        prams.set("page", page + 1);
-                        setSearchParams(prams);
-                      }}
-                    >
-                      {page + 1}
-                    </Button>
-                  );
-                })}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={currentPage === paging.totalPages}
-                  onClick={() => {
-                    const prams = new URLSearchParams(searchParams);
-                    prams.set("page", currentPage + 1);
-                    setSearchParams(prams);
-                  }}
-                >
-                  Next
-                </Button>
-              </div>
-            </div>
+          {paging?.totalPages > 0 && (
+            <MyPagination
+              currentPage={currentPage}
+              setCurrentPage={(page) => {
+                const params = new URLSearchParams(searchParams);
+                params.set("page", page);
+                setSearchParams(params);
+              }}
+              totalPages={paging.totalPages}
+              totalPagesToDisplay={Math.min(10, paging.totalPages)}
+            />
           )}
         </div>
       </div>

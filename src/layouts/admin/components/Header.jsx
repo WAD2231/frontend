@@ -10,18 +10,6 @@ function Header({user, setUser}) {
         <Search className="h-5 w-5" />
       </Button>
       <div className="flex items-center space-x-4 ml-auto">
-        <div className="relative">
-          <Bell className="h-5 w-5 text-muted-foreground" />
-          <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full w-4 h-4 flex items-center justify-center">
-            3
-          </span>
-        </div>
-        <div className="relative">
-          <ShoppingCart className="h-5 w-5 text-muted-foreground" />
-          <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full w-4 h-4 flex items-center justify-center">
-            2
-          </span>
-        </div>
         <ModeToggle/>
         <div className="flex items-center space-x-3 cursor-pointer">
           <img src={user.avatar} alt={user.username} className="h-10 w-10 rounded-full" />

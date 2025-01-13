@@ -46,7 +46,7 @@ export default function SearchPage({ setIsOpenCart, setCartItems }) {
   const tag = searchParams.get("tag") || "";
 
   const [paging, setPaging] = useState({
-    pageSize: 12,
+    pageSize: 6,
     totalItems: 0,
     totalPages: 0,
   });

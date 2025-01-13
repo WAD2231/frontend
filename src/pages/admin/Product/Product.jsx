@@ -29,6 +29,7 @@ import formatDate from "@/lib/formatDate";
 import ProductStatus from "@/components/ProductStatus";
 import MyAlertDialog from "@/components/MyAlertDialog";
 import useDebounce from "@/hooks/useDebounce";
+import { MyPagination } from "@/components/Pagination";
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
 
@@ -40,7 +41,7 @@ export default function ProductsPage() {
     totalItems: 0,
   });
 
-  const currentPage = parseInt(searchParams.get("page")) || 1;
+  let currentPage = parseInt(searchParams.get("page")) || 1;
   const [search, setSearch] = useState(searchParams.get("search") || "");
 
   const debounceSearchValue = useDebounce(search, 500);
@@ -72,14 +73,6 @@ export default function ProductsPage() {
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearch(value);
-
-    const newParams = new URLSearchParams(searchParams);
-    if (value) {
-      newParams.set("search", value);
-    } else {
-      newParams.delete("search");
-    }
-    setSearchParams(newParams);
   };
 
   const handleDeleteProduct = async (id) => {
@@ -232,61 +225,18 @@ export default function ProductsPage() {
             })}
           </TableBody>
         </Table>
-        {paging.totalPages > 1 && (
-          <div className="p-4 border-t border-border flex items-center justify-between">
-            <div className="text-sm text-muted-foreground">
-              {`Showing ${(currentPage - 1) * paging.pageSize + 1}-${
-                (currentPage - 1) * paging.pageSize + products.length
-              } from ${paging.totalItems} products`}
-            </div>
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={currentPage === 1}
-                onClick={() => {
-                  const params = new URLSearchParams(searchParams);
-                  params.set("page", currentPage - 1);
-                  setSearchParams(params);
-                }}
-              >
-                Previous
-              </Button>
-              {[...Array(paging.totalPages).keys()].map((page) => {
-                return (
-                  <Button
-                    key={page}
-                    variant="outline"
-                    size="sm"
-                    className={
-                      currentPage === page + 1
-                        ? "bg-primary text-primary-foreground"
-                        : ""
-                    }
-                    onClick={() => {
-                      const params = new URLSearchParams(searchParams);
-                      params.set("page", page + 1);
-                      setSearchParams(params);
-                    }}
-                  >
-                    {page + 1}
-                  </Button>
-                );
-              })}
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={currentPage === paging.totalPages}
-                onClick={() => {
-                  const params = new URLSearchParams(searchParams);
-                  params.set("page", currentPage + 1);
-                  setSearchParams(params);
-                }}
-              >
-                Next
-              </Button>
-            </div>
-          </div>
+
+        {paging?.totalPages > 0 && (
+          <MyPagination
+            currentPage={currentPage}
+            setCurrentPage={(page) => {
+              const params = new URLSearchParams(searchParams);
+              params.set("page", page);
+              setSearchParams(params);
+            }}
+            totalPages={paging.totalPages}
+            totalPagesToDisplay={Math.min(10, paging.totalPages)}
+          />
         )}
       </div>
     </div>

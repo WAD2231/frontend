@@ -26,7 +26,7 @@ function Navbar() {
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <span className="text-primary-foreground text-xl font-bold">D</span>
           </div>
-          <span className="text-xl font-bold">Dashlab</span>
+          <span className="text-xl font-bold">Dashboard</span>
         </Link>
       </div>
       <nav className="flex-1 px-4 space-y-1">
