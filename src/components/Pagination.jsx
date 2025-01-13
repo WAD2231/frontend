@@ -58,7 +58,7 @@ export const MyPagination = ({
   };
 
   return (
-    <Pagination className="my-3">
+    <Pagination className="py-3">
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious

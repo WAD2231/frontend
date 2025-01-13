@@ -26,6 +26,7 @@ const routes = {
   search: "/search",
   profile: "/profile",
   editProfile: "/profile/edit",
+  orderDetailClient: "/order-detail",
   notFound: "*"
 };
 

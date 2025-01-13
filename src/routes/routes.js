@@ -27,6 +27,7 @@ import ProductCategory from "@/pages/user/ProductCategory";
 import SearchPage from "@/pages/user/Search";
 import Profile from "@/pages/user/Profile";
 import EditProfile from "@/pages/user/EditProfile";
+import OrderDetailClient from "@/pages/user/OrderDetail";
 
 //Private Routes (for Admin)
 
@@ -59,6 +60,7 @@ const publicRoutes = [
   { path: routes.profile, components: Profile },
   { path: routes.editProfile, components: EditProfile },
   { path: routes.notFound, components: Notfound },
+  { path: `${routes.orderDetailClient}/:id`, components: OrderDetailClient },
   { path: `${routes.productCategory}/:id`, components: ProductCategory },
 
 ];

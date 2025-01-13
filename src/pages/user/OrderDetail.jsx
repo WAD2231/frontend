@@ -8,6 +8,7 @@ import {
   Truck,
   MapPin,
   UserCircle,
+  Phone,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -25,6 +26,7 @@ export default function OrderDetail() {
     const fetchOrder = async () => {
       const response = await getOrderById(id);
       if (response.status === 200) {
+        console.log(response.data);
         setOrder(response.data);
       }
     };
@@ -32,7 +34,7 @@ export default function OrderDetail() {
   }, [id]);
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container p-6 px-[200px]">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div className="flex items-center justify-between">
           <div>
@@ -179,7 +181,7 @@ export default function OrderDetail() {
                   {order?.details?.map((item) => {
                     return (
                       <Link
-                        to={`${routes.detailProduct}/${item?.product?.id}`}
+                        to={`${routes.productDetail}/${item?.product?.id}`}
                         key={item?.product?.id}
                       >
                         <div className="grid grid-cols-12 gap-4 items-center">

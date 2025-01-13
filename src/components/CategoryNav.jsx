@@ -21,7 +21,10 @@ function CategoryItem({ category, level = 0, activePath, onHover }) {
           onHover([...activePath.slice(0, level), category.name])
         }
       >
-        <Link to={`${routes.productCategory}/${category.category_id}`} className="flex-1">
+        <Link
+          to={`${routes.productCategory}/${category.category_id}`}
+          className="flex-1"
+        >
           {category.name}
         </Link>
         {category.children && <ChevronRight className="h-4 w-4" />}
@@ -30,7 +33,7 @@ function CategoryItem({ category, level = 0, activePath, onHover }) {
       {showSubCategories && (
         <ul
           className={cn(
-            "absolute left-full top-0 bg-white shadow-lg rounded-md space-y-1 p-2 z-10"
+            "absolute left-full top-0 bg-white shadow-lg rounded-md space-y-1 p-2 z-10 min-w-[230px]"
           )}
         >
           {category.children.map((subCategory) => (
@@ -48,7 +51,7 @@ function CategoryItem({ category, level = 0, activePath, onHover }) {
   );
 }
 
-export default function CategoriesNav({categories}) {
+export default function CategoriesNav({ categories }) {
   const [activePath, setActivePath] = useState([]);
 
   return (
