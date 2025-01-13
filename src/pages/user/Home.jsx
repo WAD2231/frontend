@@ -8,7 +8,7 @@ import { useDarkMode } from "@/components/DarkModeContext";
 import { getHomeProducts } from "@/services/productServices";
 import { FullWidthCarousel } from "@/components/FullWidthCarousel";
 
-const Home = ({ setIsOpenCart, setCartItems }) => {
+const Home = ({ setIsOpenCart, setCartItems, cartItems }) => {
   const { darkMode } = useDarkMode();
 
   const [homeProducts, setHomeProducts] = useState({});
@@ -51,6 +51,7 @@ const Home = ({ setIsOpenCart, setCartItems }) => {
           products={homeProducts?.bestSellingProducts}
           setIsOpenCart={setIsOpenCart}
           setCartItems={setCartItems}
+          cartItems={cartItems}
         />
       </div>
 
@@ -72,6 +73,7 @@ const Home = ({ setIsOpenCart, setCartItems }) => {
           setIsOpenCart={setIsOpenCart}
           setCartItems={setCartItems}
           products={homeProducts?.highestDiscountProducts}
+          cartItems={cartItems}
         />
       </div>
 
@@ -94,6 +96,7 @@ const Home = ({ setIsOpenCart, setCartItems }) => {
           setIsOpenCart={setIsOpenCart}
           setCartItems={setCartItems}
           products={homeProducts?.newProducts}
+          cartItems={cartItems}
         />
       </div>
 
@@ -116,6 +119,7 @@ const Home = ({ setIsOpenCart, setCartItems }) => {
           setIsOpenCart={setIsOpenCart}
           setCartItems={setCartItems}
           products={homeProducts?.featuredProducts}
+          cartItems={cartItems}
         />
       </div>
 

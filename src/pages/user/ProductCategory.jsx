@@ -25,8 +25,13 @@ import { useSearchParams } from "react-router-dom";
 import routes from "@/config/routes";
 import { Button } from "@/components/ui/button";
 import { addToCart, getCart } from "@/services/cartServices";
+import updateLocalCart from "@/lib/updateCart";
 
-export default function ProductCategory({ setIsOpenCart, setCartItems }) {
+export default function ProductCategory({
+  setIsOpenCart,
+  setCartItems,
+  cartItems,
+}) {
   const { id } = useParams();
 
   const [paging, setPaging] = useState({
@@ -55,11 +60,53 @@ export default function ProductCategory({ setIsOpenCart, setCartItems }) {
     fetchProducts(id, currentPage, paging.pageSize);
   }, [id, currentPage]);
 
-  const handleAddToCart = async (productId) => {
-    const response = await addToCart(productId);
+  const handleAddToCart = async (product) => {
+    if (cartItems.isLocal) {
+      const isExisted = cartItems?.items?.some(
+        (item) => item.product.id === product.id
+      );
+      setCartItems((prev) => {
+        let newItems;
+        if (isExisted) {
+          newItems = prev.items.map((item) => {
+            if (item.product.id === product.id) {
+              return {
+                ...item,
+                quantity: item.quantity + 1,
+              };
+            }
+            return item;
+          });
+        } else {
+          newItems = [
+            ...prev.items,
+            {
+              product: {
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                discount: product.discount,
+                images: [product.images[0]],
+                tag: product.tag,
+              },
+              quantity: 1,
+            },
+          ];
+        }
+        updateLocalCart({ items: newItems });
+        return { items: newItems, isLocal: true };
+      });
+      setIsOpenCart(true);
+      return;
+    }
+
+    const response = await addToCart(product.id);
     if (response.status === 201) {
       const cart = await getCart();
-      setCartItems(cart.data.items);
+      setCartItems({
+        items: cart.data.items,
+        isLocal: false,
+      });
       setIsOpenCart(true);
     }
   };
@@ -127,7 +174,7 @@ export default function ProductCategory({ setIsOpenCart, setCartItems }) {
                 <Button
                   onClick={(e) => {
                     e.preventDefault();
-                    handleAddToCart(product?.id);
+                    handleAddToCart(product);
                   }}
                 >
                   + Add to cart

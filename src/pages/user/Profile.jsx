@@ -18,11 +18,12 @@ import {
   Phone,
   MapPin,
   Clock,
+  Pencil,
 } from "lucide-react";
 import formatDate from "@/lib/formatDate";
 import { useEffect, useState } from "react";
 import { getOrderHistory } from "@/services/orderServices";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import capitalFirstLetter from "@/lib/capitalFirstLetter";
 
 import { format } from "date-fns";
@@ -42,10 +43,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import routes from "@/config/routes";
 
 export default function Profile({ user }) {
-  console.log(user);
-
   const [date, setDate] = useState();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -124,7 +124,10 @@ export default function Profile({ user }) {
   return (
     <div className="container mx-auto p-6 px-[100px]">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <Card className="lg:col-span-1">
+        <Card className="lg:col-span-1 relative">
+          <Link to={`${routes.editProfile}`} className="absolute top-4 right-4">
+            <Pencil className="h-4 w-4 text-muted-foreground" />
+          </Link>
           <CardContent className="pt-6">
             <div className="flex flex-col items-center text-center">
               <div className="relative">

@@ -106,7 +106,7 @@ const Header = ({ user, setUser, cartItems, setCartItems, setIsOpenCart }) => {
             <div className="relative cursor-pointer" onClick={() => setIsOpenCart(true)}>
               <ShoppingCart className="text-muted-foreground" size={26} />
               <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                {cartItems?.length}
+                {cartItems?.items?.length}
               </span>
             </div>
             <div

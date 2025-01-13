@@ -3,7 +3,9 @@ import ProductTag from "./ProductTag";
 import routes from "@/config/routes";
 import { Card } from "./ui/card";
 import { addToCart, getCart } from "@/services/cartServices";
+import updateLocalCart from "@/lib/updateCart";
 const Product = ({
+  cartItems,
   setCartItems,
   setIsOpenCart,
   id,
@@ -15,6 +17,45 @@ const Product = ({
   ...props
 }) => {
   const handleAddToCart = async () => {
+    if (cartItems.isLocal) {
+      const isExisted = cartItems?.items?.some(
+        (item) => item.product.id === id
+      );
+      setCartItems((prev) => {
+        let newItems;
+        if (isExisted) {
+          newItems = prev.items.map((item) => {
+            if (item.product.id === id) {
+              return {
+                ...item,
+                quantity: item.quantity + 1,
+              };
+            }
+            return item;
+          });
+        } else {
+          newItems = [
+            ...prev.items,
+            {
+              product: {
+                id,
+                name,
+                price,
+                discount,
+                images: [image],
+                tag,
+              },
+              quantity: 1,
+            },
+          ];
+        }
+        updateLocalCart({ items: newItems });
+        return { items: newItems, isLocal: true };
+      });
+      setIsOpenCart(true);
+      return;
+    }
+
     const response = await addToCart(id);
 
     if (response.status === 201) {

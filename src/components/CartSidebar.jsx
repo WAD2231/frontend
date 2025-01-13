@@ -11,30 +11,51 @@ import { Link } from "react-router-dom";
 import { deleteProduct, updateProductQuantity } from "@/services/cartServices";
 import routes from "@/config/routes";
 import { ShoppingCart } from "lucide-react";
+import updateLocalCart from "@/lib/updateCart";
 
 export function CartSidebar({ open, setOpen, cartItems, setCartItems }) {
-  const subtotal = cartItems?.reduce(
+  const subtotal = cartItems?.items?.reduce(
     (sum, item) => sum + item?.product?.price * item?.quantity,
     0
   );
 
   const handleChangeQuantity = async (productId, quantity) => {
+    if (cartItems.isLocal) {
+      const newItems = cartItems?.items?.map((item) => {
+        if (item.product.id === productId) {
+          return { ...item, quantity };
+        }
+        return item;
+      });
+      setCartItems({ items: newItems, isLocal: true });
+      updateLocalCart({ items: newItems });
+      return;
+    }
+
     const res = await updateProductQuantity(productId, quantity);
     if (res.status === 200) {
-      setCartItems((prevItems) =>
-        prevItems.map((item) =>
-          item.product.id === productId ? { ...item, quantity } : item
-        )
+      const newItems = cartItems?.items?.map((item) =>
+        item.product.id === productId ? { ...item, quantity } : item
       );
+      setCartItems({ items: newItems, isLocal: false });
     }
   };
 
   const deleteProductInCart = async (productId) => {
+    if (cartItems.isLocal) {
+      const newItems = cartItems?.items?.filter((item) => {
+        return item.product.id !== productId;
+      });
+      setCartItems({ items: newItems, isLocal: true });
+      updateLocalCart({ items: newItems });
+      return;
+    }
     const res = await deleteProduct(productId);
     if (res.status === 200) {
-      setCartItems((prevItems) =>
-        prevItems.filter((item) => item.product.id !== productId)
+      const newItems = cartItems?.items?.filter(
+        (item) => item.product.id !== productId
       );
+      setCartItems({ items: newItems, isLocal: false });
     }
   };
 
@@ -56,7 +77,7 @@ export function CartSidebar({ open, setOpen, cartItems, setCartItems }) {
         </SheetHeader>
         <div className="flex-1 overflow-y-auto py-4">
           <div className="space-y-4">
-            {cartItems?.map((item) => (
+            {cartItems?.items?.map((item) => (
               <div
                 key={item?.product?.id}
                 className="flex items-center justify-between bg-white dark:bg-gray-900 rounded-lg shadow-sm"
@@ -81,7 +102,7 @@ export function CartSidebar({ open, setOpen, cartItems, setCartItems }) {
                             {(
                               item?.product?.price *
                               (1 - item?.product?.discount)
-                            ).toFixed(2)}
+                            )?.toFixed(2)}
                           </span>
                           <span className="text-sm text-gray-500 dark:text-gray-400 line-through">
                             ${item?.product?.price}
@@ -148,7 +169,7 @@ export function CartSidebar({ open, setOpen, cartItems, setCartItems }) {
               Subtotal
             </span>
             <span className="font-semibold text-gray-900 dark:text-gray-100">
-              ${subtotal.toFixed(2)}
+              ${subtotal?.toFixed(2)}
             </span>
           </div>
           <Link to={routes.cart}>

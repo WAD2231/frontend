@@ -32,8 +32,6 @@ export default function EditCategory() {
       ]);
 
       if (categoryResponse.status === 200) {
-        console.log(categoryResponse.data);
-        
         setCategory({
           ...categoryResponse.data,
           thumbnail: [categoryResponse.data.thumbnail]

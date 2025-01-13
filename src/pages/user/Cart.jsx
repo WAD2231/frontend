@@ -8,21 +8,22 @@ import routes from "@/config/routes";
 import { deleteProduct, updateProductQuantity } from "@/services/cartServices";
 import { createOrder } from "@/services/orderServices";
 
-export default function ShoppingCart({ cartItems, setCartItems }) {
+export default function ShoppingCart({ user, cartItems, setCartItems }) {
   const { darkMode } = useDarkMode();
 
   const [selectedItems, setSelectedItems] = useState(
-    cartItems?.map((item) => item.product.id)
+    cartItems?.items?.map((item) => item.product.id)
   );
 
   const isAllChecked =
-    selectedItems.length === cartItems.length && cartItems.length > 0;
+    selectedItems.length === cartItems?.items?.length &&
+    cartItems?.items?.length > 0;
 
   const toggleSelectAll = () => {
     if (isAllChecked) {
       setSelectedItems([]);
     } else {
-      setSelectedItems(cartItems?.map((item) => item?.product?.id));
+      setSelectedItems(cartItems?.items?.map((item) => item?.product?.id));
     }
   };
 
@@ -57,18 +58,24 @@ export default function ShoppingCart({ cartItems, setCartItems }) {
   const subtotal = selectedItems.reduce(
     (sum, id) =>
       sum +
-        cartItems.find((item) => item.product.id === id)?.product.price *
-          cartItems.find((item) => item.product.id === id)?.quantity || 0,
+        cartItems?.items?.find((item) => item.product.id === id)?.product
+          .price *
+          cartItems?.items?.find((item) => item.product.id === id)?.quantity ||
+      0,
     0
   );
 
   const discount = selectedItems?.reduce((sum, id) => {
-    const item = cartItems.find((item) => item.product.id === id);
+    const item = cartItems?.items?.find((item) => item.product.id === id);
     return sum + item?.product.price * item?.quantity * item?.product.discount;
   }, 0);
 
   const handleCreateOrder = async () => {
-    const selectedProducts = cartItems.filter((item) =>
+    if (!user) {
+      console.log("Please login to continue");
+      return;
+    }
+    const selectedProducts = cartItems?.items?.filter((item) =>
       selectedItems.includes(item.product.id)
     );
     let total = 0;
@@ -121,7 +128,7 @@ export default function ShoppingCart({ cartItems, setCartItems }) {
                 darkMode ? "bg-gray-800" : "bg-white"
               } shadow-sm`}
             >
-              {cartItems.length > 0 ? (
+              {cartItems?.items?.length > 0 ? (
                 <div
                   className={`p-6 ${
                     darkMode
@@ -149,7 +156,7 @@ export default function ShoppingCart({ cartItems, setCartItems }) {
 
                   {/* Cart Items */}
                   <div className="divide-y">
-                    {cartItems.map((item) => (
+                    {cartItems?.items?.map((item) => (
                       <div
                         key={item.product.id}
                         className="grid grid-cols-12 gap-4 py-4 items-center"

@@ -4,7 +4,6 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  useNavigate,
   useLocation,
 } from "react-router-dom";
 import { privateRoutes, publicRoutes } from "@/routes/routes";
@@ -38,16 +37,39 @@ function App() {
     </ThemeProvider>
   );
 }
+
+const checkLocalCart = () => {
+  const cartData = localStorage.getItem("cart");
+  if (!cartData) {
+    localStorage.setItem("cart", JSON.stringify({ items: [] }));
+    return { items: [] };
+  } else {
+    const cart = JSON.parse(cartData);
+    return cart;
+  }
+};
+
 function AppContent({ user, setUser, checkingAuth, setCheckingAuth }) {
   const location = useLocation();
 
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState({
+    items: [],
+    isLocal: true,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       const [cartData, userData] = await Promise.all([getCart(), getMe()]);
       if (cartData.status === 200) {
-        setCartItems(cartData.data.items);
+        setCartItems({
+          items: cartData.data.items,
+          isLocal: false,
+        });
+      } else {
+        setCartItems({
+          items: checkLocalCart().items,
+          isLocal: true,
+        });
       }
       if (userData.status === 200) {
         setUser(userData.data);
@@ -101,7 +123,12 @@ function AppContent({ user, setUser, checkingAuth, setCheckingAuth }) {
                 setCartItems={setCartItems}
                 setIsOpenCart={setIsOpenCart}
               >
-                <Page user={user} setIsOpenCart={setIsOpenCart} cartItems={cartItems} setCartItems={setCartItems} />
+                <Page
+                  user={user}
+                  setIsOpenCart={setIsOpenCart}
+                  cartItems={cartItems}
+                  setCartItems={setCartItems}
+                />
                 <CartSidebar
                   open={isOpenCart}
                   setOpen={setIsOpenCart}

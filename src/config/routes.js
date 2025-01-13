@@ -25,6 +25,7 @@ const routes = {
   productCategory: "/product-category",
   search: "/search",
   profile: "/profile",
+  editProfile: "/profile/edit",
   notFound: "*"
 };
 

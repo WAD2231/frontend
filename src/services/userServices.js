@@ -35,3 +35,12 @@ export const deleteUser = async (id) => {
     return error;
   }
 }
+
+export const updateProfile = async (data) => { 
+  try {
+      const res = await api.put(`/users`, data);
+      return res;
+  } catch (error) {
+    return error;
+  }
+}

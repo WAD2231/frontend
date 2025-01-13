@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/carousel";
 import Product from "./Product";
 
-export function FullWidthCarousel({ setIsOpenCart, products, setCartItems }) {
+export function FullWidthCarousel({ setIsOpenCart, products, setCartItems, cartItems }) {
   return (
     <Carousel
       opts={{
@@ -22,6 +22,7 @@ export function FullWidthCarousel({ setIsOpenCart, products, setCartItems }) {
           <CarouselItem key={item.id} className="pl-16 md:basis-1/4">
             <div className="h-full grid grid-cols-3 gap-4">
               <Product
+                cartItems={cartItems}
                 setIsOpenCart={setIsOpenCart}
                 setCartItems={setCartItems}
                 key={item?.id}
