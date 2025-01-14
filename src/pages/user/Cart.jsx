@@ -3,7 +3,7 @@ import MyAlertDialog from "@/components/MyAlertDialog";
 import { Button } from "@/components/ui/button";
 import routes from "@/config/routes";
 import updateLocalCart from "@/lib/updateCart";
-import { updateProductQuantity } from "@/services/cartServices";
+import { deleteProduct, updateProductQuantity } from "@/services/cartServices";
 import { createOrder } from "@/services/orderServices";
 import { Home, Minus, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -113,7 +113,7 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
   const navigate = useNavigate();
 
   const handleAction = () => {
-    if (label === "Please log in to before checkout") {
+    if (label === "Please log in before checkout") {
       navigate(`${routes.login}`);
     } else if (label === "Please update your information before checkout") {
       navigate(`${routes.editProfile}`);
@@ -130,10 +130,11 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
     if (selectedItems.length === 0) {
       setLabel("Please select items to checkout");
       setIsOpen(true);
+      return
     }
 
     if (!user) {
-      setLabel("Please log in to before checkout");
+      setLabel("Please log in before checkout");
       setIsOpen(true);
       return;
     }
@@ -365,11 +366,10 @@ export default function ShoppingCart({ user, cartItems, setCartItems }) {
                       Total
                     </span>
                     <span className="font-semibold dark:text-white text-black">
-                      $$
+                      $
                       {subtotal < discount
                         ? 0
                         : (subtotal - discount).toFixed(2)}{" "}
-                      USD
                     </span>
                   </div>
                 </div>

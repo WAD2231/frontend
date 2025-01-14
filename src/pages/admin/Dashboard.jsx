@@ -175,7 +175,7 @@ export default function DashboardPage() {
               monthYear: `${item.month}/${item.year}`,
             };
           })}
-          label={"Sales Data: January - June 2024"}
+          label={"Revenue Data"}
         />
       </div>
 

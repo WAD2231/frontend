@@ -93,6 +93,8 @@ export default function EditProduct() {
       formData.append("newImages", image);
     });
     product?.images?.forEach((image) => {
+      console.log(product.images);
+      
       formData.append("oldImages", image.image_url);
     });
     formData.append("tag", product.tag);

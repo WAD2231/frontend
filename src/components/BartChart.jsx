@@ -31,7 +31,7 @@ export default function BarChartLabel({ label, chartData, dataKey }) {
     <Card>
       <CardHeader>
         <CardTitle>Bar Chart - Label</CardTitle>
-        <CardDescription>Sales Data: January - June 2024</CardDescription>
+        <CardDescription>Revenue Data</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={{}}>

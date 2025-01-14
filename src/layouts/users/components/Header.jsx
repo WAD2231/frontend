@@ -57,7 +57,7 @@ const Header = ({ user, setUser, cartItems, setCartItems, setIsOpenCart }) => {
         <div className="container py-3 mx-auto flex justify-between items-center">
           <div className="flex items-center justify-between w-7/12">
             <div className="text-2xl font-bold">
-              <Link to={routes.home}>Exclusive</Link>
+              <Link to={routes.home}>E-commerce</Link>
             </div>
             <div className="relative" ref={categoriesRef}>
               <Button

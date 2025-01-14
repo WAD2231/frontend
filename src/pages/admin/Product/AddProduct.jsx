@@ -73,7 +73,7 @@ function AddProduct() {
     formData.append("name", fields.name);
     formData.append("description", fields.description);
     formData.append("price", fields.price);
-    formData.append("discount", fields.discount);
+    formData.append("discount", fields.discount / 100);
     formData.append("stock", fields.stock);
     formData.append("category_id", fields.category_id);
     formData.append("manufacturer_id", fields.manufacturer_id);
